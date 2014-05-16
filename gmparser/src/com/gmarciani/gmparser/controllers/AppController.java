@@ -1,6 +1,8 @@
 package com.gmarciani.gmparser.controllers;
 
 
+import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -23,6 +25,8 @@ public class AppController {
 	
 	private static AppController instance;
 	private Options options;
+	
+	private static final String FILE_LOGO = "com/gmarciani/gmparser/views/res/prova.txt";
 	
 	private static final String DESCRIPTION_VERSION = "GMParser version.";
 	private static final String DESCRIPTION_HELP = "GMParser helper.";
@@ -80,11 +84,15 @@ public class AppController {
 		this.options.addOptionGroup(optionGroup);
 		this.options.addOption(logon);
 	}
-	
-	private static final String LOGO = "";
 
 	public void printWelcome() {
-		System.out.println(LOGO);
+		String welcome = "WELCOME TO GMPARSER";
+		try {
+			welcome = IOController.getFileAsString(FILE_LOGO);
+		} catch (IOException exc) {
+			this.printException(exc);
+		}
+		System.out.println(welcome);
 	}	
 
 	public void play(String[] args) throws ParseException {
@@ -148,7 +156,7 @@ public class AppController {
 		System.out.println("[WARNING] " + message);
 	}
 	
-	public void printException(ParseException exc) {
+	public void printException(Exception exc) {
 		System.out.println("[ERROR] " + exc.getMessage());
 	}
 	
