@@ -12,21 +12,29 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.fusesource.jansi.Ansi.Color;
+import org.fusesource.jansi.AnsiConsole;
 
+import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
 import com.gmarciani.gmparser.models.grammar.GrammarType;
 import com.gmarciani.gmparser.models.parser.ParserType;
 
+import static org.fusesource.jansi.Ansi.*;
+
 public class AppController {
 	
 	private static final boolean DEBUG = false;
-	private static boolean logon = false;
+	private boolean logon = false;
 	
 	private static AppController instance;
 	private Options options;
 	
-	private static final String FILE_LOGO = "com/gmarciani/gmparser/views/res/prova.txt";
+	private static final String FILE_LOGO = "com/gmarciani/gmparser/views/res/logo.txt";
+	private static final Color LOGO_COLOR = Color.YELLOW;
+	private static final Color WARNING_COLOR = Color.RED;
+	private static final Color DEBUG_COLOR = Color.MAGENTA;
 	
 	private static final String DESCRIPTION_VERSION = "GMParser version.";
 	private static final String DESCRIPTION_HELP = "GMParser helper.";
@@ -35,7 +43,8 @@ public class AppController {
 	private static final String DESCRIPTION_CHECK = "Check the GRAMMAR type and form.";
 	
 	private AppController() {
-		buildOptions();
+		AnsiConsole.systemInstall();
+		this.buildOptions();
 	}
 	
 	public static AppController getInstance() {
@@ -83,24 +92,24 @@ public class AppController {
 		this.options = new Options();	
 		this.options.addOptionGroup(optionGroup);
 		this.options.addOption(logon);
-	}
-
+	}	
+	
 	public void printWelcome() {
 		String welcome = "WELCOME TO GMPARSER";
 		try {
 			welcome = IOController.getFileAsString(FILE_LOGO);
 		} catch (IOException exc) {
-			this.printException(exc);
+			this.printWarning(exc.getMessage());;
 		}
-		System.out.println(welcome);
-	}	
+		System.out.println(ansi().fg(LOGO_COLOR).bold().a(welcome).reset());
+	}
 
 	public void play(String[] args) throws ParseException {
 		CommandLineParser cmdParser = new GnuParser();
 		CommandLine cmd = cmdParser.parse(this.options, args);
 		
 		if(cmd.hasOption("logon")) {
-			logon = true;
+			this.logon = true;
 		}
 		
 		if (cmd.hasOption("parse")) {
@@ -108,17 +117,17 @@ public class AppController {
 			final String grammar = vals[0];
 			final String string = vals[1];
 			final ParserType parser = ParserType.valueOf(vals[2]);
-			parse(grammar, string, parser);
+			this.parse(grammar, string, parser);
 		} else if (cmd.hasOption("check")) {
 			String vals[] = cmd.getOptionValues("check");
 			final String grammar = vals[0];
-			check(grammar);
+			this.check(grammar);
 		} else if (cmd.hasOption("help")) {
-			help();
+			this.help();
 		} else if (cmd.hasOption("version")) {
-			version();
+			this.version();
 		} else {
-			unrecognizedCommands();
+			this.printWarning("Unrecognized commands.");
 		}
 	}	
 
@@ -145,23 +154,32 @@ public class AppController {
 	}
 
 	public void quit() {
+		AnsiConsole.systemUninstall();
 		System.exit(0);
 	}
-
-	private void unrecognizedCommands() {
-		printWarning("Unrecognized commands");
-	}	
 	
 	public void printWarning(String message) {
-		System.out.println("[WARNING] " + message);
-	}
-	
-	public void printException(Exception exc) {
-		System.out.println("[ERROR] " + exc.getMessage());
+		String warning = "[WARNING] " + message;
+		System.out.println(ansi().fg(WARNING_COLOR).a(warning).reset());
 	}
 	
 	public void printDebug(String message) {
-		if (DEBUG) System.out.println(message);
+		if (DEBUG) System.out.println(ansi().fg(DEBUG_COLOR).a(message).reset());
+	}
+	
+	public void printTable(String[] header, String[][] data) {
+		ASCIITable.getInstance().printTable(header, 0, data, 0);
+	}
+
+	public void printproduction() {
+		String header[] = {"Grammar Productions"};
+		String data[][] = {{"S -> A | Ba | B"},
+				{"S -> A | Ba | B"},
+				{"S -> A | Ba | B"},
+				{"S -> A | Ba | B"},
+				{"S -> A | Ba | B"},
+				{"S -> A | Ba | B"}};		
+		ASCIITable.getInstance().printTable(header, 0, data, 0);
 	}
 
 }

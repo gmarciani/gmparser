@@ -9,10 +9,11 @@ public class App {
 	public static void main(String[] args) {	
 		AppController app = AppController.getInstance();
 		app.printWelcome();
+		app.printproduction();
 		try {
 			app.play(args);
 		} catch (ParseException exc) {
-			app.printException(exc);
+			app.printWarning(exc.getMessage());
 			app.quit();
 		}	
 	}	
