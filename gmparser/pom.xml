@@ -7,7 +7,7 @@
   	<version>1.0</version>
   	<packaging>jar</packaging>
 
-  	<name>jhex</name>
+  	<name>gmparser</name>
   	<description>Automata theory and Formal languages processor</description>
   	<url>http://gmarciani.com</url>
 
@@ -72,4 +72,11 @@
   		</plugins>
   	</build>
   
+  	<organization>
+  		<name>gmarciani</name>
+  		<url>http://gmarciani.com</url>
+  	</organization>
+  	<scm>
+  		<developerConnection>Giacomo Marciani</developerConnection>
+  	</scm>
 </project>
