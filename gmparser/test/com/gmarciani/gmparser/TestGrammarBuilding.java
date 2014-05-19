@@ -1,5 +1,27 @@
-package com.gmarciani.gmparser;
+/*	The MIT License (MIT)
+ *
+ *	Copyright (c) 2014 Giacomo Marciani
+ *	
+ *	Permission is hereby granted, free of charge, to any person obtaining a copy
+ *	of this software and associated documentation files (the "Software"), to deal
+ *	in the Software without restriction, including without limitation the rights
+ *	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *	copies of the Software, and to permit persons to whom the Software is
+ *	furnished to do so, subject to the following conditions:
+ *	
+ *	The above copyright notice and this permission notice shall be included in all
+ *	copies or substantial portions of the Software.
+ *	
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *	SOFTWARE.
+*/
 
+package com.gmarciani.gmparser;
 
 import static org.junit.Assert.*;
 
@@ -14,13 +36,18 @@ import org.junit.Test;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestGrammar {
+public class TestGrammarBuilding {
 	
 	private static final int NON_TERMINALS = 10;
 	private static final int TERMINALS = 10;
 	private static final int PRODUCTIONS = 10;
 	private static final int PRODUCTION_LENGHT = 3;
 	private static final int EMPTY_LENGHT = 1;
+	
+	private static final String MEMBER_SEPARATOR = "->";
+	private static final String INFIX_SEPARATOR = "|";
+	private static final String INFIX_SEPARATOR_REG = "\\|";
+	private static final String PRODUCTION_SEPARATOR = ";";
 
 	@Test
 	public void testGrammarBuildings() {
@@ -49,7 +76,7 @@ public class TestGrammar {
 			
 			for (Character nonTerminal : productions.keySet()) {
 				for (String sentential : productions.get(nonTerminal)) {
-					String production = nonTerminal + "->" + sentential;
+					String production = nonTerminal + MEMBER_SEPARATOR + sentential;
 					assertTrue("Grammar built with " + modality + " doesn't contain the production: " + production, grammar.getProductionsForNonTerminalSymbol(nonTerminal).contains(sentential));
 				}			
 			}
@@ -97,8 +124,8 @@ public class TestGrammar {
 		
 		for (Character nonTerminal : productions.keySet()) {
 			for (String sentential : productions.get(nonTerminal)) {
-				String production = nonTerminal + "->" + sentential;
-				builder.hasProduction(production, "->");
+				String production = nonTerminal + MEMBER_SEPARATOR + sentential;
+				builder.hasProduction(production, MEMBER_SEPARATOR);
 			}			
 		}
 		
@@ -112,12 +139,12 @@ public class TestGrammar {
 		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
 		
 		for (Character nonTerminal : productions.keySet()) {
-			String production = nonTerminal + "->";
+			String production = nonTerminal + MEMBER_SEPARATOR;
 			for (String sentential : productions.get(nonTerminal)) {
-				production += sentential + "|";
+				production += sentential + INFIX_SEPARATOR;
 			}			
 			production = production.substring(0, production.length() - 1);
-			builder.hasProductions(production, "->", "\\|");
+			builder.hasProductions(production, MEMBER_SEPARATOR, INFIX_SEPARATOR_REG);
 		}
 		
 		Grammar grammar = builder.create();
@@ -131,15 +158,15 @@ public class TestGrammar {
 		
 		String production = "";
 		for (Character nonTerminal : productions.keySet()) {
-			production += nonTerminal + "->";
+			production += nonTerminal + MEMBER_SEPARATOR;
 			for (String sentential : productions.get(nonTerminal)) {
-				production += sentential + "|";
+				production += sentential + INFIX_SEPARATOR;
 			}			
 			production = production.substring(0, production.length() - 1);
-			production += ";";
+			production += PRODUCTION_SEPARATOR;
 		}
 		production = production.substring(0, production.length() -1);
-		builder.hasProductions(production, "->", "\\|", ";");
+		builder.hasProductions(production, MEMBER_SEPARATOR, INFIX_SEPARATOR_REG, PRODUCTION_SEPARATOR);
 		
 		Grammar grammar = builder.create();
 		
