@@ -21,27 +21,23 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.parser;
+package com.gmarciani.gmparser.controllers.grammar;
 
-public enum ParserType {
+import com.gmarciani.gmparser.controllers.ui.Listener;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.ParserType;
+
+public class Parser {
 	
-	CYK("Cock-Young-Kasami", "CYK"),
-	LL1("LL1", "LL1");	
+	private static Listener output;
 	
-	private String name;
-	private String shortName;
-	
-	private ParserType(String name, String shortName) {
-		this.name = name;
-		this.shortName = shortName;
+	public static void setOutput(Listener listener) {
+		output = listener;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getShortName() {
-		return shortName;
-	}
+	public static boolean parse(Grammar grammar, String string, ParserType parser) {
+		output.onDebug("ParserController.parseGrammar()");
+		return false;
+	}	
 
 }
