@@ -21,23 +21,18 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.controllers.ui;
 
-import org.apache.commons.cli.ParseException;
-
-import com.gmarciani.gmparser.controllers.AppController;
-
-public class App {
-
-	public static void main(String[] args) {	
-		AppController app = AppController.getInstance();
-		app.printWelcome();
-		try {
-			app.play(args);
-		} catch (ParseException exc) {
-			app.getOutput().onWarning(exc.getMessage());
-			app.quit();
-		}	
-	}	
+public interface Listener {
+	
+	public void onLogon(String logonMessage);
+	
+	public void onWarning(String warningMessage);
+	
+	public void onException(String exceptionMessage);
+	
+	public void onDebug(String debugMessage);
+	
+	public void onUnrecognizedArguments(String[] arguments);
 
 }
