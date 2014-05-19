@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers;
+package com.gmarciani.gmparser.controllers.io;
 
 import java.io.IOException;
 import java.io.InputStream;
