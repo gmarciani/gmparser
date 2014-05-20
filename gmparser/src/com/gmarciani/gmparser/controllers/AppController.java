@@ -207,7 +207,7 @@ public class AppController {
 
 	@SuppressWarnings("static-access")
 	private void parse(String strGrammar, String string, ParserType parser) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar, "->", "\\|", ";")
+		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
 										.withAxiom('S')
 										.withEmpty("e")
 										.create();
@@ -220,7 +220,7 @@ public class AppController {
 	
 	@SuppressWarnings("static-access")
 	private void transform(String strGrammar, GrammarForm grammarForm) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar, "->", "\\|", ";")
+		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
 										.withAxiom('S')
 										.withEmpty("e")
 										.create();
@@ -233,7 +233,7 @@ public class AppController {
 	
 	@SuppressWarnings("static-access")
 	private void check(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar, "->", "\\|", ";")
+		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
 										.withAxiom('S')
 										.withEmpty("e")
 										.create();

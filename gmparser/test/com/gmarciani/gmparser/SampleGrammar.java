@@ -23,6 +23,7 @@
 
 package com.gmarciani.gmparser;
 
+
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
@@ -30,30 +31,31 @@ public class SampleGrammar {
 
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
-		Grammar grammarOne = GrammarBuilder.hasProduction('S', "Aa")
-										.hasProduction("A->AbB", "->")
-										.hasProductions("B->C|Bba|b", "->", "\\|")
-										.hasProductions("C->Cc|Dc|c;D->d", "->", "\\|", ";")
+		
+		Grammar grammarOne = GrammarBuilder.hasProduction("S", "Aa")
+										.hasProductionAsString("A->AbB", "->")
+										.hasProductionsAsString("B->C|Bba|b", "->", "|")
+										.hasProductionsAsString("C->Cc|Dc|c;D->d", "->", "|", ";")
 										.withAxiom('S')
 										.withEmpty("e")
 										.create();
 		
 		System.out.println(grammarOne);
 
-		Grammar grammarTwo = GrammarBuilder.hasProduction('S', "Aa")
-										.hasProduction('S', "Aa")
-										.hasProduction('A', "a")
+		Grammar grammarTwo = GrammarBuilder.hasProduction("S", "Aa")
+										.hasProduction("S", "Aa")
+										.hasProduction("A", "a")
 										.withAxiom('S')
-										.withEmpty("e")
+										.withEmpty(Grammar.EMPTY_STRING)
 										.create();
 
 		System.out.println(grammarTwo);
 		
-		String strGrammarThree = "S->Aa;S->Aa;S->Ba;A->a;B->b";
+		String strGrammarThree = "S->Aa;S->Aa|Ba;A->a;B->Cb;C->c|" + Grammar.EMPTY_STRING;
 		
-		Grammar grammarThree = GrammarBuilder.hasProductions(strGrammarThree, "->", "\\|", ";")
+		Grammar grammarThree = GrammarBuilder.hasProductionsAsString(strGrammarThree, "->", "|", ";")
 											.withAxiom('S')
-											.withEmpty("e")
+											.withEmpty(Grammar.EMPTY_STRING)
 											.create();
 		
 		System.out.println(grammarThree);

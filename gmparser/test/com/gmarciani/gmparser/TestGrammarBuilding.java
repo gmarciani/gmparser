@@ -26,6 +26,7 @@ package com.gmarciani.gmparser;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
@@ -35,18 +36,20 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.Production;
+import com.gmarciani.gmparser.models.grammar.Productions;
 
 public class TestGrammarBuilding {
 	
-	private static final int NON_TERMINALS = 10;
-	private static final int TERMINALS = 10;
-	private static final int PRODUCTIONS = 10;
+	private static final int NON_TERMINALS = 5;
+	private static final int TERMINALS = 5;
+	private static final int PRODUCTIONS = 5;
 	private static final int PRODUCTION_LENGHT = 3;
-	private static final int EMPTY_LENGHT = 1;
+	
+	private static final String EMPTY_STRING = Grammar.EMPTY_STRING;
 	
 	private static final String MEMBER_SEPARATOR = "->";
 	private static final String INFIX_SEPARATOR = "|";
-	private static final String INFIX_SEPARATOR_REG = "\\|";
 	private static final String PRODUCTION_SEPARATOR = ";";
 
 	@Test
@@ -57,27 +60,26 @@ public class TestGrammarBuilding {
 		Set<Character> terminals = getRandomTerminals(TERMINALS);	
 		
 		Character axiom = getRandomCharacter(nonTerminals);
-		String empty = getRandomString(terminals, EMPTY_LENGHT);
+		String empty = EMPTY_STRING;
 		
-		Map<Character, Set<String>> productions = getRandomProductions(nonTerminals, terminals, PRODUCTIONS, PRODUCTION_LENGHT);	
+		Productions productions = getRandomProductions(nonTerminals, terminals, PRODUCTIONS, PRODUCTION_LENGHT);	
 		
-		Grammar grammarOne = buildGrammarSingleProduction(productions, axiom, empty);
-		grammars.put("Single Production", grammarOne);
-		Grammar grammarTwo = buildGrammarSingleProductionString(productions, axiom, empty);
-		grammars.put("Single Production String", grammarTwo);
-		Grammar grammarThree = buildGrammarProductionsSameNonTerminalString(productions, axiom, empty);
-		grammars.put("Productions String for single non terminal", grammarThree);
-		Grammar grammarFour = buildGrammarProductionsDifferentNonTerminalsString(productions, axiom, empty);
-		grammars.put("Productions String for different non terminals", grammarFour);
+		Grammar grammarProduction = buildGrammarProductionAsProduction(productions, axiom, empty);
+		grammars.put("Production (as Production)", grammarProduction);
+		Grammar grammarLeftRightString = buildGrammarProductionAsLeftRightString(productions, axiom, empty);
+		grammars.put("Production (as String)", grammarLeftRightString);
+		Grammar grammarString = buildGrammarProductionsAsString(productions, axiom, empty);
+		grammars.put("Productions (as String)", grammarString);
 		
 		for (Map.Entry<String, Grammar> entry : grammars.entrySet()) {
 			String modality = entry.getKey();
 			Grammar grammar = entry.getValue();
 			
-			for (Character nonTerminal : productions.keySet()) {
-				for (String sentential : productions.get(nonTerminal)) {
-					String production = nonTerminal + MEMBER_SEPARATOR + sentential;
-					assertTrue("Grammar built with " + modality + " doesn't contain the production: " + production, grammar.getProductionsForNonTerminalSymbol(nonTerminal).contains(sentential));
+			for (String left : productions.getNonTerminals()) {
+				for (String right : productions.getSententialsFor(left)) {
+					String production = left + MEMBER_SEPARATOR + right;
+					assertTrue("Grammar built with " + modality + " doesn't contain the production: " + production, 
+							grammar.getProductions().getSententialsFor(left).contains(right));
 				}			
 			}
 		}		
@@ -100,96 +102,75 @@ public class TestGrammarBuilding {
 			System.out.println("\n");
 		}
 	}	
-	
-	@SuppressWarnings("static-access")
-	private Grammar buildGrammarSingleProduction(Map<Character, Set<String>> productions, Character axiom, String empty) {
-		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
-		
-		for (Map.Entry<Character, Set<String>> production : productions.entrySet()) {
-			Character nonTerminal = production.getKey();
-			
-			for (String sentential : production.getValue()) {
-				builder.hasProduction(nonTerminal, sentential);
-			}
-		}
-		
-		Grammar grammar = builder.create();
-		
-		return grammar;
-	}
-	
-	@SuppressWarnings("static-access")
-	private Grammar buildGrammarSingleProductionString(Map<Character, Set<String>> productions, Character axiom, String empty) {
-		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
-		
-		for (Character nonTerminal : productions.keySet()) {
-			for (String sentential : productions.get(nonTerminal)) {
-				String production = nonTerminal + MEMBER_SEPARATOR + sentential;
-				builder.hasProduction(production, MEMBER_SEPARATOR);
-			}			
-		}
-		
-		Grammar grammar = builder.create();
-		
-		return grammar;
-	}
-	
-	@SuppressWarnings("static-access")
-	private Grammar buildGrammarProductionsSameNonTerminalString(Map<Character, Set<String>> productions, Character axiom, String empty) {
-		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
-		
-		for (Character nonTerminal : productions.keySet()) {
-			String production = nonTerminal + MEMBER_SEPARATOR;
-			for (String sentential : productions.get(nonTerminal)) {
-				production += sentential + INFIX_SEPARATOR;
-			}			
-			production = production.substring(0, production.length() - 1);
-			builder.hasProductions(production, MEMBER_SEPARATOR, INFIX_SEPARATOR_REG);
-		}
-		
-		Grammar grammar = builder.create();
-		
-		return grammar;
-	}
-	
-	@SuppressWarnings("static-access")
-	private Grammar buildGrammarProductionsDifferentNonTerminalsString(Map<Character, Set<String>> productions, Character axiom, String empty) {
-		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
-		
-		String production = "";
-		for (Character nonTerminal : productions.keySet()) {
-			production += nonTerminal + MEMBER_SEPARATOR;
-			for (String sentential : productions.get(nonTerminal)) {
-				production += sentential + INFIX_SEPARATOR;
-			}			
-			production = production.substring(0, production.length() - 1);
-			production += PRODUCTION_SEPARATOR;
-		}
-		production = production.substring(0, production.length() -1);
-		builder.hasProductions(production, MEMBER_SEPARATOR, INFIX_SEPARATOR_REG, PRODUCTION_SEPARATOR);
-		
-		Grammar grammar = builder.create();
-		
-		return grammar;
-	}
 
-	private Map<Character, Set<String>> getRandomProductions(Set<Character> nonTerminals, Set<Character> terminals, int n, int lenght) {
-		Map<Character, Set<String>> productions = new HashMap<Character, Set<String>>();
+	@SuppressWarnings("static-access")
+	private Grammar buildGrammarProductionAsProduction(Productions productions, Character axiom, String empty) {
+		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
+		
+		for (Production production : productions) {
+			builder.hasProduction(production);
+		}
+		
+		Grammar grammar = builder.create();
+		
+		return grammar;
+	}
+	
+	@SuppressWarnings("static-access")
+	private Grammar buildGrammarProductionAsLeftRightString(Productions productions, Character axiom, String empty) {
+		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
+		
+		for (Production production : productions) {
+			String left = production.getLeft();
+			String right = production.getRight();
+			
+			builder.hasProduction(left, right);
+		}
+		
+		Grammar grammar = builder.create();
+		
+		return grammar;
+	}
+	
+	@SuppressWarnings("static-access")
+	private Grammar buildGrammarProductionsAsString(Productions productions, Character axiom, String empty) {
+		GrammarBuilder builder = GrammarBuilder.withAxiom(axiom).withEmpty(empty);
+		
+		String string = "";
+		
+		Iterator<String> iLefts = productions.getNonTerminals().iterator();
+		while (iLefts.hasNext()) {
+			String left = iLefts.next();
+			string += left + MEMBER_SEPARATOR;
+			Iterator<String> iRights = productions.getSententialsFor(left).iterator();
+			while (iRights.hasNext()) {
+				String right = iRights.next();
+				string += right;
+				if (iRights.hasNext())
+					string += INFIX_SEPARATOR;
+			}
+			if (iLefts.hasNext())
+				string += PRODUCTION_SEPARATOR;
+		}
+		
+		Grammar grammar = builder.hasProductionsAsString(string, MEMBER_SEPARATOR, INFIX_SEPARATOR, PRODUCTION_SEPARATOR)
+				.create();
+		
+		return grammar;
+	}	
+
+	private Productions getRandomProductions(Set<Character> nonTerminals, Set<Character> terminals, int n, int lenght) {
+		Productions productions = new Productions();
 		
 		Set<Character> alphabet = new LinkedHashSet<Character>();
 		alphabet.addAll(nonTerminals);
 		alphabet.addAll(terminals);
 		
 		for (int i = 1; i <= n; i++) {
-			Character nonTerminal = getRandomCharacter(nonTerminals);
+			String left = getRandomString(nonTerminals, 1);			
+			String right = getRandomString(alphabet, lenght);
 			
-			if (!productions.containsKey(nonTerminal)) {
-				productions.put(nonTerminal, new LinkedHashSet<String>());
-			}
-			
-			String sentential = getRandomString(alphabet, lenght);
-			
-			productions.get(nonTerminal).add(sentential);
+			productions.add(left, right);
 		}
 		
 		return productions;

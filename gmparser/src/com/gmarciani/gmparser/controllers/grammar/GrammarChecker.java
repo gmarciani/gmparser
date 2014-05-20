@@ -65,24 +65,19 @@ public class GrammarChecker {
 	
 	public static boolean checkGrammar(Grammar grammar, String productionRegExp) {
 		output.onDebug("GrammarChecker.check()");
-		for (Character nonTerminal : grammar.getProductions().keySet()) {
-			Set<String> sententials = grammar.getProductionsForNonTerminalSymbol(nonTerminal);
-			for (String sentential : sententials) {
-				if (!checkProduction(grammar, nonTerminal, sentential, productionRegExp))
-					return false;
-			}
-		}
 		
 		return true;
 	}
 	
-	private static boolean checkProduction(Grammar grammar, Character nonTerminal, String sentential, String productionRegExp) {
+	public static boolean checkProduction(Grammar grammar, Character nonTerminal, String sentential, String productionRegExp) {
+		output.onDebug("GrammarChecker.checkProduction()");
 		Set<String> prods = parseProductionRegExp(productionRegExp);
 
-		return false;
+		return true;
 	}
 	
-	private static Set<String> parseProductionRegExp(String productionRegExp) {
+	public static Set<String> parseProductionRegExp(String productionRegExp) {
+		output.onDebug("GrammarChecker.parseProductionRegExp()");
 		Set<String> setProds = new LinkedHashSet<String>();
 		
 		String prodsDiff[] = productionRegExp.split(";");

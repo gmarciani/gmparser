@@ -25,6 +25,10 @@ package com.gmarciani.gmparser;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarChecker;
@@ -35,27 +39,41 @@ public class TestGrammarCheck {
 	
 	private static final String GRAMMAR_GREIBACH = "";
 	private static final String GRAMMAR_CHOMSKY = "";
+	
+	@Test
+	public void testParseGrammaFormPattern(String pattern) {
+		Map<String, Set<String>> productionsPattern = new HashMap<String, Set<String>>();
+		
+		System.out.println("#INPUT");
+		System.out.println("Pattern: " + pattern);
+		System.out.println("\n");
+		
+		System.out.println("#OUTPUT");
+		
+	}
 
 	@SuppressWarnings("static-access")
 	@Test
 	public void testGreibachNormalForm() {
-		Grammar grammarGreibach = GrammarBuilder.hasProductions(GRAMMAR_GREIBACH, "->", "\\|", ";")
+		Grammar grammarGreibach = GrammarBuilder.hasProductionsAsString(GRAMMAR_GREIBACH, "->", "|", ";")
 												.withAxiom('S')
 												.withEmpty("e")
 												.create();
 		
-		assertTrue("Grammar in Greibach Normal Form has not been recognized: " + grammarGreibach, (GrammarChecker.checkGreibach(grammarGreibach)));
+		assertTrue("Grammar in Greibach Normal Form has not been recognized: " + grammarGreibach, 
+				(GrammarChecker.checkGreibach(grammarGreibach)));
 	}
 	
 	@SuppressWarnings("static-access")
 	@Test
 	public void testChomskyNormalForm() {
-		Grammar grammarChomsky = GrammarBuilder.hasProductions(GRAMMAR_CHOMSKY, "->", "\\|", ";")
+		Grammar grammarChomsky = GrammarBuilder.hasProductionsAsString(GRAMMAR_CHOMSKY, "->", "|", ";")
 												.withAxiom('S')
 												.withEmpty("e")
 												.create();
 		
-		assertTrue("Grammar in Chomsky Normal Form has not been recognized: " + grammarChomsky, (GrammarChecker.checkGreibach(grammarChomsky)));
+		assertTrue("Grammar in Chomsky Normal Form has not been recognized: " + grammarChomsky, 
+				(GrammarChecker.checkGreibach(grammarChomsky)));
 	}
 
 }

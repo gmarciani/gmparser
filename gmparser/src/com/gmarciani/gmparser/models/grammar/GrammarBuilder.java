@@ -23,70 +23,70 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 public class GrammarBuilder {
 	
 	private static GrammarBuilder instance = new GrammarBuilder();
 	
-	private static Map<Character, Set<String>> productions;	
+	private static Productions productions;	
 	private static Character axiom;
 	private static String empty;
 	
 	private GrammarBuilder() {
-		axiom = Grammar.DEFAULT_AXIOM;
-		empty = Grammar.DEFAULT_EMPTY_STRING;
-		productions = new HashMap<Character, Set<String>>();
+		axiom = Grammar.AXIOM;
+		empty = Grammar.EMPTY_STRING;
+		productions = new Productions();
 	}
 	
 	private static void reset() {
-		axiom = Grammar.DEFAULT_AXIOM;
-		empty = Grammar.DEFAULT_EMPTY_STRING;
+		axiom = Grammar.AXIOM;
+		empty = Grammar.EMPTY_STRING;
 		productions.clear();
 	}
 	
-	public static GrammarBuilder hasProduction(Character nonTerminalSymbol, String sentential) {
-		Set<String> sententials = productions.get(nonTerminalSymbol);
-		if (sententials == null) {
-			productions.put(nonTerminalSymbol, new LinkedHashSet<String>());
-		}
+	public static GrammarBuilder hasProduction(Production production) {
+		productions.add(production);
 		
-		productions.get(nonTerminalSymbol).add(sentential);
 		return instance;
 	}
 	
+	public static GrammarBuilder hasProduction(String left, String right) {
+		Production production = new Production(left, right);
+		productions.add(production);
+
+		return instance;
+	}	
+	
 	//A->Aa
-	public static GrammarBuilder hasProduction(String production, String memberSeparator) {
-		String productionAsArray[] = production.split(memberSeparator);
-		Character nonTerminalSymbol = productionAsArray[0].charAt(0);
-		String sentential = productionAsArray[1];
-		hasProduction(nonTerminalSymbol, sentential);
+	public static GrammarBuilder hasProductionAsString(String productions, String memberSeparator) {
+		String productionAsArray[] = productions.split(Pattern.quote(memberSeparator));
+		String left = productionAsArray[0];
+		String right = productionAsArray[1];
+		hasProduction(left, right);
 		
 		return instance;
 	}
 	
 	//A->Aa|Ba
-	public static GrammarBuilder hasProductions(String productions, String memberSeparator, String infixSeparator) {
-		String productionsAsArray[] = productions.split(memberSeparator);		
-		Character nonTerminalSymbol = productionsAsArray[0].charAt(0);
-		String sententials[] = productionsAsArray[1].split(infixSeparator);
+	public static GrammarBuilder hasProductionsAsString(String productions, String memberSeparator, String infixSeparator) {
+		String productionsAsArray[] = productions.split(Pattern.quote(memberSeparator));		
+		String left = productionsAsArray[0];
+		String rights[] = productionsAsArray[1].split(Pattern.quote(infixSeparator));
 		
-		for (String sentential : sententials) {
-			hasProduction(nonTerminalSymbol + memberSeparator + sentential, memberSeparator);
+		for (String right : rights) {
+			hasProductionAsString(left + memberSeparator + right, memberSeparator);
 		}		
 		
 		return instance;
 	}
 	
 	//A->Aa|Ba;B->Bb|b
-	public static GrammarBuilder hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator) {
-		String productionsDiff[] = productions.split(productionSeparator);
+	public static GrammarBuilder hasProductionsAsString(String productions, String memberSeparator, String infixSeparator, String productionSeparator) {
+		String productionsAsArray[] = productions.split(Pattern.quote(productionSeparator));
 		
-		for (String productionsSame : productionsDiff) {
-			hasProductions(productionsSame, memberSeparator, infixSeparator);
+		for (String productionsSameNonTerminal : productionsAsArray) {
+			hasProductionsAsString(productionsSameNonTerminal, memberSeparator, infixSeparator);
 		}
 		
 		return instance;
@@ -94,41 +94,21 @@ public class GrammarBuilder {
 	
 	public static GrammarBuilder withAxiom(Character symbol) {
 		axiom = symbol;
+		
 		return instance;
 	}
 	
 	public static GrammarBuilder withEmpty(String emptyString) {
 		empty = emptyString;
+		
 		return instance;
 	}
 	
 	public static Grammar create() {
-		Grammar grammar = new Grammar();
-		grammar.setAxiom(axiom);
-		grammar.setEmpty(empty);
+		Grammar grammar = new Grammar(axiom, empty);
 		
-		for (Map.Entry<Character, Set<String>> production : productions.entrySet()) {
-			Character nonTerminalSymbol = production.getKey();
-			grammar.addNonTerminalSymbol(nonTerminalSymbol);
-			
-			if (!grammar.getProductions().containsKey(nonTerminalSymbol)) {
-				grammar.getProductions().put(nonTerminalSymbol, new LinkedHashSet<String>());
-			}
-			
-			for (String sentential : productions.get(nonTerminalSymbol)) {
-				char[] symbols = sentential.toCharArray();
-				for (char symbol : symbols) {
-					if (Character.isUpperCase(symbol)) {
-						grammar.addNonTerminalSymbol(symbol);
-						if (!grammar.getProductions().containsKey(symbol)) {
-							grammar.getProductions().put(symbol, new LinkedHashSet<String>());
-						}
-					} else {
-						grammar.addTerminalSymbol(symbol);
-					}
-				}
-				grammar.addProduction(nonTerminalSymbol, sentential);
-			}
+		for (Production production : productions) {
+			grammar.addProduction(production);
 		}
 		
 		reset();
