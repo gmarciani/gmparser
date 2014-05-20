@@ -23,12 +23,13 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
+import com.gmarciani.gmparser.models.grammar.Production;
+import com.gmarciani.gmparser.models.grammar.ProductionPattern;
+import com.gmarciani.gmparser.models.grammar.ProductionPatternBuilder;
 
 public class GrammarChecker {
 	
@@ -42,7 +43,6 @@ public class GrammarChecker {
 	}
 	
 	public static GrammarForm check(Grammar grammar) {
-		output.onDebug("GrammarChecker.check()");
 		
 		if (checkChomsky(grammar)) 
 			return GrammarForm.CHOMSKY_NORMAL_FORM;
@@ -53,46 +53,42 @@ public class GrammarChecker {
 		return GrammarForm.UNKNOWN;
 	}	
 	
+	@SuppressWarnings("static-access")
 	public static boolean checkChomsky(Grammar grammar) {
-		output.onDebug("GrammarChecker.checkChomsky()");
-		return checkGrammar(grammar, PATTERN_CHOMSKY_NORMAL_FORM);
+		ProductionPattern pattern = ProductionPatternBuilder
+				.hasPatternAsString(PATTERN_CHOMSKY_NORMAL_FORM, "->", "|")
+				.withItem('A', grammar.getNonTerminals())
+				.withItem('B', grammar.getNonTerminals())
+				.withItem('C', grammar.getNonTerminals())
+				.withItem('a', grammar.getTerminals())
+				.create();
+		
+		return checkGrammar(grammar, pattern);
 	}
 	
-	public static boolean checkGreibach(Grammar grammar) {		
-		output.onDebug("GrammarChecker.checkGreibach()");
-		return checkGrammar(grammar, PATTERN_GREIBACH_NORMAL_FORM);
+	@SuppressWarnings("static-access")
+	public static boolean checkGreibach(Grammar grammar) {	
+		ProductionPattern pattern = ProductionPatternBuilder
+				.hasPatternAsString(PATTERN_GREIBACH_NORMAL_FORM, "->", "|")
+				.withItem('A', grammar.getNonTerminals())
+				.withItem('B', grammar.getNonTerminals())
+				.withItem('a', grammar.getTerminals())
+				.create();
+		
+		return checkGrammar(grammar, pattern);
 	}	
 	
-	public static boolean checkGrammar(Grammar grammar, String productionRegExp) {
-		output.onDebug("GrammarChecker.check()");
-		
-		return true;
-	}
-	
-	public static boolean checkProduction(Grammar grammar, Character nonTerminal, String sentential, String productionRegExp) {
-		output.onDebug("GrammarChecker.checkProduction()");
-		Set<String> prods = parseProductionRegExp(productionRegExp);
-
-		return true;
-	}
-	
-	public static Set<String> parseProductionRegExp(String productionRegExp) {
-		output.onDebug("GrammarChecker.parseProductionRegExp()");
-		Set<String> setProds = new LinkedHashSet<String>();
-		
-		String prodsDiff[] = productionRegExp.split(";");
-		for (String prodsSame : prodsDiff) {
-			String prodsSameSplit[] = prodsSame.split("->");
-			Character nT = prodsSameSplit[0].toCharArray()[0];
-			String prods[] = prodsSameSplit[1].split("\\|");
-			for (String prod : prods) {
-				setProds.add(nT + "->" + prod);
-			}			
+	public static boolean checkGrammar(Grammar grammar, ProductionPattern pattern) {
+		for (Production production : grammar.getProductions()) {
+			if (!checkProduction(production, pattern))
+				return false;
 		}
 		
-		return setProds;
+		return true;
 	}
-
 	
+	private static boolean checkProduction(Production production, ProductionPattern pattern) {	
+		return (pattern.match(production));
+	}	
 
 }

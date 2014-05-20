@@ -11,7 +11,7 @@ public class Production implements Comparable<Production> {
 	public static final String MEMBER_SEPARATOR = "->";
 
 	public Production() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public Production(String left, String right) {
@@ -46,6 +46,39 @@ public class Production implements Comparable<Production> {
 		return target;
 	}
 	
+	public Set<Character> getLeftSymbols() {
+		Set<Character> target = new LinkedHashSet<Character>();
+		
+		for (Character symbol : this.left.toCharArray()) {
+			target.add(symbol);
+		}
+		
+		return target;
+	}
+	
+	public Set<Character> getRightSymbols() {
+		Set<Character> target = new LinkedHashSet<Character>();
+		
+		for (Character symbol : this.right.toCharArray()) {
+			target.add(symbol);
+		}
+		
+		return target;
+	}
+	
+	public boolean isWithin(Set<Character> symbols) {
+		return (this.isLeftWithin(symbols)
+				&& this.isRightWithin(symbols));
+	}
+	
+	public boolean isLeftWithin(Set<Character> symbols) {
+		return (symbols.containsAll(this.getLeftSymbols()));
+	}
+	
+	public boolean isRightWithin(Set<Character> symbols) {
+		return (symbols.containsAll(this.getRightSymbols()));
+	}
+	
 	@Override
 	public String toString() {
 		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
@@ -78,6 +111,6 @@ public class Production implements Comparable<Production> {
 		result = prime * result + ((this.left == null) ? 0 : this.left.hashCode());
 		result = prime * result + ((this.right == null) ? 0 : this.right.hashCode());
 		return result;
-	}	
+	}		
 
 }

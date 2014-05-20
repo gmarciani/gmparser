@@ -69,13 +69,25 @@ public class Grammar {
 	public Set<Character> getTerminals() {
 		return this.terminals;
 	}
+	
+	public void setTerminals(Set<Character> terminals) {
+		this.terminals = terminals;
+	}
 
 	public Set<Character> getNonTerminals() {
 		return this.nonTerminals;
 	}
 	
+	public void setNonTerminals(Set<Character> nonTerminals) {
+		this.nonTerminals = nonTerminals;
+	}
+	
 	public Productions getProductions() {
 		return this.productions;
+	}
+	
+	public void setProductions(Productions productions) {
+		this.productions = productions;
 	}
 
 	public Character getAxiom() {

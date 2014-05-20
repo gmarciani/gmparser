@@ -22,6 +22,26 @@ public class Productions extends LinkedHashSet<Production> {
 		return this.add(production);
 	}
 	
+	public void restrictTo(Set<Production> restricted) {
+		Iterator<Production> iter = this.iterator();
+		while (iter.hasNext()) {
+			Production production = iter.next();
+			if (!restricted.contains(production))
+				iter.remove();
+		}
+	}
+	
+	public Set<Production> getProductionsWithSymbolsIn(Set<Character> symbols) {
+		Set<Production> target = new LinkedHashSet<Production>();
+		
+		for (Production production : this) {
+			if (production.isWithin(symbols))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
 	public Set<Production> getProductionsFor(String nonTerminal) {
 		Set<Production> target = new LinkedHashSet<Production>();
 		
