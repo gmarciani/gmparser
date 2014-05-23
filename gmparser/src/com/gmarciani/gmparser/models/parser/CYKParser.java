@@ -21,43 +21,20 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.models.parser;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import com.gmarciani.gmparser.controllers.grammar.GrammarChecker;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestGrammarCheck {
-	
-	private static final String GRAMMAR_GREIBACH = "";
-	private static final String GRAMMAR_CHOMSKY = "";
-		
-	@SuppressWarnings("static-access")
-	@Test
-	public void testChomskyNormalForm() {
-		Grammar grammarChomsky = GrammarBuilder.hasProductions(GRAMMAR_CHOMSKY)
-												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY_STRING)
-												.create();
-		
-		assertTrue("Unrecognized Chomsky Normal Form: " + grammarChomsky, 
-				(GrammarChecker.checkGreibach(grammarChomsky)));
+public class CYKParser implements Parser {
+
+	public CYKParser() {
+		// TODO Auto-generated constructor stub
 	}
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testGreibachNormalForm() {
-		Grammar grammarGreibach = GrammarBuilder.hasProductions(GRAMMAR_GREIBACH)
-												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY_STRING)
-												.create();
-		
-		assertTrue("Unrecognized Greibach Normal Form: " + grammarGreibach, 
-				(GrammarChecker.checkGreibach(grammarGreibach)));
-	}	
+	@Override
+	public boolean parse(Grammar grammar, String word) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

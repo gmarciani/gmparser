@@ -23,19 +23,18 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
-import com.gmarciani.gmparser.models.grammar.PatternBuilder;
-import com.gmarciani.gmparser.models.grammar.Production;
-import com.gmarciani.gmparser.models.grammar.ProductionPattern;
-import com.gmarciani.gmparser.models.grammar.ProductionPatternBuilder;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.pattern.ProductionPattern;
+import com.gmarciani.gmparser.models.grammar.pattern.ProductionPatternBuilder;
+import com.gmarciani.gmparser.models.grammar.production.Production;
+import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 public class GrammarTransformer {
 	
+	@SuppressWarnings("unused")
 	private static Listener output;	
 	
 	public static void setOutput(Listener listener) {
@@ -47,13 +46,19 @@ public class GrammarTransformer {
 	}
 	
 	@SuppressWarnings("static-access")
-	public static void removeUngenerativeSymbols(Grammar grammar) {
-		Set<Character> terminals = grammar.getTerminals();
-		Set<Character> nonTerminals = grammar.getTerminals();
+	public static void removeUngenerativeSymbols(Grammar grammar) {		
+		//Vt
+		Alphabet originaryTerminals = grammar.getTerminals();
+		//Vn
+		Alphabet originaryNonTerminals = grammar.getNonTerminals();
 		
-		Set<Character> acceptedNonTerminals = new LinkedHashSet<Character>();
-		Set<Character> acceptedAlphabet = new LinkedHashSet<Character>();
-		acceptedAlphabet.addAll(terminals);
+		//Vn'={}
+		Alphabet acceptedNonTerminals = new Alphabet();
+		
+		//(Vt U Vn')
+		Alphabet acceptedAlphabet = new Alphabet();
+		acceptedAlphabet.addAll(originaryTerminals);
+		acceptedAlphabet.addAll(acceptedNonTerminals);
 		
 		boolean loop = true;
 		while(loop) {
@@ -61,78 +66,92 @@ public class GrammarTransformer {
 			
 			acceptedAlphabet.addAll(acceptedNonTerminals);
 			
-			ProductionPattern pattern = ProductionPatternBuilder.hasPatternAsString("A->a*", "->")
-					.withItem('A', nonTerminals)
-					.withItem('a', acceptedAlphabet)
+			ProductionPattern pattern = ProductionPatternBuilder
+					.hasPattern("A->B*.")
+					.withItem('A', originaryNonTerminals)
+					.withItem('B', acceptedAlphabet)
 					.create();
 			
-			for (Production production : grammar.getProductions()) {
+			Productions productions = grammar.getProductions();
+			
+			for (Production production : productions) {
 				if (pattern.match(production)) {
-					Character acceptedNonTerminal = pattern.extract('A', production);
+					Character acceptedNonTerminal = pattern.extract('A', production).toCharArray()[0];
 					acceptedNonTerminals.add(acceptedNonTerminal);
 					loop = true;
-					break;
 				}					
 			}			
 		}		
 		
-		Set<Production> newProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedAlphabet);
-		grammar.getProductions().restrictTo(newProductions);
+		Productions acceptedProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedAlphabet);
+		grammar.getProductions().retainAll(acceptedProductions);
 	}
 	
 	@SuppressWarnings("static-access")
 	public static void removeUnreacheableSymbols(Grammar grammar) {
-		Set<Character> terminals = grammar.getTerminals();
-		Set<Character> nonTerminals = grammar.getNonTerminals();
+		//Vt
+		Alphabet originaryTerminals = grammar.getTerminals();
+		//Vn
+		Alphabet originaryNonTerminals = grammar.getNonTerminals();
 		
-		Set<Character> alphabet = new LinkedHashSet<Character>();
-		alphabet.addAll(terminals);
-		alphabet.addAll(nonTerminals);
+		//Vt'={}
+		Alphabet acceptedTerminals = new Alphabet();
+		//Vn'={S}
+		Alphabet acceptedNonTerminals = new Alphabet();	
+		acceptedNonTerminals.add(grammar.getAxiom());
 		
-		Set<Character> acceptedTerminals = new LinkedHashSet<Character>();
-		Set<Character> acceptedNonTerminals = new LinkedHashSet<Character>(grammar.getAxiom());	
+		//(Vt U Vn)
+		Alphabet originaryAlphabet = new Alphabet();
+		originaryAlphabet.addAll(originaryTerminals);
+		originaryAlphabet.addAll(originaryNonTerminals);		
 		
 		boolean loop = true;
 		while(loop) {
 			loop = false;
+			System.out.println("inside loop");
 			
-			for (Production production : grammar.getProductions()) {
-				ProductionPattern patternOne = ProductionPatternBuilder.hasPatternAsString("A->B*CD*", "->")
-						.withItem('A', acceptedNonTerminals)
-						.withItem('B', alphabet)
-						.withItem('C', nonTerminals)
-						.withItem('D', alphabet)
-						.create();
-				
-				ProductionPattern patternTwo = ProductionPatternBuilder.hasPatternAsString("A->B*CD*", "->")
-						.withItem('A', acceptedNonTerminals)
-						.withItem('B', alphabet)
-						.withItem('C', terminals)
-						.withItem('D', alphabet)
-						.create();
+			ProductionPattern patternOne = ProductionPatternBuilder
+					.hasPattern("A->B*CD*.")
+					.withItem('A', acceptedNonTerminals)
+					.withItem('B', originaryAlphabet)
+					.withItem('C', originaryNonTerminals)
+					.withItem('D', originaryAlphabet)
+					.create();
+			
+			ProductionPattern patternTwo = ProductionPatternBuilder
+					.hasPattern("A->B*CD*.")
+					.withItem('A', acceptedNonTerminals)
+					.withItem('B', originaryAlphabet)
+					.withItem('C', originaryTerminals)
+					.withItem('D', originaryAlphabet)
+					.create();
+			
+			Productions productions = grammar.getProductions();
+			
+			for (Production production : productions) {						
 				
 				if (patternOne.match(production)) {
-					Character acceptedNonTerminal = patternOne.extract('C', production);
+					System.out.println(production + " match pattern " + patternOne);
+					Character acceptedNonTerminal = patternOne.extract('C', production).toCharArray()[0];
+					System.out.println("\textracted symbol: " + acceptedNonTerminal);
 					acceptedNonTerminals.add(acceptedNonTerminal);
 					loop = true;
-					break;
 				}
 				
 				if (patternTwo.match(production)) {
-					Character acceptedTerminal = patternTwo.extract('C', production);
+					Character acceptedTerminal = patternTwo.extract('C', production).toCharArray()[0];
 					acceptedTerminals.add(acceptedTerminal);
 					loop = true;
-					break;
 				}
 			}
 		}		
 		
-		Set<Character> acceptedSymbols = new LinkedHashSet<Character>();
-		acceptedSymbols.addAll(acceptedTerminals);
-		acceptedSymbols.addAll(acceptedNonTerminals);
+		Alphabet acceptedAlphabet = new Alphabet();
+		acceptedAlphabet.addAll(acceptedTerminals);
+		acceptedAlphabet.addAll(acceptedNonTerminals);
 		
-		Set<Production> newProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedSymbols);
-		grammar.getProductions().restrictTo(newProductions);
+		Productions acceptedProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedAlphabet);
+		grammar.getProductions().retainAll(acceptedProductions);
 	}
 	
 	public static void removeUselessSymbols(Grammar grammar) {

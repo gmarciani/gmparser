@@ -206,23 +206,23 @@ public class AppController {
 	}	
 
 	@SuppressWarnings("static-access")
-	private void parse(String strGrammar, String string, ParserType parser) {
-		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
+	private void parse(String strGrammar, String word, ParserType parser) {
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty("e")
+										.withEmpty(Grammar.EMPTY_STRING)
 										.create();
 		
 		//parsing
-		boolean accepted = Parser.parse(grammar, string, parser);
+		boolean accepted = Parser.parse(grammar, word, parser);
 		
-		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nString: " + string + "\nParser: " + parser.getName() + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
+		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nString: " + word + "\nParser: " + parser.getName() + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
 	}
 	
 	@SuppressWarnings("static-access")
 	private void transform(String strGrammar, GrammarForm grammarForm) {
-		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty("e")
+										.withEmpty(Grammar.EMPTY_STRING)
 										.create();
 		
 		//trasformation
@@ -233,9 +233,9 @@ public class AppController {
 	
 	@SuppressWarnings("static-access")
 	private void check(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductionsAsString(strGrammar, "->", "|", ";")
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty("e")
+										.withEmpty(Grammar.EMPTY_STRING)
 										.create();
 		
 		//checking

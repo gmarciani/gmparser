@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.controllers;
 
 import org.fusesource.jansi.Ansi.Color;
 
-import com.gmarciani.gmparser.models.parser.ParserType;
 
 public final class App {
 
@@ -126,12 +125,6 @@ public final class App {
 	public static final class AppSettings {
 		public static final boolean DEBUG = true;
 		public static boolean logon = false;
-	}
-	
-	public static final class AppSample {
-		public static final String GRAMMAR = "S->Aa|Bb|Cc;A->Aa|a;B->Bb|b;C->Cc|c";
-		public static final String INPUT_STRING = "aaaaabbbbbbccccc";
-		public static final ParserType PARSER = ParserType.CYK;
 	}
 	
 

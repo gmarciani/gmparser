@@ -21,46 +21,20 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
-
+package com.gmarciani.gmparser.models.parser;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class SampleGrammar {
+public class LRParser implements Parser {
 
-	@SuppressWarnings("static-access")
-	public static void main(String[] args) {
-		
-		Grammar grammarOne = GrammarBuilder.hasProduction("S", "Aa")
-										.hasProductionAsString("A->AbB", "->")
-										.hasProductionsAsString("B->C|Bba|b", "->", "|")
-										.hasProductionsAsString("C->Cc|Dc|c;D->d", "->", "|", ";")
-										.withAxiom('S')
-										.withEmpty("e")
-										.create();
-		
-		System.out.println(grammarOne);
+	public LRParser() {
+		// TODO Auto-generated constructor stub
+	}
 
-		Grammar grammarTwo = GrammarBuilder.hasProduction("S", "Aa")
-										.hasProduction("S", "Aa")
-										.hasProduction("A", "a")
-										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY_STRING)
-										.create();
-
-		System.out.println(grammarTwo);
-		
-		String strGrammarThree = "S->Aa;S->Aa|Ba;A->a;B->Cb;C->c|" + Grammar.EMPTY_STRING;
-		
-		Grammar grammarThree = GrammarBuilder.hasProductionsAsString(strGrammarThree, "->", "|", ";")
-											.withAxiom('S')
-											.withEmpty(Grammar.EMPTY_STRING)
-											.create();
-		
-		System.out.println(grammarThree);
-		
-		
+	@Override
+	public boolean parse(Grammar grammar, String word) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

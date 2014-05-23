@@ -21,120 +21,114 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.grammar;
+package com.gmarciani.gmparser.models.grammar.pattern;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.grammar.production.ProductionsBuilder;
 
+public class ProductionPatternBuilder {
+	
+	private static ProductionPatternBuilder instance = new ProductionPatternBuilder();	
+	
+	private static Productions patternProductions;
+	private static Map<Character, Alphabet> alphabetMap;	
 
-public class GrammarBuilder {
-	
-	private static GrammarBuilder instance = new GrammarBuilder();
-	
-	private static Productions grammarProductions;
-	private static Character axiom;
-	private static String empty;
-	
-	private GrammarBuilder() {
-		grammarProductions = new Productions();
-		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY_STRING;
+	public ProductionPatternBuilder() {
+		patternProductions = new Productions();
+		alphabetMap = new HashMap<Character, Alphabet>();
 	}
 	
 	private static void reset() {
-		grammarProductions.clear();
-		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY_STRING;
+		patternProductions.clear();
+		alphabetMap.clear();
 	}
 	
 	//[(S,Aa),(A,a)]
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(Productions productions) {
+	public static ProductionPatternBuilder hasPattern(Productions productions) {
 		Productions created = ProductionsBuilder
 				.hasProductions(productions)
 				.create();
-		
+			
 		for (Production prod : created)
-			grammarProductions.add(prod);
-		
+			patternProductions.add(prod);
+			
 		return instance;
 	}
-	
+		
 	//(S,Aa)
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(Production production) {
+	public static ProductionPatternBuilder hasPattern(Production production) {
 		Productions created = ProductionsBuilder
 				.hasProduction(production)
 				.create();
-		
+			
 		for (Production prod : created)
-			grammarProductions.add(prod);
-		
+			patternProductions.add(prod);
+			
 		return instance;
 	}
-	
+		
 	//(S,Aa)
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(String left, String right) {
+	public static ProductionPatternBuilder hasPattern(String left, String right) {
 		Productions created = ProductionsBuilder
 				.hasProduction(left, right)
 				.create();
-		
+			
 		for (Production prod : created)
-			grammarProductions.add(prod);
-		
+			patternProductions.add(prod);
+			
 		return instance;
 	}	
-	
+		
 	//S->Aa|a;A->a. (default separators)
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(String productions) {
+	public static ProductionPatternBuilder hasPattern(String productions) {
 		Productions created = ProductionsBuilder
 				.hasProductions(productions)
 				.create();
-		
+			
 		for (Production prod : created)
-			grammarProductions.add(prod);
-		
+			patternProductions.add(prod);
+			
 		return instance;
 	}
-	
+		
 	//S->Aa|a;A->a.
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionEnder) {
+	public static ProductionPatternBuilder hasPattern(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionEnder) {
 		Productions created = ProductionsBuilder
 				.hasProductions(productions, memberSeparator, infixSeparator, productionSeparator, productionEnder)
 				.create();
-		
+			
 		for (Production prod : created)
-			grammarProductions.add(prod);
-		
+			patternProductions.add(prod);
+			
 		return instance;
 	}	
 	
-	public static GrammarBuilder withAxiom(Character symbol) {
-		axiom = symbol;
+	public static ProductionPatternBuilder withItem(Character item, Alphabet alphabet) {
+		alphabetMap.put(item, alphabet);
 		
 		return instance;
 	}
 	
-	public static GrammarBuilder withEmpty(String emptyString) {
-		empty = emptyString;
+	public static ProductionPattern create() {
+		ProductionPattern productionPattern = new ProductionPattern(alphabetMap);
 		
-		return instance;
-	}
-	
-	public static Grammar create() {
-		Grammar grammar = new Grammar(axiom, empty);
-		
-		for (Production production : grammarProductions) {
-			grammar.addProduction(production);
+		for (Production production : patternProductions) {
+			productionPattern.add(production);
 		}
 		
 		reset();
 		
-		return grammar;
-	}
+		return productionPattern;
+	}	
 
 }

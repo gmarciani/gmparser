@@ -23,14 +23,14 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.production.Production;
+import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 public class Grammar {	
 	
-	private Set<Character> terminals;
-	private Set<Character> nonTerminals;
+	private Alphabet terminals;
+	private Alphabet nonTerminals;
 	private Productions productions;
 	private Character axiom;
 	
@@ -41,8 +41,8 @@ public class Grammar {
 	
 	public Grammar() {	
 		this.axiom = AXIOM;
-		this.terminals = new LinkedHashSet<Character>();
-		this.nonTerminals = new LinkedHashSet<Character>();
+		this.terminals = new Alphabet();
+		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
 		this.emptyString = EMPTY_STRING;
@@ -50,8 +50,8 @@ public class Grammar {
 	
 	public Grammar(char axiom) {	
 		this.axiom = axiom;
-		this.terminals = new LinkedHashSet<Character>();
-		this.nonTerminals = new LinkedHashSet<Character>();
+		this.terminals = new Alphabet();
+		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(axiom);
 		this.productions = new Productions();			
 		this.emptyString = EMPTY_STRING;
@@ -59,26 +59,26 @@ public class Grammar {
 	
 	public Grammar(char axiom, String emptyString) {	
 		this.axiom = axiom;
-		this.terminals = new LinkedHashSet<Character>();
-		this.nonTerminals = new LinkedHashSet<Character>();
+		this.terminals = new Alphabet();
+		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(axiom);
 		this.productions = new Productions();			
 		this.emptyString = emptyString;
 	}
 	
-	public Set<Character> getTerminals() {
+	public Alphabet getTerminals() {
 		return this.terminals;
 	}
 	
-	public void setTerminals(Set<Character> terminals) {
+	public void setTerminals(Alphabet terminals) {
 		this.terminals = terminals;
 	}
 
-	public Set<Character> getNonTerminals() {
+	public Alphabet getNonTerminals() {
 		return this.nonTerminals;
 	}
 	
-	public void setNonTerminals(Set<Character> nonTerminals) {
+	public void setNonTerminals(Alphabet nonTerminals) {
 		this.nonTerminals = nonTerminals;
 	}
 	
@@ -108,7 +108,7 @@ public class Grammar {
 	
 	public void addProduction(Production production) {
 		this.productions.add(production);
-		this.addSymbols(production.getSymbols());
+		this.addSymbols(production.getLeft() + production.getRight());
 	}	
 
 	public void addProduction(String left, String right) {
@@ -117,19 +117,9 @@ public class Grammar {
 		this.addSymbols(left + right);
 	}
 	
-	//incorrect!
-	private void addSymbols(Collection<Character> symbols) {
-		for (char symbol : symbols) {
-			if (Character.isUpperCase(symbol)) {
-				this.nonTerminals.add(symbol);
-			} else {
-				this.terminals.add(symbol);
-			}
-		}
-	}
-	
 	private void addSymbols(String symbols) {
-		for (char symbol : symbols.toCharArray()) {
+		String cleanSymbols = symbols.replaceAll(this.getEmptyString(), "");
+		for (char symbol : cleanSymbols.toCharArray()) {
 			if (Character.isUpperCase(symbol)) {
 				this.nonTerminals.add(symbol);
 			} else {
@@ -137,7 +127,7 @@ public class Grammar {
 			}
 		}
 	}
-	
+
 	public void addTerminal(Character symbol) {
 		this.terminals.add(symbol);
 	}
@@ -151,7 +141,7 @@ public class Grammar {
 		String s = "Grammar(" + this.getTerminals() + "," + 
 								this.getNonTerminals() + "," + 
 								this.getAxiom() + "," + 
-								this.getProductions() + ")" + EMPTY_STRING + "=" + this.getEmptyString();
+								this.getProductions() + ")";
 		return s;
 	}	
 	

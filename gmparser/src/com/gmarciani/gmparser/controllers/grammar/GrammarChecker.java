@@ -27,16 +27,17 @@ package com.gmarciani.gmparser.controllers.grammar;
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
-import com.gmarciani.gmparser.models.grammar.Production;
-import com.gmarciani.gmparser.models.grammar.ProductionPattern;
-import com.gmarciani.gmparser.models.grammar.ProductionPatternBuilder;
+import com.gmarciani.gmparser.models.grammar.pattern.ProductionPattern;
+import com.gmarciani.gmparser.models.grammar.pattern.ProductionPatternBuilder;
+import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class GrammarChecker {
 	
+	@SuppressWarnings("unused")
 	private static Listener output;	
 		
-	private static final String PATTERN_CHOMSKY_NORMAL_FORM = "A->BC|a";
-	private static final String PATTERN_GREIBACH_NORMAL_FORM = "A->aB*";
+	private static final String PATTERN_CHOMSKY_NORMAL_FORM = "A->BC|a.";
+	private static final String PATTERN_GREIBACH_NORMAL_FORM = "A->aB*.";
 	
 	public static void setOutput(Listener listener) {
 		output = listener;
@@ -56,7 +57,7 @@ public class GrammarChecker {
 	@SuppressWarnings("static-access")
 	public static boolean checkChomsky(Grammar grammar) {
 		ProductionPattern pattern = ProductionPatternBuilder
-				.hasPatternAsString(PATTERN_CHOMSKY_NORMAL_FORM, "->", "|")
+				.hasPattern(PATTERN_CHOMSKY_NORMAL_FORM)
 				.withItem('A', grammar.getNonTerminals())
 				.withItem('B', grammar.getNonTerminals())
 				.withItem('C', grammar.getNonTerminals())
@@ -69,7 +70,7 @@ public class GrammarChecker {
 	@SuppressWarnings("static-access")
 	public static boolean checkGreibach(Grammar grammar) {	
 		ProductionPattern pattern = ProductionPatternBuilder
-				.hasPatternAsString(PATTERN_GREIBACH_NORMAL_FORM, "->", "|")
+				.hasPattern(PATTERN_GREIBACH_NORMAL_FORM)
 				.withItem('A', grammar.getNonTerminals())
 				.withItem('B', grammar.getNonTerminals())
 				.withItem('a', grammar.getTerminals())

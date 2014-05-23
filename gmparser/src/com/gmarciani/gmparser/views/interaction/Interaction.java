@@ -56,7 +56,7 @@ public class Interaction {
 	
 	public String run() {
 		this.show();
-		System.out.println("input: ");
+		System.out.print("input: ");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 	    try {
