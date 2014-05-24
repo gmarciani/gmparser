@@ -27,7 +27,7 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class Production implements Comparable<Production> {
 	
-	private String left;
+	private Character left;
 	private String right;
 	
 	public static final String MEMBER_SEPARATOR = "->";
@@ -36,16 +36,16 @@ public class Production implements Comparable<Production> {
 		
 	}
 	
-	public Production(String left, String right) {
+	public Production(Character left, String right) {
 		this.left = left;
 		this.right = right;
 	}
 
-	public String getLeft() {
+	public Character getLeft() {
 		return this.left;
 	}
 
-	public void setLeft(String left) {
+	public void setLeft(Character left) {
 		this.left = left;
 	}
 
@@ -57,32 +57,54 @@ public class Production implements Comparable<Production> {
 		this.right = right;
 	}
 	
-	public Alphabet getSymbols() {
+	public Alphabet getLeftAlphabet() {
 		Alphabet target = new Alphabet();
-		String symbols = this.left + this.right;
+		target.add(this.left);
 		
-		for (Character symbol : symbols.toCharArray()) {
-			target.add(symbol);
+		return target;
+	}
+	
+	public Alphabet getRightAlphabet() {
+		Alphabet target = new Alphabet();
+		target.add(this.right);
+		
+		return target;
+	}	
+	
+	public Alphabet getLeftNonTerminals() {
+		Alphabet target = new Alphabet();
+		
+		Alphabet lhs = this.getLeftAlphabet();
+		
+		for (Character c : lhs) {
+			if (Character.isUpperCase(c)) 
+				target.add(c);
 		}
 		
 		return target;
 	}
 	
-	public Alphabet getLeftSymbols() {
+	public Alphabet getRightNonTerminals() {
 		Alphabet target = new Alphabet();
 		
-		for (Character symbol : this.left.toCharArray()) {
-			target.add(symbol);
+		Alphabet rhs = this.getRightAlphabet();
+		
+		for (Character c : rhs) {
+			if (Character.isUpperCase(c)) 
+				target.add(c);
 		}
 		
 		return target;
 	}
-	
-	public Alphabet getRightSymbols() {
+
+	public Alphabet getRightTerminals() {
 		Alphabet target = new Alphabet();
 		
-		for (Character symbol : this.right.toCharArray()) {
-			target.add(symbol);
+		Alphabet rhs = this.getRightAlphabet();
+		
+		for (Character c : rhs) {
+			if (Character.isLowerCase(c)) 
+				target.add(c);
 		}
 		
 		return target;
@@ -92,13 +114,23 @@ public class Production implements Comparable<Production> {
 		return (this.isLeftWithin(alphabet)
 				&& this.isRightWithin(alphabet));
 	}
-	
+
 	public boolean isLeftWithin(Alphabet alphabet) {
-		return (alphabet.containsAll(this.getLeftSymbols()));
+		return (alphabet.containsAll(this.getLeftAlphabet()));
 	}
 	
 	public boolean isRightWithin(Alphabet alphabet) {
-		return (alphabet.containsAll(this.getRightSymbols()));
+		return (alphabet.containsAll(this.getRightAlphabet()));
+	}
+	
+	public boolean isUnitProduction(Alphabet nonTerminals) {
+		return (this.isLeftWithin(nonTerminals)
+				&& this.isRightWithin(nonTerminals));
+	}
+	
+	public boolean isTrivialUnitProduction(Alphabet nonTerminals) {
+		return (this.isUnitProduction(nonTerminals)
+				&& this.getLeft().equals(this.getRight()));
 	}
 	
 	@Override
@@ -133,6 +165,6 @@ public class Production implements Comparable<Production> {
 		result = prime * result + ((this.left == null) ? 0 : this.left.hashCode());
 		result = prime * result + ((this.right == null) ? 0 : this.right.hashCode());
 		return result;
-	}		
+	}	
 
 }

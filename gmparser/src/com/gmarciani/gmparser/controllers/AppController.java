@@ -209,7 +209,7 @@ public class AppController {
 	private void parse(String strGrammar, String word, ParserType parser) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY_STRING)
+										.withEmpty(Grammar.EMPTY)
 										.create();
 		
 		//parsing
@@ -222,7 +222,7 @@ public class AppController {
 	private void transform(String strGrammar, GrammarForm grammarForm) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY_STRING)
+										.withEmpty(Grammar.EMPTY)
 										.create();
 		
 		//trasformation
@@ -235,7 +235,7 @@ public class AppController {
 	private void check(String strGrammar) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY_STRING)
+										.withEmpty(Grammar.EMPTY)
 										.create();
 		
 		//checking

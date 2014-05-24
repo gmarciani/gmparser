@@ -33,10 +33,35 @@ public class Alphabet extends TreeSet<Character> {
 		super();
 	}
 	
-	public void add(String symbols) {
-		for (Character symbol : symbols.toCharArray()) {
-			this.add(symbol);
-		}
+	public Alphabet(Character symbol) {
+		super();
+		this.add(symbol);
 	}
-
+	
+	public Alphabet(Alphabet alphabet) {
+		super(alphabet);
+	}
+	
+	public Alphabet(String symbols) {
+		super();
+		this.add(symbols);
+	}	
+	
+	public boolean add(Alphabet symbols) {
+		boolean added = false;
+		for (Character symbol : symbols) {
+			added = this.add(symbol) ? true : added;
+		}
+		
+		return added;
+	}
+	
+	public boolean add(String symbols) {
+		boolean added = false;
+		for (Character symbol : symbols.toCharArray()) {
+			added = this.add(symbol) ? true : added;
+		}
+		
+		return added;
+	}
 }

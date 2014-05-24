@@ -34,10 +34,10 @@ public class Grammar {
 	private Productions productions;
 	private Character axiom;
 	
-	private String emptyString;
+	private String empty;
 	
 	public static final Character AXIOM = 'S';
-	public static final String EMPTY_STRING = "\u03B5"; //on terminal Ctrl+Shift+u+03b5
+	public static final String EMPTY = "\u03B5"; //on terminal Ctrl+Shift+u+03b5
 	
 	public Grammar() {	
 		this.axiom = AXIOM;
@@ -45,7 +45,7 @@ public class Grammar {
 		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
-		this.emptyString = EMPTY_STRING;
+		this.empty = EMPTY;
 	}	
 	
 	public Grammar(char axiom) {	
@@ -54,7 +54,7 @@ public class Grammar {
 		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(axiom);
 		this.productions = new Productions();			
-		this.emptyString = EMPTY_STRING;
+		this.empty = EMPTY;
 	}
 	
 	public Grammar(char axiom, String emptyString) {	
@@ -63,7 +63,7 @@ public class Grammar {
 		this.nonTerminals = new Alphabet();
 		this.nonTerminals.add(axiom);
 		this.productions = new Productions();			
-		this.emptyString = emptyString;
+		this.empty = emptyString;
 	}
 	
 	public Alphabet getTerminals() {
@@ -98,27 +98,28 @@ public class Grammar {
 		this.axiom = axiom;
 	}
 	
-	public String getEmptyString() {
-		return this.emptyString;
+	public String getEmpty() {
+		return this.empty;
 	}
 	
-	public void setEmptyString(String emptyString) {
-		this.emptyString = emptyString;
+	public void setEmpty(String empty) {
+		this.empty = empty;
 	}
 	
-	public void addProduction(Production production) {
-		this.productions.add(production);
-		this.addSymbols(production.getLeft() + production.getRight());
+	public boolean addProduction(Production production) {
+		boolean added = this.productions.add(production);
+		if (added)
+			this.addSymbols(production.getLeft() + production.getRight());
+		return added;
 	}	
 
-	public void addProduction(String left, String right) {
+	public boolean addProduction(Character left, String right) {
 		Production production = new Production(left, right);
-		this.productions.add(production);
-		this.addSymbols(left + right);
+		return this.addProduction(production);
 	}
 	
 	private void addSymbols(String symbols) {
-		String cleanSymbols = symbols.replaceAll(this.getEmptyString(), "");
+		String cleanSymbols = symbols.replaceAll(this.getEmpty(), "");
 		for (char symbol : cleanSymbols.toCharArray()) {
 			if (Character.isUpperCase(symbol)) {
 				this.nonTerminals.add(symbol);

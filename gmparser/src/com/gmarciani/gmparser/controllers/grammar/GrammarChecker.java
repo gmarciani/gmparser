@@ -23,73 +23,81 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
-import com.gmarciani.gmparser.models.grammar.pattern.ProductionPattern;
-import com.gmarciani.gmparser.models.grammar.pattern.ProductionPatternBuilder;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class GrammarChecker {
 	
 	@SuppressWarnings("unused")
 	private static Listener output;	
-		
-	private static final String PATTERN_CHOMSKY_NORMAL_FORM = "A->BC|a.";
-	private static final String PATTERN_GREIBACH_NORMAL_FORM = "A->aB*.";
-	
+			
 	public static void setOutput(Listener listener) {
 		output = listener;
 	}
 	
 	public static GrammarForm check(Grammar grammar) {
 		
-		if (checkChomsky(grammar)) 
+		if (isChomsky(grammar)) 
 			return GrammarForm.CHOMSKY_NORMAL_FORM;
 		
-		if (checkGreibach(grammar)) 
+		if (isGreibach(grammar)) 
 			return GrammarForm.GREIBACH_NORMAL_FORM;		
 		
 		return GrammarForm.UNKNOWN;
 	}	
 	
-	@SuppressWarnings("static-access")
-	public static boolean checkChomsky(Grammar grammar) {
-		ProductionPattern pattern = ProductionPatternBuilder
-				.hasPattern(PATTERN_CHOMSKY_NORMAL_FORM)
-				.withItem('A', grammar.getNonTerminals())
-				.withItem('B', grammar.getNonTerminals())
-				.withItem('C', grammar.getNonTerminals())
-				.withItem('a', grammar.getTerminals())
-				.create();
-		
-		return checkGrammar(grammar, pattern);
-	}
-	
-	@SuppressWarnings("static-access")
-	public static boolean checkGreibach(Grammar grammar) {	
-		ProductionPattern pattern = ProductionPatternBuilder
-				.hasPattern(PATTERN_GREIBACH_NORMAL_FORM)
-				.withItem('A', grammar.getNonTerminals())
-				.withItem('B', grammar.getNonTerminals())
-				.withItem('a', grammar.getTerminals())
-				.create();
-		
-		return checkGrammar(grammar, pattern);
-	}	
-	
-	public static boolean checkGrammar(Grammar grammar, ProductionPattern pattern) {
+	public static boolean isChomsky(Grammar grammar) {
 		for (Production production : grammar.getProductions()) {
-			if (!checkProduction(production, pattern))
+			if (!isChomsky(production, grammar.getTerminals(), grammar.getNonTerminals()))
 				return false;
 		}
 		
 		return true;
 	}
 	
-	private static boolean checkProduction(Production production, ProductionPattern pattern) {	
-		return (pattern.match(production));
+	//"A->BC|a."
+	private static boolean isChomsky(Production production, Alphabet terminals, Alphabet nonTerminals) {
+		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
+				&& production.isRightWithin(nonTerminals) && production.getRightAlphabet().size() == 2)
+			return true;
+		
+		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
+				&& production.isRightWithin(terminals) && production.getRightAlphabet().size() == 1)
+			return true;
+		
+		return false;
+	}
+
+	public static boolean isGreibach(Grammar grammar) {	
+		for (Production production : grammar.getProductions()) {
+			if (!isGreibach(production, grammar.getTerminals(), grammar.getNonTerminals()))
+				return false;
+		}
+		
+		return true;
+	}
+
+	//"A->aB*."
+	private static boolean isGreibach(Production production, Alphabet terminals, Alphabet nonTerminals) {
+		String regex = "^[";
+		for (Character terminal : terminals) {
+			regex += terminal;
+		}
+		regex += "]";
+		regex += "[";
+		for (Character nonTerminal : nonTerminals) {
+			regex += nonTerminal;
+		}
+		regex += "]*$";
+		
+		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
+				&& production.getRight().matches(regex))
+			return true;
+		
+		return false;
 	}	
 
 }

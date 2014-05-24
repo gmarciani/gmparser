@@ -27,8 +27,6 @@ import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.pattern.ProductionPattern;
-import com.gmarciani.gmparser.models.grammar.pattern.ProductionPatternBuilder;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
@@ -45,19 +43,14 @@ public class GrammarTransformer {
 		return null;
 	}
 	
-	@SuppressWarnings("static-access")
-	public static void removeUngenerativeSymbols(Grammar grammar) {		
-		//Vt
-		Alphabet originaryTerminals = grammar.getTerminals();
-		//Vn
-		Alphabet originaryNonTerminals = grammar.getNonTerminals();
+	public static void removeUngenerativeSymbols(Grammar grammar) {	
 		
 		//Vn'={}
 		Alphabet acceptedNonTerminals = new Alphabet();
 		
 		//(Vt U Vn')
 		Alphabet acceptedAlphabet = new Alphabet();
-		acceptedAlphabet.addAll(originaryTerminals);
+		acceptedAlphabet.addAll(grammar.getTerminals());
 		acceptedAlphabet.addAll(acceptedNonTerminals);
 		
 		boolean loop = true;
@@ -66,28 +59,19 @@ public class GrammarTransformer {
 			
 			acceptedAlphabet.addAll(acceptedNonTerminals);
 			
-			ProductionPattern pattern = ProductionPatternBuilder
-					.hasPattern("A->B*.")
-					.withItem('A', originaryNonTerminals)
-					.withItem('B', acceptedAlphabet)
-					.create();
-			
 			Productions productions = grammar.getProductions();
 			
 			for (Production production : productions) {
-				if (pattern.match(production)) {
-					Character acceptedNonTerminal = pattern.extract('A', production).toCharArray()[0];
-					acceptedNonTerminals.add(acceptedNonTerminal);
-					loop = true;
-				}					
+				if (production.isRightWithin(acceptedAlphabet)) {
+					loop = acceptedNonTerminals.add(production.getLeft());
+				}		
 			}			
 		}		
 		
-		Productions acceptedProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedAlphabet);
+		Productions acceptedProductions = grammar.getProductions().getProductionsWithin(acceptedAlphabet);
 		grammar.getProductions().retainAll(acceptedProductions);
 	}
 	
-	@SuppressWarnings("static-access")
 	public static void removeUnreacheableSymbols(Grammar grammar) {
 		//Vt
 		Alphabet originaryTerminals = grammar.getTerminals();
@@ -108,40 +92,17 @@ public class GrammarTransformer {
 		boolean loop = true;
 		while(loop) {
 			loop = false;
-			System.out.println("inside loop");
-			
-			ProductionPattern patternOne = ProductionPatternBuilder
-					.hasPattern("A->B*CD*.")
-					.withItem('A', acceptedNonTerminals)
-					.withItem('B', originaryAlphabet)
-					.withItem('C', originaryNonTerminals)
-					.withItem('D', originaryAlphabet)
-					.create();
-			
-			ProductionPattern patternTwo = ProductionPatternBuilder
-					.hasPattern("A->B*CD*.")
-					.withItem('A', acceptedNonTerminals)
-					.withItem('B', originaryAlphabet)
-					.withItem('C', originaryTerminals)
-					.withItem('D', originaryAlphabet)
-					.create();
 			
 			Productions productions = grammar.getProductions();
 			
-			for (Production production : productions) {						
-				
-				if (patternOne.match(production)) {
-					System.out.println(production + " match pattern " + patternOne);
-					Character acceptedNonTerminal = patternOne.extract('C', production).toCharArray()[0];
-					System.out.println("\textracted symbol: " + acceptedNonTerminal);
-					acceptedNonTerminals.add(acceptedNonTerminal);
-					loop = true;
+			for (Production production : productions) {	
+				if (production.isLeftWithin(acceptedNonTerminals)
+						&& acceptedNonTerminals.containsAll(production.getRightNonTerminals())) {
+					loop = acceptedNonTerminals.add(production.getRightNonTerminals());
 				}
 				
-				if (patternTwo.match(production)) {
-					Character acceptedTerminal = patternTwo.extract('C', production).toCharArray()[0];
-					acceptedTerminals.add(acceptedTerminal);
-					loop = true;
+				if (production.isLeftWithin(acceptedNonTerminals)) {
+					acceptedTerminals.add(production.getRightTerminals());
 				}
 			}
 		}		
@@ -150,7 +111,7 @@ public class GrammarTransformer {
 		acceptedAlphabet.addAll(acceptedTerminals);
 		acceptedAlphabet.addAll(acceptedNonTerminals);
 		
-		Productions acceptedProductions = grammar.getProductions().getProductionsWithSymbolsIn(acceptedAlphabet);
+		Productions acceptedProductions = grammar.getProductions().getProductionsWithin(acceptedAlphabet);
 		grammar.getProductions().retainAll(acceptedProductions);
 	}
 	

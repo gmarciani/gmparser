@@ -45,13 +45,13 @@ public class Productions extends LinkedHashSet<Production> {
 	public Productions(Productions productions) {
 		super(productions);
 	}
-	
-	public boolean add(String left, String right) {
+		
+	public boolean add(Character left, String right) {
 		Production production = new Production(left, right);
 		return this.add(production);
 	}
 	
-	public Productions getProductionsWithSymbolsIn(Alphabet	alphabet) {
+	public Productions getProductionsWithin(Alphabet alphabet) {
 		Productions target = new Productions();
 		
 		for (Production production : this) {
@@ -62,8 +62,8 @@ public class Productions extends LinkedHashSet<Production> {
 		return target;
 	}
 	
-	public Set<Production> getProductionsFor(String nonTerminal) {
-		Set<Production> target = new LinkedHashSet<Production>();
+	public Productions getProductionsForNonTerminal(Character nonTerminal) {
+		Productions target = new Productions();
 		
 		for (Production production : this) {
 			if (production.getLeft().equals(nonTerminal))
@@ -73,7 +73,7 @@ public class Productions extends LinkedHashSet<Production> {
 		return target;
 	}
 	
-	public Set<String> getSententialsFor(String nonTerminal) {
+	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
 		Set<String> target = new LinkedHashSet<String>();
 		
 		for (Production production : this) {
@@ -84,11 +84,31 @@ public class Productions extends LinkedHashSet<Production> {
 		return target;
 	}
 	
-	public Set<String> getNonTerminals() {
-		Set<String> target = new LinkedHashSet<String>();
+	public Alphabet getLeftNonTerminals() {
+		Alphabet target = new Alphabet();
 		
 		for (Production production : this) {
-			target.add(production.getLeft());
+			target.add(production.getLeftNonTerminals());
+		}
+		
+		return target;
+	}
+	
+	public Alphabet getRightNonTerminals() {
+		Alphabet target = new Alphabet();
+		
+		for (Production production : this) {
+			target.add(production.getRightNonTerminals());
+		}
+		
+		return target;
+	}
+	
+	public Alphabet getRightTerminals() {
+		Alphabet target = new Alphabet();
+		
+		for (Production production : this) {
+			target.add(production.getRightTerminals());
 		}
 		
 		return target;
@@ -98,11 +118,11 @@ public class Productions extends LinkedHashSet<Production> {
 	public String toString() {
 		String s = "[";
 		
-		Iterator<String> nonTerminals = this.getNonTerminals().iterator();
+		Iterator<Character> nonTerminals = this.getLeftNonTerminals().iterator();
 		while(nonTerminals.hasNext()) {
-			String nonTerminal = nonTerminals.next();
+			Character nonTerminal = nonTerminals.next();
 			s += nonTerminal + Production.MEMBER_SEPARATOR;
-			Iterator<String> sententials = this.getSententialsFor(nonTerminal).iterator();
+			Iterator<String> sententials = this.getSententialsForNonTerminal(nonTerminal).iterator();
 			while(sententials.hasNext()) {
 				String sentential = sententials.next();
 				s += sentential + ((sententials.hasNext()) ? INFIX_SEPARATOR : "");

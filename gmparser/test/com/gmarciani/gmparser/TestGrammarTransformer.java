@@ -39,11 +39,11 @@ public class TestGrammarTransformer {
 	private static final String GRAMMAR_WITH_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a.";
 	private static final String GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS = "S->a.";
 	
-	private static final String GRAMMAR_WITH_USELESS_SYMBOLS = "S->XY|a;X->a;Y->YX.";
-	private static final String GRAMMAR_WITHOUT_USELESS_SYMBOLS = "S->XY.";	
+	private static final String GRAMMAR_WITH_USELESS_SYMBOLS = "S->XY|XZ|a;X->a;Y->YZ.";
+	private static final String GRAMMAR_WITHOUT_USELESS_SYMBOLS = "S->a.";	
 	
-	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A" + Grammar.EMPTY_STRING + ".";
-	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->" + Grammar.EMPTY_STRING + ".";
+	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A" + Grammar.EMPTY + ".";
+	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->" + Grammar.EMPTY + ".";
 	
 	private static final String GRAMMAR_WITH_UNIT_PRODUCTIONS = "S->AS|A;A->B|a;B->A|S|b.";
 	private static final String GRAMMAR_WITHOUT_UNIT_PRODUCTIONS = "S->AS|a|b;A->AS|a|b.";	
@@ -58,11 +58,7 @@ public class TestGrammarTransformer {
 				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
 				.create();
 		
-		System.out.println("GRAMMAR WITH UNGENERATIVE SYMBOLS: " + grammar);
-		
 		GrammarTransformer.removeUngenerativeSymbols(grammar);
-		
-		System.out.println("GRAMMAR WITHOUT UNGENERATIVE SYMBOLS: " + grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
@@ -79,11 +75,7 @@ public class TestGrammarTransformer {
 				.hasProductions(GRAMMAR_WITH_UNREACHEABLE_SYMBOLS)
 				.create();
 		
-		System.out.println("GRAMMAR WITH UNREACHEABLE SYMBOLS: " + grammar);
-		
 		GrammarTransformer.removeUnreacheableSymbols(grammar);
-		
-		System.out.println("GRAMMAR WITHOUT UNREACHEABLE SYMBOLS: " + grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS)
@@ -92,7 +84,7 @@ public class TestGrammarTransformer {
 		assertTrue("Incorrect removal of unreacheable symbols", 
 				grammar.getProductions().equals(shouldBe.getProductions()));
 	}
-	/*
+	
 	@SuppressWarnings("static-access")
 	@Test
 	public void removeUselessSymbols() {
@@ -100,11 +92,7 @@ public class TestGrammarTransformer {
 				.hasProductions(GRAMMAR_WITH_USELESS_SYMBOLS)
 				.create();
 		
-		System.out.println("GRAMMAR WITH USELESS SYMBOLS: " + grammar);
-		
 		GrammarTransformer.removeUselessSymbols(grammar);
-		
-		System.out.println("GRAMMAR WITHOUT USELESS SYMBOLS: " + grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_USELESS_SYMBOLS)
@@ -114,7 +102,7 @@ public class TestGrammarTransformer {
 				grammar.getProductions().equals(shouldBe.getProductions()));
 	}
 	
-	
+	/*
 	@SuppressWarnings("static-access")
 	@Test
 	public void testRemoveEpsilonProductions() {

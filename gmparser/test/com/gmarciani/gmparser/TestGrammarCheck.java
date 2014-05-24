@@ -41,11 +41,11 @@ public class TestGrammarCheck {
 	public void testChomskyNormalForm() {
 		Grammar grammarChomsky = GrammarBuilder.hasProductions(GRAMMAR_CHOMSKY)
 												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY_STRING)
+												.withEmpty(Grammar.EMPTY)
 												.create();
 		
 		assertTrue("Unrecognized Chomsky Normal Form: " + grammarChomsky, 
-				(GrammarChecker.checkGreibach(grammarChomsky)));
+				(GrammarChecker.isGreibach(grammarChomsky)));
 	}
 
 	@SuppressWarnings("static-access")
@@ -53,11 +53,11 @@ public class TestGrammarCheck {
 	public void testGreibachNormalForm() {
 		Grammar grammarGreibach = GrammarBuilder.hasProductions(GRAMMAR_GREIBACH)
 												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY_STRING)
+												.withEmpty(Grammar.EMPTY)
 												.create();
 		
 		assertTrue("Unrecognized Greibach Normal Form: " + grammarGreibach, 
-				(GrammarChecker.checkGreibach(grammarGreibach)));
+				(GrammarChecker.isGreibach(grammarGreibach)));
 	}	
 
 }

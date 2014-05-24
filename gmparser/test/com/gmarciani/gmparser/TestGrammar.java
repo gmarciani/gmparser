@@ -45,10 +45,10 @@ public class TestGrammar {
 	public void testGrammarBuilding() {
 		Productions productions = new Productions();
 		
-		Production prodOne = new Production("S","Aa");
-		Production prodTwo = new Production("S","a");
-		Production prodThree = new Production("A","a");
-		Production prodFour = new Production("A", Grammar.EMPTY_STRING);
+		Production prodOne = new Production('S',"Aa");
+		Production prodTwo = new Production('S',"a");
+		Production prodThree = new Production('S',"a");
+		Production prodFour = new Production('S', Grammar.EMPTY);
 		
 		productions.add(prodOne);
 		productions.add(prodTwo);
@@ -59,7 +59,7 @@ public class TestGrammar {
 		Grammar grammarOne = GrammarBuilder
 				.hasProductions(productions)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY_STRING)
+				.withEmpty(Grammar.EMPTY)
 				.create();
 		
 		Grammar grammarTwo = GrammarBuilder
@@ -68,7 +68,7 @@ public class TestGrammar {
 				.hasProduction(prodThree)
 				.hasProduction(prodFour)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY_STRING)
+				.withEmpty(Grammar.EMPTY)
 				.create();
 		
 		Grammar grammarThree = GrammarBuilder
@@ -77,13 +77,13 @@ public class TestGrammar {
 				.hasProduction(prodThree.getLeft(), prodThree.getRight())
 				.hasProduction(prodFour.getLeft(), prodFour.getRight())
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY_STRING)
+				.withEmpty(Grammar.EMPTY)
 				.create();
 		
 		Grammar grammarFour = GrammarBuilder
-				.hasProductions("S->Aa|a;A->a|" + Grammar.EMPTY_STRING + ".")
+				.hasProductions("S->Aa|a;A->a|" + Grammar.EMPTY + ".")
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY_STRING)
+				.withEmpty(Grammar.EMPTY)
 				.create();
 				
 		Map<String, Grammar> grammars = new HashMap<String, Grammar>();
@@ -108,7 +108,7 @@ public class TestGrammar {
 		Grammar grammar = GrammarBuilder
 				.hasProductions(input)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY_STRING)
+				.withEmpty(Grammar.EMPTY)
 				.create();
 		
 		System.out.println(grammar);

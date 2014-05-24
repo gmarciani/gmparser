@@ -39,13 +39,13 @@ public class GrammarBuilder {
 	private GrammarBuilder() {
 		grammarProductions = new Productions();
 		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY_STRING;
+		empty = Grammar.EMPTY;
 	}
 	
 	private static void reset() {
 		grammarProductions.clear();
 		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY_STRING;
+		empty = Grammar.EMPTY;
 	}
 	
 	//[(S,Aa),(A,a)]
@@ -76,7 +76,7 @@ public class GrammarBuilder {
 	
 	//(S,Aa)
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(String left, String right) {
+	public static GrammarBuilder hasProduction(Character left, String right) {
 		Productions created = ProductionsBuilder
 				.hasProduction(left, right)
 				.create();
