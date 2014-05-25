@@ -29,8 +29,15 @@ public class Alphabet extends TreeSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
+	private AlphabetType type = null;
+	
 	public Alphabet() {
 		super();
+	}
+	
+	public Alphabet(AlphabetType type) {
+		super();
+		this.type = type;
 	}
 	
 	public Alphabet(Character symbol) {
@@ -47,10 +54,19 @@ public class Alphabet extends TreeSet<Character> {
 		this.add(symbols);
 	}	
 	
+	public AlphabetType getType() {
+		return this.type;
+	}
+	
 	public boolean add(Alphabet symbols) {
 		boolean added = false;
 		for (Character symbol : symbols) {
-			added = this.add(symbol) ? true : added;
+			if (this.isAcceptableSymbol(symbol)) {
+				added = this.add(symbol) ? true : added;
+			} else {
+				System.out.println("Not acceptable symbol: " + symbol + " in alphabet of type " + this.type);
+			}
+				
 		}
 		
 		return added;
@@ -59,9 +75,35 @@ public class Alphabet extends TreeSet<Character> {
 	public boolean add(String symbols) {
 		boolean added = false;
 		for (Character symbol : symbols.toCharArray()) {
-			added = this.add(symbol) ? true : added;
+			if (this.isAcceptableSymbol(symbol)) {
+				added = this.add(symbol) ? true : added;
+			} else {
+				System.out.println("Not acceptable symbol: " + symbol + " in alphabet of type " + this.type);
+			}
 		}
 		
 		return added;
+	}
+	
+	private boolean isAcceptableSymbol(Character symbol) {
+		if (this.type == null)
+			return true;
+		if (this.type == AlphabetType.NON_TERMINAL
+				&& isNonTerminal(symbol))
+			return true;
+		if (this.type == AlphabetType.TERMINAL
+				&& isTerminal(symbol))
+			return true;
+		
+		return false;
+	}	
+	
+	public static boolean isTerminal(Character symbol) {
+		return (!isNonTerminal(symbol));
+	}
+	
+	public static boolean isNonTerminal(Character symbol) {
+		return (Character.isLetter(symbol)
+				&& Character.isUpperCase(symbol));
 	}
 }

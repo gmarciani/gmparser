@@ -76,9 +76,10 @@ public class Production implements Comparable<Production> {
 		
 		Alphabet lhs = this.getLeftAlphabet();
 		
-		for (Character c : lhs) {
-			if (Character.isUpperCase(c)) 
-				target.add(c);
+		for (Character symbol : lhs) {
+			if (Character.isLetter(symbol) 
+					&& Character.isUpperCase(symbol)) 
+				target.add(symbol);
 		}
 		
 		return target;
@@ -89,9 +90,10 @@ public class Production implements Comparable<Production> {
 		
 		Alphabet rhs = this.getRightAlphabet();
 		
-		for (Character c : rhs) {
-			if (Character.isUpperCase(c)) 
-				target.add(c);
+		for (Character symbol : rhs) {
+			if (Character.isLetter(symbol) 
+					&& Character.isUpperCase(symbol)) 
+				target.add(symbol);
 		}
 		
 		return target;
@@ -102,9 +104,10 @@ public class Production implements Comparable<Production> {
 		
 		Alphabet rhs = this.getRightAlphabet();
 		
-		for (Character c : rhs) {
-			if (Character.isLowerCase(c)) 
-				target.add(c);
+		for (Character symbol : rhs) {
+			if (!(Character.isLetter(symbol) 
+					&& Character.isUpperCase(symbol))) 
+				target.add(symbol);
 		}
 		
 		return target;

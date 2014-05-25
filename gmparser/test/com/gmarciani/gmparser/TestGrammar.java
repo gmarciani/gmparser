@@ -25,9 +25,6 @@ package com.gmarciani.gmparser;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,14 +39,14 @@ public class TestGrammar {
 
 	@SuppressWarnings("static-access")
 	@Test
-	public void testGrammarBuilding() {
-		Productions productions = new Productions();
+	public void testGrammarBuilding() {		
 		
 		Production prodOne = new Production('S',"Aa");
 		Production prodTwo = new Production('S',"a");
-		Production prodThree = new Production('S',"a");
-		Production prodFour = new Production('S', Grammar.EMPTY);
+		Production prodThree = new Production('A',"a");
+		Production prodFour = new Production('A', Grammar.EMPTY);
 		
+		Productions productions = new Productions();
 		productions.add(prodOne);
 		productions.add(prodTwo);
 		productions.add(prodThree);
@@ -100,6 +97,7 @@ public class TestGrammar {
 		}
 	}
 	
+	/*
 	@SuppressWarnings("static-access")
 	@Test
 	public void testGrammarInput() {
@@ -127,5 +125,6 @@ public class TestGrammar {
 	    System.out.println("\n");
 		return input;
 	}
+	*/
 
 }

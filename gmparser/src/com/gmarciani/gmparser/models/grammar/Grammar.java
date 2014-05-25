@@ -118,24 +118,24 @@ public class Grammar {
 		return this.addProduction(production);
 	}
 	
-	private void addSymbols(String symbols) {
+	private boolean addSymbols(String symbols) {
 		String cleanSymbols = symbols.replaceAll(this.getEmpty(), "");
-		for (char symbol : cleanSymbols.toCharArray()) {
-			if (Character.isUpperCase(symbol)) {
-				this.nonTerminals.add(symbol);
-			} else {
-				this.terminals.add(symbol);
-			}
+		boolean added = false;
+		for (Character symbol : cleanSymbols.toCharArray()) {
+			added = (this.addSymbol(symbol) ? true : added);
 		}
-	}
-
-	public void addTerminal(Character symbol) {
-		this.terminals.add(symbol);
+		
+		return added;
 	}
 	
-	public void addNonTerminal(Character symbol) {
-		this.nonTerminals.add(symbol);
-	}	
+	private boolean addSymbol(Character symbol) {
+		if (Alphabet.isTerminal(symbol))
+			return this.terminals.add(symbol);
+		if (Alphabet.isNonTerminal(symbol))
+			return this.nonTerminals.add(symbol);
+		
+		return false;
+	}
 
 	@Override
 	public String toString() {

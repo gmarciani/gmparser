@@ -31,33 +31,53 @@ import com.gmarciani.gmparser.controllers.grammar.GrammarChecker;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestGrammarCheck {
+public class TestGrammarForm {
 	
-	private static final String GRAMMAR_GREIBACH = "";
-	private static final String GRAMMAR_CHOMSKY = "";
+	private static final String GRAMMAR_CHOMSKY = "E->EA|TB|LC|a;A->PT;P->+;T->TB|LC|a;B->MF;M->x;F->LC|a;C->ER;L->(;R->).";
+	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
+	
+	private static final String GRAMMAR_GREIBACH = "S->aA|a;A->aA|a|bS|b.";
+	private static final String GRAMMAR_NOT_GREIBACH = "S->SA|A|a;A->aA|Aab.";
+	
 		
 	@SuppressWarnings("static-access")
 	@Test
 	public void testChomskyNormalForm() {
 		Grammar grammarChomsky = GrammarBuilder.hasProductions(GRAMMAR_CHOMSKY)
-												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY)
-												.create();
+				.withAxiom('E')
+				.withEmpty(Grammar.EMPTY)
+				.create();
 		
-		assertTrue("Unrecognized Chomsky Normal Form: " + grammarChomsky, 
-				(GrammarChecker.isGreibach(grammarChomsky)));
+		Grammar grammarNotChomsky = GrammarBuilder.hasProductions(GRAMMAR_NOT_CHOMSKY)
+				.withAxiom('E')
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
+				(GrammarChecker.isChomsky(grammarChomsky)));
+		
+		assertFalse("Uncorrect Chomsky Normal Form recognition (should not be recognized)", 
+				(GrammarChecker.isChomsky(grammarNotChomsky)));
 	}
 
 	@SuppressWarnings("static-access")
 	@Test
 	public void testGreibachNormalForm() {
 		Grammar grammarGreibach = GrammarBuilder.hasProductions(GRAMMAR_GREIBACH)
-												.withAxiom('S')
-												.withEmpty(Grammar.EMPTY)
-												.create();
+				.withAxiom('S')
+				.withEmpty(Grammar.EMPTY)
+				.create();
 		
-		assertTrue("Unrecognized Greibach Normal Form: " + grammarGreibach, 
+		Grammar grammarNotGreibach = GrammarBuilder.hasProductions(GRAMMAR_NOT_GREIBACH)
+				.withAxiom('S')
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
 				(GrammarChecker.isGreibach(grammarGreibach)));
+		
+		assertFalse("Uncorrect Greibach Normal Form recognition (should not be recognized)", 
+				(GrammarChecker.isGreibach(grammarNotGreibach)));
 	}	
 
 }

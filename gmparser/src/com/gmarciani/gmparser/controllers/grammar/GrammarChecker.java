@@ -68,6 +68,8 @@ public class GrammarChecker {
 				&& production.isRightWithin(terminals) && production.getRightAlphabet().size() == 1)
 			return true;
 		
+		//aggiungere S->empty e S non sta nel rhs di alcuna produzione
+		
 		return false;
 	}
 
@@ -86,7 +88,7 @@ public class GrammarChecker {
 		for (Character terminal : terminals) {
 			regex += terminal;
 		}
-		regex += "]";
+		regex += "]{1}";
 		regex += "[";
 		for (Character nonTerminal : nonTerminals) {
 			regex += nonTerminal;
@@ -96,6 +98,8 @@ public class GrammarChecker {
 		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
 				&& production.getRight().matches(regex))
 			return true;
+		
+		//aggiungere S->empty
 		
 		return false;
 	}	
