@@ -23,12 +23,19 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
+import java.util.Iterator;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
-import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 public class GrammarTransformer {
 	
@@ -46,7 +53,7 @@ public class GrammarTransformer {
 	public static void removeUngenerativeSymbols(Grammar grammar) {	
 		
 		//Vn'={}
-		Alphabet acceptedNonTerminals = new Alphabet();
+		Alphabet acceptedNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
 		
 		//(Vt U Vn')
 		Alphabet acceptedAlphabet = new Alphabet();
@@ -59,51 +66,34 @@ public class GrammarTransformer {
 			
 			acceptedAlphabet.addAll(acceptedNonTerminals);
 			
-			Productions productions = grammar.getProductions();
-			
-			for (Production production : productions) {
+			for (Production production : grammar.getProductions()) {
 				if (production.isRightWithin(acceptedAlphabet)) {
-					loop = acceptedNonTerminals.add(production.getLeft());
+					loop = acceptedNonTerminals.add(production.getLeftNonTerminals());
 				}		
 			}			
 		}		
 		
-		Productions acceptedProductions = grammar.getProductions().getProductionsWithin(acceptedAlphabet);
-		grammar.getProductions().retainAll(acceptedProductions);
+		grammar.retainAllProductionsWithin(acceptedAlphabet);
 	}
 	
-	public static void removeUnreacheableSymbols(Grammar grammar) {
-		//Vt
-		Alphabet originaryTerminals = grammar.getTerminals();
-		//Vn
-		Alphabet originaryNonTerminals = grammar.getNonTerminals();
-		
+	public static void removeUnreacheableSymbols(Grammar grammar) {		
 		//Vt'={}
-		Alphabet acceptedTerminals = new Alphabet();
+		Alphabet acceptedTerminals = new Alphabet(AlphabetType.TERMINAL);
 		//Vn'={S}
-		Alphabet acceptedNonTerminals = new Alphabet();	
+		Alphabet acceptedNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
 		acceptedNonTerminals.add(grammar.getAxiom());
-		
-		//(Vt U Vn)
-		Alphabet originaryAlphabet = new Alphabet();
-		originaryAlphabet.addAll(originaryTerminals);
-		originaryAlphabet.addAll(originaryNonTerminals);		
 		
 		boolean loop = true;
 		while(loop) {
 			loop = false;
 			
-			Productions productions = grammar.getProductions();
-			
-			for (Production production : productions) {	
+			for (Production production : grammar.getProductions()) {	
 				if (production.isLeftWithin(acceptedNonTerminals)
-						&& acceptedNonTerminals.containsAll(production.getRightNonTerminals())) {
+						&& acceptedNonTerminals.containsAll(production.getRightNonTerminals()))
 					loop = acceptedNonTerminals.add(production.getRightNonTerminals());
-				}
 				
-				if (production.isLeftWithin(acceptedNonTerminals)) {
+				if (production.isLeftWithin(acceptedNonTerminals))
 					acceptedTerminals.add(production.getRightTerminals());
-				}
 			}
 		}		
 		
@@ -111,8 +101,7 @@ public class GrammarTransformer {
 		acceptedAlphabet.addAll(acceptedTerminals);
 		acceptedAlphabet.addAll(acceptedNonTerminals);
 		
-		Productions acceptedProductions = grammar.getProductions().getProductionsWithin(acceptedAlphabet);
-		grammar.getProductions().retainAll(acceptedProductions);
+		grammar.retainAllProductionsWithin(acceptedAlphabet);
 	}
 	
 	public static void removeUselessSymbols(Grammar grammar) {
@@ -121,19 +110,57 @@ public class GrammarTransformer {
 	}
 	
 	public static void removeEpsilonProductions(Grammar grammar) {
-		//
-		removeUselessSymbols(grammar);
+		Alphabet nullables = grammar.getNullables();	
+		
+		Iterator<Production> iterProductions = grammar.getProductions().iterator();
+		while(iterProductions.hasNext()) {
+			Production production = iterProductions.next();
+			if (!CollectionUtils.intersection(production.getRightNonTerminals(), nullables).isEmpty()) {
+				Character lhs = production.getLeft();
+				String rhs = production.getRight().replaceAll(nullables.getUnionRegex(), Grammar.EMPTY);
+				Production productionWithoutNullables = new Production(lhs, rhs);
+				grammar.addProduction(productionWithoutNullables);
+			}
+		}
+		
+		Iterator<Production> iterEpsilonProductions = grammar.getEpsilonProductions().iterator();
+		while(iterEpsilonProductions.hasNext()) {
+			Production epsilonProduction = iterEpsilonProductions.next();
+			grammar.removeProduction(epsilonProduction);
+		}
+		
+		if (nullables.contains(grammar.getAxiom()))
+			grammar.addProduction(grammar.getAxiom(), Grammar.EMPTY);
 	}
 	
 	public static void removeUnitProductions(Grammar grammar) {
 		removeEpsilonProductions(grammar);
-		//
-		removeUselessSymbols(grammar);
+		
+		Iterator<Production> iterTrivialUnitProductions = grammar.getTrivialUnitProductions().iterator();
+		while(iterTrivialUnitProductions.hasNext()) {
+			Production trivialUnitProduction = iterTrivialUnitProductions.next();
+			grammar.removeProduction(trivialUnitProduction);
+		}
+		
+		Queue<Production> queue = new ConcurrentLinkedQueue<Production>(grammar.getNonTrivialUnitProductions());
+		while(!queue.isEmpty()) {
+			Production nonTrivialUnitProduction = queue.poll();
+			Character lhs = nonTrivialUnitProduction.getLeft();
+			Character rhs = nonTrivialUnitProduction.getRight().charAt(0);
+			
+			Set<String> unfoldings = grammar.getSententialsForNonTerminal(rhs);
+			for (String unfolding : unfoldings)
+				grammar.addProduction(lhs, unfolding);
+			
+			grammar.removeProduction(nonTrivialUnitProduction);
+			
+			Iterator<Production> iterGeneratedTrivialUnitProductions = grammar.getTrivialUnitProductions().iterator();
+			while(iterGeneratedTrivialUnitProductions.hasNext()) {
+				Production trivialUnitProduction = iterGeneratedTrivialUnitProductions.next();
+				grammar.removeProduction(trivialUnitProduction);
+			}			
+			
+			queue.addAll(grammar.getNonTrivialUnitProductions());
+		}
 	}	
-	
-	public static void removeLeftRecursion(Grammar grammar) {
-		//
-		removeUnitProductions(grammar);
-	}
-
 }

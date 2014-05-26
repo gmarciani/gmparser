@@ -23,9 +23,9 @@
 
 package com.gmarciani.gmparser.models.grammar.alphabet;
 
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-public class Alphabet extends TreeSet<Character> {
+public class Alphabet extends ConcurrentSkipListSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
@@ -106,4 +106,14 @@ public class Alphabet extends TreeSet<Character> {
 		return (Character.isLetter(symbol)
 				&& Character.isUpperCase(symbol));
 	}
+
+	public String getUnionRegex() {
+		String regex = "[";
+		for (Character symbol : this) {
+			regex += symbol;
+		}
+		regex += "]";
+		
+		return regex;
+	}	
 }

@@ -23,7 +23,10 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
+import java.util.Set;
+
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
@@ -41,8 +44,8 @@ public class Grammar {
 	
 	public Grammar() {	
 		this.axiom = AXIOM;
-		this.terminals = new Alphabet();
-		this.nonTerminals = new Alphabet();
+		this.terminals = new Alphabet(AlphabetType.TERMINAL);
+		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
 		this.empty = EMPTY;
@@ -50,36 +53,28 @@ public class Grammar {
 	
 	public Grammar(char axiom) {	
 		this.axiom = axiom;
-		this.terminals = new Alphabet();
-		this.nonTerminals = new Alphabet();
-		this.nonTerminals.add(axiom);
+		this.terminals = new Alphabet(AlphabetType.TERMINAL);
+		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
 		this.empty = EMPTY;
 	}
 	
-	public Grammar(char axiom, String emptyString) {	
+	public Grammar(char axiom, String empty) {	
 		this.axiom = axiom;
-		this.terminals = new Alphabet();
-		this.nonTerminals = new Alphabet();
-		this.nonTerminals.add(axiom);
+		this.terminals = new Alphabet(AlphabetType.TERMINAL);
+		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
-		this.empty = emptyString;
+		this.empty = empty;
 	}
 	
 	public Alphabet getTerminals() {
 		return this.terminals;
 	}
-	
-	public void setTerminals(Alphabet terminals) {
-		this.terminals = terminals;
-	}
 
 	public Alphabet getNonTerminals() {
 		return this.nonTerminals;
-	}
-	
-	public void setNonTerminals(Alphabet nonTerminals) {
-		this.nonTerminals = nonTerminals;
 	}
 	
 	public Productions getProductions() {
@@ -88,28 +83,21 @@ public class Grammar {
 	
 	public void setProductions(Productions productions) {
 		this.productions = productions;
+		this.rebuildAlphabet();
 	}
 
 	public Character getAxiom() {
 		return this.axiom;
 	}	
 	
-	public void setAxiom(Character axiom) {
-		this.axiom = axiom;
-	}
-	
 	public String getEmpty() {
 		return this.empty;
-	}
-	
-	public void setEmpty(String empty) {
-		this.empty = empty;
 	}
 	
 	public boolean addProduction(Production production) {
 		boolean added = this.productions.add(production);
 		if (added)
-			this.addSymbols(production.getLeft() + production.getRight());
+			this.rebuildAlphabet();
 		return added;
 	}	
 
@@ -118,23 +106,96 @@ public class Grammar {
 		return this.addProduction(production);
 	}
 	
-	private boolean addSymbols(String symbols) {
-		String cleanSymbols = symbols.replaceAll(this.getEmpty(), "");
-		boolean added = false;
-		for (Character symbol : cleanSymbols.toCharArray()) {
-			added = (this.addSymbol(symbol) ? true : added);
-		}
+	public boolean removeProduction(Production production) {
+		boolean removed = this.productions.remove(production);
+		if (removed)
+			this.rebuildAlphabet();
 		
-		return added;
+		return removed;
+	}	
+
+	public boolean replaceProduction(Production oldProduction, Production newProduction) {
+		boolean replaced = this.productions.replace(oldProduction, newProduction);
+		if (replaced)
+			this.rebuildAlphabet();	
+		
+		return replaced;
 	}
 	
-	private boolean addSymbol(Character symbol) {
-		if (Alphabet.isTerminal(symbol))
-			return this.terminals.add(symbol);
-		if (Alphabet.isNonTerminal(symbol))
-			return this.nonTerminals.add(symbol);
+	public boolean retainAllProductionsWithin(Alphabet alphabet) {
+		Productions withinProductions = this.productions.getProductionsWithin(alphabet);
+		boolean modified = this.productions.retainAll(withinProductions);
+		if (modified)
+			this.rebuildAlphabet();
 		
-		return false;
+		return modified;
+	}
+	
+	public boolean retainAllProductionsLeftWithin(Alphabet alphabet) {
+		Productions withinProductions = this.productions.getProductionsLeftWithin(alphabet);
+		boolean modified = this.productions.retainAll(withinProductions);
+		if (modified)
+			this.rebuildAlphabet();
+		
+		return modified;
+	}
+	
+	public boolean retainAllProductionsRightWithin(Alphabet alphabet) {
+		Productions withinProductions = this.productions.getProductionsRightWithin(alphabet);
+		boolean modified = this.productions.retainAll(withinProductions);
+		if (modified)
+			this.rebuildAlphabet();
+		
+		return modified;
+	}
+	
+	public Productions getEpsilonProductions() {
+		return this.productions.getEpsilonProductions();
+	}
+	
+	public Productions getUnitProductions() {
+		return this.productions.getUnitProductions(this.nonTerminals);
+	}
+	
+	public Productions getTrivialUnitProductions() {
+		return this.productions.getTrivialUnitProductions(this.nonTerminals);
+	}
+	
+	public Productions getNonTrivialUnitProductions() {
+		return this.productions.getNonTrivialUnitProductions(this.nonTerminals);
+	}
+	
+	public Alphabet getNullables() {
+		return this.productions.getNullables();
+	}
+	
+	public Productions getProductionsWithin(Alphabet alphabet) {
+		return this.productions.getProductionsWithin(alphabet);
+	}
+	
+	public Productions getProductionsForNonTerminal(Character nonTerminal) {
+		return this.productions.getProductionsForNonTerminal(nonTerminal);
+	}
+	
+	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
+		return this.productions.getSententialsForNonTerminal(nonTerminal);
+	}
+	
+	public Alphabet getLeftNonTerminals() {
+		return this.productions.getLeftNonTerminals();
+	}
+	
+	public Alphabet getRightNonTerminals() {
+		return this.getRightNonTerminals();
+	}
+	
+	public Alphabet getRightTerminals() {
+		return this.productions.getRightTerminals();
+	}
+	
+	private void rebuildAlphabet() {
+		this.nonTerminals = this.productions.getNonTerminals();
+		this.terminals = this.productions.getTerminals();
 	}
 
 	@Override
@@ -164,5 +225,4 @@ public class Grammar {
 		
 		return true;
 	}
-
 }

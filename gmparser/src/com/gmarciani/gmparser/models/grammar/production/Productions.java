@@ -24,12 +24,13 @@
 package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
-public class Productions extends LinkedHashSet<Production> {
+public class Productions extends ConcurrentSkipListSet<Production> {
 
 	private static final long serialVersionUID = 9062194540654802369L;
 	
@@ -51,6 +52,17 @@ public class Productions extends LinkedHashSet<Production> {
 		return this.add(production);
 	}
 	
+	public boolean replace(Production oldProduction, Production newProduction) {
+		if (oldProduction.equals(newProduction))
+			return false;
+		boolean removed = this.remove(oldProduction);
+		boolean replaced = false;
+		if (removed)
+			replaced = this.add(newProduction);
+		
+		return replaced;
+	}	
+	
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		Productions target = new Productions();
 		
@@ -62,30 +74,131 @@ public class Productions extends LinkedHashSet<Production> {
 		return target;
 	}
 	
-	public Productions getProductionsForNonTerminal(Character nonTerminal) {
+	public Productions getProductionsLeftWithin(Alphabet alphabet) {
 		Productions target = new Productions();
 		
 		for (Production production : this) {
-			if (production.getLeft().equals(nonTerminal))
+			if (production.isLeftWithin(alphabet))
 				target.add(production);
 		}
 		
 		return target;
 	}
 	
-	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
-		Set<String> target = new LinkedHashSet<String>();
+	public Productions getProductionsRightWithin(Alphabet alphabet) {
+		Productions target = new Productions();
 		
 		for (Production production : this) {
-			if (production.getLeft().equals(nonTerminal))
+			if (production.isRightWithin(alphabet))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsForNonTerminal(Character nonTerminal) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.getLeft() == nonTerminal)
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getEpsilonProductions() {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isEpsilonProduction())
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getUnitProductions(Alphabet nonTerminals) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isUnitProduction(nonTerminals))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getTrivialUnitProductions(Alphabet nonTerminals) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isTrivialUnitProduction(nonTerminals))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getNonTrivialUnitProductions(Alphabet nonTerminals) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isNonTrivialUnitProduction(nonTerminals))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Alphabet getNullables() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		
+		for (Production production : this) {
+			if (production.isEpsilonProduction()) {
+				target.add(production.getLeftNonTerminals());
+			}
+				
+		}
+		
+		for (Production production : this) {
+			if (target.containsAll(production.getRightAlphabet())) {
+				target.add(production.getLeftNonTerminals());
+			}
+				
+		}
+		
+		return target;
+	}
+	
+	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
+		Set<String> target = new ConcurrentSkipListSet<String>();
+		
+		for (Production production : this) {
+			if (production.getLeft() == nonTerminal)
 				target.add(production.getRight());
 		}
 		
 		return target;
 	}
 	
+	public Alphabet getNonTerminals() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		target.add(this.getLeftNonTerminals());
+		target.add(this.getRightNonTerminals());
+		
+		return target;
+	}
+	
+	public Alphabet getTerminals() {
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
+		target.add(this.getRightTerminals());
+		
+		return target;
+	}
+	
 	public Alphabet getLeftNonTerminals() {
-		Alphabet target = new Alphabet();
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
 		for (Production production : this) {
 			target.add(production.getLeftNonTerminals());
@@ -95,7 +208,7 @@ public class Productions extends LinkedHashSet<Production> {
 	}
 	
 	public Alphabet getRightNonTerminals() {
-		Alphabet target = new Alphabet();
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
 		for (Production production : this) {
 			target.add(production.getRightNonTerminals());
@@ -105,14 +218,14 @@ public class Productions extends LinkedHashSet<Production> {
 	}
 	
 	public Alphabet getRightTerminals() {
-		Alphabet target = new Alphabet();
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
 		
 		for (Production production : this) {
 			target.add(production.getRightTerminals());
 		}
 		
 		return target;
-	}
+	}	
 
 	@Override
 	public String toString() {
@@ -134,5 +247,4 @@ public class Productions extends LinkedHashSet<Production> {
 		
 		return s;
 	}	
-
 }

@@ -21,12 +21,9 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.grammar;
 
 import static org.junit.Assert.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
@@ -50,8 +47,7 @@ public class TestGrammar {
 		productions.add(prodOne);
 		productions.add(prodTwo);
 		productions.add(prodThree);
-		productions.add(prodFour);
-		
+		productions.add(prodFour);		
 		
 		Grammar grammarOne = GrammarBuilder
 				.hasProductions(productions)
@@ -82,49 +78,15 @@ public class TestGrammar {
 				.withAxiom('S')
 				.withEmpty(Grammar.EMPTY)
 				.create();
-				
-		Map<String, Grammar> grammars = new HashMap<String, Grammar>();
-		grammars.put("GrammarOne", grammarOne);
-		grammars.put("GrammarTwo", grammarTwo);
-		grammars.put("GrammarThree", grammarThree);
-		grammars.put("GrammarFour", grammarFour);
+		/*
+		System.out.println("GRAMMAR ONE: " + grammarOne);
+		System.out.println("GRAMMAR TWO: " + grammarTwo);
+		System.out.println("GRAMMAR THREE: " + grammarThree);
+		System.out.println("GRAMMAR FOUR: " + grammarFour);*/
 		
-		for (Map.Entry<String, Grammar> i : grammars.entrySet()) {
-			for (Map.Entry<String, Grammar> j : grammars.entrySet()) {
-				assertTrue("Incorrect grammar building: " + i.getKey() + " different from " + j.getKey(),
-						i.getValue().equals(j.getValue()));
-			}
-		}
+		assertTrue("Uncorrect grammar building",
+				grammarOne.equals(grammarTwo)
+				&& grammarTwo.equals(grammarThree)
+				&& grammarThree.equals(grammarFour));
 	}
-	
-	/*
-	@SuppressWarnings("static-access")
-	@Test
-	public void testGrammarInput() {
-		String input = getInput();
-		
-		Grammar grammar = GrammarBuilder
-				.hasProductions(input)
-				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
-				.create();
-		
-		System.out.println(grammar);
-		
-	}
-	
-	private String getInput() {
-		System.out.print("Grammar: ");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String input = null;
-	    try {
-	    	input = br.readLine();
-		} catch (NumberFormatException | IOException e) {
-			
-		}
-	    System.out.println("\n");
-		return input;
-	}
-	*/
-
 }

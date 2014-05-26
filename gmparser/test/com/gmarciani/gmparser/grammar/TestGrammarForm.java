@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.grammar;
 
 import static org.junit.Assert.*;
 
@@ -52,6 +52,9 @@ public class TestGrammarForm {
 				.withAxiom('E')
 				.withEmpty(Grammar.EMPTY)
 				.create();
+		/*
+		System.out.println("CHOMSKY: " + grammarChomsky);
+		System.out.println("NOT CHOMSKY: " + grammarNotChomsky);*/
 		
 		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
 				(GrammarChecker.isChomsky(grammarChomsky)));
@@ -72,6 +75,9 @@ public class TestGrammarForm {
 				.withAxiom('S')
 				.withEmpty(Grammar.EMPTY)
 				.create();
+		/*
+		System.out.println("GREIBACH: " + grammarGreibach);
+		System.out.println("NOT GREIBACH: " + grammarNotGreibach);*/
 		
 		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
 				(GrammarChecker.isGreibach(grammarGreibach)));
