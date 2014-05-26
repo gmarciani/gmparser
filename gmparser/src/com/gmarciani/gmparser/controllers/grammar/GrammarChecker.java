@@ -88,7 +88,7 @@ public class GrammarChecker {
 		for (Character terminal : terminals) {
 			regex += terminal;
 		}
-		regex += "]{1}";
+		regex += "]";
 		regex += "[";
 		for (Character nonTerminal : nonTerminals) {
 			regex += nonTerminal;
