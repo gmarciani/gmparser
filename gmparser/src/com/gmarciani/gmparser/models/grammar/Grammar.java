@@ -225,4 +225,13 @@ public class Grammar {
 		
 		return true;
 	}
+
+	public Character getNewNonTerminal() {
+		Alphabet totalNonTerminals = Alphabet.getTotalNonTerminals();
+		totalNonTerminals.removeAll(this.nonTerminals);
+		Character target = totalNonTerminals.first();
+		
+		return target;
+		
+	}
 }

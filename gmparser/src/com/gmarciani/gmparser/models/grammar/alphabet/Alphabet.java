@@ -29,6 +29,8 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
+	private static final Alphabet STANDARD_NON_TERMINAL_ALPHABET = new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	
 	private AlphabetType type = null;
 	
 	public Alphabet() {
@@ -115,5 +117,12 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		regex += "]";
 		
 		return regex;
+	}
+
+	public static Alphabet getTotalNonTerminals() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		target.addAll(STANDARD_NON_TERMINAL_ALPHABET);
+		
+		return target;
 	}	
 }

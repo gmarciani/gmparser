@@ -52,6 +52,11 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return this.add(production);
 	}
 	
+	public boolean remove(Character left, String right) {
+		Production production = new Production(left, right);
+		return this.remove(production);
+	}
+	
 	public boolean replace(Production oldProduction, Production newProduction) {
 		if (oldProduction.equals(newProduction))
 			return false;
