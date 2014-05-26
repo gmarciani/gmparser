@@ -107,9 +107,7 @@ public class GrammarTransformer {
 	
 	public static void removeUselessSymbols(Grammar grammar) {
 		removeUngenerativeSymbols(grammar);
-		System.out.println("#grammar without ungeneratives: " + grammar);
 		removeUnreacheableSymbols(grammar);
-		System.out.println("#grammar without unreacheables: " + grammar);
 	}
 	
 	public static void removeEpsilonProductions(Grammar grammar) {
@@ -169,13 +167,9 @@ public class GrammarTransformer {
 	
 	public static void toChomskyNormalForm(Grammar grammar) {
 		removeEpsilonProductions(grammar);
-		System.out.println("#grammar without epsilons: " + grammar);
 		removeUnitProductions(grammar);
-		System.out.println("#grammar without units: " + grammar);	
 		
 		boolean emptyGeneration = grammar.getNullables().contains(grammar.getAxiom());
-		
-		System.out.println("#empty word in language: " + emptyGeneration);
 		
 		boolean loop = true;
 		while(loop) {
@@ -185,27 +179,19 @@ public class GrammarTransformer {
 			while(iterProductions.hasNext()) {
 				Production production = iterProductions.next();
 				if (production.getRightSize() > 2) {
-					System.out.println("#production too long: " + production);
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					System.out.println("#new non terminal: " + newNonTerminal);
 					Production reducedProductionOne = new Production();
 					reducedProductionOne.setLeft(production.getLeft());
 					reducedProductionOne.setRight(production.getRight().substring(0, 1) + newNonTerminal);
-					
-					System.out.println("#reduced production one: " + reducedProductionOne);
 					
 					Production reducedProductionTwo = new Production();
 					reducedProductionTwo.setLeft(newNonTerminal);
 					reducedProductionTwo.setRight(production.getRight().substring(1));
 					
-					System.out.println("#reduced production two: " + reducedProductionTwo);
-					
 					grammar.removeProduction(production);
 					grammar.addProduction(reducedProductionOne);
 					grammar.addProduction(reducedProductionTwo);
-					
-					System.out.println("#grammar: " + grammar);
 				}
 			}
 		}
@@ -220,33 +206,21 @@ public class GrammarTransformer {
 				if (production.getRightSize() > 1
 						&& !production.getRightTerminals().isEmpty()) {
 					
-					System.out.println("#production to promote: " + production);
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					System.out.println("#new non terminal: " + newNonTerminal);
 					Character terminal = production.getRightTerminals().first();
-					System.out.println("#terminal to promote: " + terminal);
 					
 					Production promotionProductionOne = new Production();
 					promotionProductionOne.setLeft(production.getLeft());
 					promotionProductionOne.setRight(production.getRight().replace(terminal, newNonTerminal));
 					
-					System.out.println("#promotion production one: " + promotionProductionOne);
-					
 					Production promotionProductionTwo = new Production();
 					promotionProductionTwo.setLeft(newNonTerminal);
 					promotionProductionTwo.setRight("" + terminal);
 					
-					System.out.println("#promotion production two: " + promotionProductionTwo);
-					
 					grammar.removeProduction(production);
 					grammar.addProduction(promotionProductionOne);
 					grammar.addProduction(promotionProductionTwo);
-					
-					System.out.println("#grammar: " + grammar);
-					
-					
-					
 				}
 			}
 		}
