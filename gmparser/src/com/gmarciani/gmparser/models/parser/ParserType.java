@@ -26,7 +26,7 @@ package com.gmarciani.gmparser.models.parser;
 public enum ParserType {
 	
 	CYK("Cock-Young-Kasami", "CYK"),
-	LL1("LL1", "LL1");	
+	LR1("LR1", "LR1");	
 	
 	private String name;
 	private String shortName;

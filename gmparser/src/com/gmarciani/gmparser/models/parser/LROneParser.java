@@ -21,23 +21,20 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.grammar;
+package com.gmarciani.gmparser.models.parser;
 
-import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.ParserType;
 
-public class Parser {
-	
-	private static Listener output;
-	
-	public static void setOutput(Listener listener) {
-		output = listener;
+public class LROneParser implements Parser {
+
+	public LROneParser() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public static boolean parse(Grammar grammar, String string, ParserType parser) {
-		output.onDebug("ParserController.parseGrammar()");
+	@Override
+	public boolean parse(Grammar grammar, String word) {
+		// TODO Auto-generated method stub
 		return false;
-	}	
+	}
 
 }

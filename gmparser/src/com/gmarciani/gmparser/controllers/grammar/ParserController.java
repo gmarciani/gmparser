@@ -21,20 +21,41 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.parser;
+package com.gmarciani.gmparser.controllers.grammar;
 
+import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.CYKParser;
+import com.gmarciani.gmparser.models.parser.LROneParser;
+import com.gmarciani.gmparser.models.parser.Parser;
+import com.gmarciani.gmparser.models.parser.ParserType;
 
-public class LRParser implements Parser {
-
-	public LRParser() {
-		// TODO Auto-generated constructor stub
+public class ParserController {
+	
+	private static Listener output;
+	
+	public static void setOutput(Listener listener) {
+		output = listener;
 	}
 
-	@Override
-	public boolean parse(Grammar grammar, String word) {
-		// TODO Auto-generated method stub
-		return false;
+	public static boolean parse(Grammar grammar, String word, ParserType parser) {
+		if (parser == ParserType.CYK) {
+			return parseCYK(grammar, word);
+		} else if (parser == ParserType.LR1) {
+			return parseLROne(grammar, word);
+		} else {
+			return false;
+		}
+	}	
+
+	public static boolean parseCYK(Grammar grammar, String word) {
+		Parser parser = new CYKParser();
+		return parser.parse(grammar, word);
+	}	
+	
+	public static boolean parseLROne(Grammar grammar, String word) {
+		Parser parser = new LROneParser();
+		return parser.parse(grammar, word);
 	}
 
 }
