@@ -51,7 +51,7 @@ public class Grammar {
 		this.empty = EMPTY;
 	}	
 	
-	public Grammar(char axiom) {	
+	public Grammar(Character axiom) {	
 		this.axiom = axiom;
 		this.terminals = new Alphabet(AlphabetType.TERMINAL);
 		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
@@ -60,7 +60,7 @@ public class Grammar {
 		this.empty = EMPTY;
 	}
 	
-	public Grammar(char axiom, String empty) {	
+	public Grammar(Character axiom, String empty) {	
 		this.axiom = axiom;
 		this.terminals = new Alphabet(AlphabetType.TERMINAL);
 		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
@@ -101,6 +101,11 @@ public class Grammar {
 		return added;
 	}	
 
+	public boolean addProduction(String left, String right) {
+		Production production = new Production(left, right);
+		return this.addProduction(production);
+	}
+	
 	public boolean addProduction(Character left, String right) {
 		Production production = new Production(left, right);
 		return this.addProduction(production);
@@ -113,14 +118,6 @@ public class Grammar {
 		
 		return removed;
 	}	
-
-	public boolean replaceProduction(Production oldProduction, Production newProduction) {
-		boolean replaced = this.productions.replace(oldProduction, newProduction);
-		if (replaced)
-			this.rebuildAlphabet();	
-		
-		return replaced;
-	}
 	
 	public boolean retainAllProductionsWithin(Alphabet alphabet) {
 		Productions withinProductions = this.productions.getProductionsWithin(alphabet);
@@ -177,12 +174,12 @@ public class Grammar {
 		return this.productions.getProductionsForNonTerminal(nonTerminal);
 	}
 	
-	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
-		return this.productions.getSententialsForNonTerminal(nonTerminal);
+	public Set<String> getRightForNonTerminal(Character nonTerminal) {
+		return this.productions.getRightForNonTerminal(nonTerminal);
 	}
 	
 	public Alphabet getLeftNonTerminals() {
-		return this.productions.getLeftNonTerminals();
+		return this.productions.getLeftNonTerminalAlphabet();
 	}
 	
 	public Alphabet getRightNonTerminals() {
@@ -190,12 +187,21 @@ public class Grammar {
 	}
 	
 	public Alphabet getRightTerminals() {
-		return this.productions.getRightTerminals();
+		return this.productions.getRightTerminalAlphabet();
+	}
+	
+	public Character getNewNonTerminal() {
+		Alphabet totalNonTerminals = Alphabet.getTotalNonTerminals();
+		totalNonTerminals.removeAll(this.nonTerminals);
+		Character target = totalNonTerminals.first();
+		
+		return target;
+		
 	}
 	
 	private void rebuildAlphabet() {
-		this.nonTerminals = this.productions.getNonTerminals();
-		this.terminals = this.productions.getTerminals();
+		this.nonTerminals = this.productions.getNonTerminalAlphabet();
+		this.terminals = this.productions.getTerminalAlphabet();
 	}
 
 	@Override
@@ -224,14 +230,6 @@ public class Grammar {
 			return false;		
 		
 		return true;
-	}
-
-	public Character getNewNonTerminal() {
-		Alphabet totalNonTerminals = Alphabet.getTotalNonTerminals();
-		totalNonTerminals.removeAll(this.nonTerminals);
-		Character target = totalNonTerminals.first();
-		
-		return target;
-		
-	}
+	}	
+	
 }

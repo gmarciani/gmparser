@@ -68,7 +68,7 @@ public class GrammarTransformer {
 			
 			for (Production production : grammar.getProductions()) {
 				if (production.isRightWithin(acceptedAlphabet)) {
-					loop = acceptedNonTerminals.add(production.getLeftNonTerminals());
+					loop = acceptedNonTerminals.add(production.getLeft().getNonTerminalAlphabet());
 				}		
 			}			
 		}		
@@ -90,11 +90,11 @@ public class GrammarTransformer {
 			
 			for (Production production : grammar.getProductions()) {	
 				if (production.isLeftWithin(acceptedNonTerminals)
-						&& acceptedNonTerminals.containsAll(production.getRightNonTerminals()))
-					loop = acceptedNonTerminals.add(production.getRightNonTerminals());
+						&& acceptedNonTerminals.containsAll(production.getRight().getNonTerminalAlphabet()))
+					loop = acceptedNonTerminals.add(production.getRight().getNonTerminalAlphabet());
 				
 				if (production.isLeftWithin(acceptedNonTerminals))
-					acceptedTerminals.add(production.getRightTerminals());
+					acceptedTerminals.add(production.getRight().getTerminalAlphabet());
 			}
 		}		
 		
@@ -116,9 +116,9 @@ public class GrammarTransformer {
 		Iterator<Production> iterProductions = grammar.getProductions().iterator();
 		while(iterProductions.hasNext()) {
 			Production production = iterProductions.next();
-			if (!CollectionUtils.intersection(production.getRightNonTerminals(), nullables).isEmpty()) {
-				Character lhs = production.getLeft();
-				String rhs = production.getRight().replaceAll(nullables.getUnionRegex(), Grammar.EMPTY);
+			if (!CollectionUtils.intersection(production.getRight().getNonTerminalAlphabet(), nullables).isEmpty()) {
+				String lhs = production.getLeft().getValue();
+				String rhs = production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EMPTY);
 				Production productionWithoutNullables = new Production(lhs, rhs);
 				grammar.addProduction(productionWithoutNullables);
 			}
@@ -146,10 +146,10 @@ public class GrammarTransformer {
 		Queue<Production> queue = new ConcurrentLinkedQueue<Production>(grammar.getNonTrivialUnitProductions());
 		while(!queue.isEmpty()) {
 			Production nonTrivialUnitProduction = queue.poll();
-			Character lhs = nonTrivialUnitProduction.getLeft();
-			Character rhs = nonTrivialUnitProduction.getRight().charAt(0);
+			String lhs = nonTrivialUnitProduction.getLeft().getValue();
+			Character rhs = nonTrivialUnitProduction.getRight().getValue().charAt(0);
 			
-			Set<String> unfoldings = grammar.getSententialsForNonTerminal(rhs);
+			Set<String> unfoldings = grammar.getRightForNonTerminal(rhs);
 			for (String unfolding : unfoldings)
 				grammar.addProduction(lhs, unfolding);
 			
@@ -178,16 +178,16 @@ public class GrammarTransformer {
 			Iterator<Production> iterProductions = grammar.getProductions().iterator();
 			while(iterProductions.hasNext()) {
 				Production production = iterProductions.next();
-				if (production.getRightSize() > 2) {
+				if (production.getRight().getSize() > 2) {
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
 					Production reducedProductionOne = new Production();
 					reducedProductionOne.setLeft(production.getLeft());
-					reducedProductionOne.setRight(production.getRight().substring(0, 1) + newNonTerminal);
+					reducedProductionOne.setRight(production.getRight().getValue().substring(0, 1) + newNonTerminal);
 					
 					Production reducedProductionTwo = new Production();
 					reducedProductionTwo.setLeft(newNonTerminal);
-					reducedProductionTwo.setRight(production.getRight().substring(1));
+					reducedProductionTwo.setRight(production.getRight().getValue().substring(1));
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(reducedProductionOne);
@@ -203,20 +203,20 @@ public class GrammarTransformer {
 			Iterator<Production> iterProductions = grammar.getProductions().iterator();
 			while(iterProductions.hasNext()) {
 				Production production = iterProductions.next();
-				if (production.getRightSize() > 1
-						&& !production.getRightTerminals().isEmpty()) {
+				if (production.getRight().getSize() > 1
+						&& !production.getRight().getTerminalAlphabet().isEmpty()) {
 					
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					Character terminal = production.getRightTerminals().first();
+					Character terminal = production.getRight().getTerminalAlphabet().first();
 					
 					Production promotionProductionOne = new Production();
 					promotionProductionOne.setLeft(production.getLeft());
-					promotionProductionOne.setRight(production.getRight().replace(terminal, newNonTerminal));
+					promotionProductionOne.setRight(production.getRight().getValue().replace(terminal, newNonTerminal));
 					
 					Production promotionProductionTwo = new Production();
 					promotionProductionTwo.setLeft(newNonTerminal);
-					promotionProductionTwo.setRight("" + terminal);
+					promotionProductionTwo.setRight(terminal);
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(promotionProductionOne);

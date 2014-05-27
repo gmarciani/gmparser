@@ -125,7 +125,6 @@ public final class App {
 	public static final class AppSettings {
 		public static final boolean DEBUG = true;
 		public static boolean logon = false;
-	}
-	
+	}	
 
 }

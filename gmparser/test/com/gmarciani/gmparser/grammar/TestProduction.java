@@ -34,11 +34,11 @@ public class TestProduction {
 
 	@Test
 	public void testProductionEmpty() {		
-		Production prodOne = new Production('S', Grammar.EMPTY);
-		Production prodTwo = new Production('S', Grammar.EMPTY + Grammar.EMPTY + Grammar.EMPTY);
-		Production prodThree = new Production('S', Grammar.EMPTY + "A");
-		Production prodFour = new Production('S', "A" + Grammar.EMPTY);
-		Production prodFive = new Production('S', Grammar.EMPTY + "A" + Grammar.EMPTY);
+		Production prodOne = new Production("S", Grammar.EMPTY);
+		Production prodTwo = new Production("S", Grammar.EMPTY + Grammar.EMPTY + Grammar.EMPTY);
+		Production prodThree = new Production("S", Grammar.EMPTY + "A");
+		Production prodFour = new Production("S", "A" + Grammar.EMPTY);
+		Production prodFive = new Production("S", Grammar.EMPTY + "A" + Grammar.EMPTY);
 		/*
 		System.out.println("PRODUCTION ONE: " + prodOne);
 		System.out.println("PRODUCTION TWO: " + prodTwo);

@@ -23,14 +23,12 @@
 
 package com.gmarciani.gmparser.models.grammar.production;
 
-import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
 public class Production implements Comparable<Production> {
 	
-	private Character left;
-	private String right;
+	private Member left;
+	private Member right;
 	
 	public static final String MEMBER_SEPARATOR = "->";
 
@@ -43,139 +41,104 @@ public class Production implements Comparable<Production> {
 		this.setRight(production.getRight());
 	}
 	
-	public Production(Character left, String right) {
+	public Production(Member left, Member right) {
 		this.setLeft(left);
 		this.setRight(right);
 	}
+	
+	public Production(String left, String right) {
+		Member lhs = new Member(left);
+		Member rhs = new Member(right);
+		this.setLeft(lhs);
+		this.setRight(rhs);
+	}
+	
+	public Production(Character left, String right) {
+		Member lhs = new Member(left);
+		Member rhs = new Member(right);
+		this.setLeft(lhs);
+		this.setRight(rhs);
+	}
 
-	public Character getLeft() {
+	public Member getLeft() {
 		return this.left;
 	}
 
-	public void setLeft(Character left) {
+	public void setLeft(Member left) {
 		this.left = left;
 	}
+	
+	public void setLeft(String left) {
+		if (this.getLeft() == null)
+			this.setLeft(new Member());
+		this.getLeft().setValue(left);
+	}
+	
+	public void setLeft(Character left) {
+		if (this.getLeft() == null)
+			this.setLeft(new Member());
+		this.getLeft().setValue(left);
+	}
 
-	public String getRight() {
+	public Member getRight() {
 		return this.right;
 	}
 
-	public void setRight(String right) {
+	public void setRight(Member right) {
 		this.right = right;
-		this.rebuild();
 	}
 	
-	private void rebuild() {
-		if (this.isEpsilonProduction()) {
-			this.right = Grammar.EMPTY;
-		} else {
-			this.right = this.right.replace(Grammar.EMPTY, "");
-		}			
+	public void setRight(String right) {
+		if (this.getRight() == null)
+			this.setRight(new Member());
+		this.getRight().setValue(right);
 	}
 	
-	public int getLeftSize() {
-		return 1;
-	}
-	
-	public int getRightSize() {
-		return this.right.length();
-	}
-	
-	public Alphabet getLeftAlphabet() {
-		Alphabet target = new Alphabet();
-		target.add(this.getLeftNonTerminals());
-		
-		return target;
-	}
-	
-	public Alphabet getRightAlphabet() {
-		Alphabet target = new Alphabet();
-		target.add(this.getRightNonTerminals());
-		target.add(this.getRightTerminals());
-		
-		return target;
-	}	
-	
-	public Alphabet getLeftNonTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		Character lhs = this.getLeft();
-		if (Alphabet.isNonTerminal(lhs))
-			target.add(this.getLeft());
-		
-		return target;
-	}
-	
-	public Alphabet getRightNonTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		
-		String rhs = this.getRight();
-		
-		for (Character symbol : rhs.toCharArray()) {
-			if (Alphabet.isNonTerminal(symbol)) 
-				target.add(symbol);
-		}
-		
-		return target;
-	}
-
-	public Alphabet getRightTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
-		
-		String rhs = this.getRight();
-		
-		for (Character symbol : rhs.toCharArray()) {
-			if (Alphabet.isTerminal(symbol)) 
-				target.add(symbol);
-		}
-		
-		return target;
+	public void setRight(Character right) {
+		if (this.getRight() == null)
+			this.setRight(new Member());
+		this.getRight().setValue(right);
 	}
 	
 	public boolean isWithin(Alphabet alphabet) {
-		return (this.isLeftWithin(alphabet)
-				&& this.isRightWithin(alphabet));
+		return (this.getLeft().isWithin(alphabet)
+				&& this.getRight().isWithin(alphabet));
 	}
-
+	
 	public boolean isLeftWithin(Alphabet alphabet) {
-		return (alphabet.containsAll(this.getLeftAlphabet()));
+		return (this.getLeft().isWithin(alphabet));
 	}
 	
 	public boolean isRightWithin(Alphabet alphabet) {
-		return (alphabet.containsAll(this.getRightAlphabet()));
+		return (this.getRight().isWithin(alphabet));
 	}
 	
 	public boolean isEpsilonProduction() {
-		return this.getRight().matches("^" + Grammar.EMPTY + "+$");
+		return this.getRight().isEpsilon();
 	}	
 	
 	public boolean isUnitProduction(Alphabet nonTerminals) {
-		return(this.getLeftSize() == 1
-				&& this.getRightSize() == 1
-				&& this.isLeftWithin(nonTerminals)
-				&& this.isRightWithin(nonTerminals));
+		return(this.getLeft().getSize() == 1
+				&& this.getRight().getSize() == 1
+				&& this.getLeft().isWithin(nonTerminals)
+				&& this.getRight().isWithin(nonTerminals));
 	}
 	
 	public boolean isTrivialUnitProduction(Alphabet nonTerminals) {
 		return (this.isUnitProduction(nonTerminals)
-				&& this.getLeft().equals(this.getRight().charAt(0)));
+				&& this.getLeft().equals(this.getRight()));
 	}
 	
 	public boolean isNonTrivialUnitProduction(Alphabet nonTerminals) {
 		return (this.isUnitProduction(nonTerminals)
 				&& !this.getLeft().equals(this.getRight()));
-	}
-	
-	@Override
-	public String toString() {
-		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
-		return s;
-	}
+	}	
 	
 	@Override
 	public int compareTo(Production other) {
-		int byLeft = this.left.compareTo(other.left);
+		int byLeft = this.getLeft().compareTo(other.getLeft());
 		if (byLeft == 0)
-			return this.right.compareTo(other.right);
+			return this.getRight().compareTo(other.getRight());
 		return byLeft;
 	}
 	
@@ -186,16 +149,23 @@ public class Production implements Comparable<Production> {
 
 		Production other = (Production) obj;
 		
-		return (this.left.equals(other.left) 
-				&& this.right.equals(other.right));
+		return (this.getLeft().equals(other.getLeft()) 
+				&& this.getRight().equals(other.getRight()));
 	}	
+	
+	@Override
+	public String toString() {
+		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
+		return s;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.left == null) ? 0 : this.left.hashCode());
-		result = prime * result + ((this.right == null) ? 0 : this.right.hashCode());
+		result = prime * result + ((this.getLeft() == null) ? 0 : this.getRight().hashCode());
+		result = prime * result + ((this.getRight() == null) ? 0 : this.getRight().hashCode());
 		return result;
 	}
+	
 }

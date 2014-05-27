@@ -60,12 +60,12 @@ public class GrammarChecker {
 	
 	//"A->BC|a."
 	private static boolean isChomsky(Production production, Alphabet terminals, Alphabet nonTerminals) {
-		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
-				&& production.isRightWithin(nonTerminals) && production.getRightAlphabet().size() == 2)
+		if (production.isLeftWithin(nonTerminals) && production.getLeft().getSize() == 1
+				&& production.isRightWithin(nonTerminals) && production.getRight().getSize() == 2)
 			return true;
 		
-		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
-				&& production.isRightWithin(terminals) && production.getRightAlphabet().size() == 1)
+		if (production.isLeftWithin(nonTerminals) && production.getLeft().getSize() == 1
+				&& production.isRightWithin(terminals) && production.getRight().getSize() == 1)
 			return true;
 		
 		//aggiungere S->empty e S non sta nel rhs di alcuna produzione
@@ -95,7 +95,7 @@ public class GrammarChecker {
 		}
 		regex += "]*$";
 		
-		if (production.isLeftWithin(nonTerminals) && production.getLeftAlphabet().size() == 1
+		if (production.isLeftWithin(nonTerminals) && production.getLeft().getSize() == 1
 				&& production.getRight().matches(regex))
 			return true;
 		

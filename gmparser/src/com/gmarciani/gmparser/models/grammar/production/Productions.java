@@ -47,26 +47,15 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		super(productions);
 	}
 		
-	public boolean add(Character left, String right) {
+	public boolean add(Member left, Member right) {
 		Production production = new Production(left, right);
 		return this.add(production);
 	}
 	
-	public boolean remove(Character left, String right) {
+	public boolean remove(Member left, Member right) {
 		Production production = new Production(left, right);
 		return this.remove(production);
 	}
-	
-	public boolean replace(Production oldProduction, Production newProduction) {
-		if (oldProduction.equals(newProduction))
-			return false;
-		boolean removed = this.remove(oldProduction);
-		boolean replaced = false;
-		if (removed)
-			replaced = this.add(newProduction);
-		
-		return replaced;
-	}	
 	
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		Productions target = new Productions();
@@ -105,7 +94,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		Productions target = new Productions();
 		
 		for (Production production : this) {
-			if (production.getLeft() == nonTerminal)
+			if (production.getLeft().contains(nonTerminal));
 				target.add(production);
 		}
 		
@@ -161,14 +150,14 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		
 		for (Production production : this) {
 			if (production.isEpsilonProduction()) {
-				target.add(production.getLeftNonTerminals());
+				target.add(production.getLeft().getNonTerminalAlphabet());
 			}
 				
 		}
 		
 		for (Production production : this) {
-			if (target.containsAll(production.getRightAlphabet())) {
-				target.add(production.getLeftNonTerminals());
+			if (target.containsAll(production.getRight().getAlphabet())) {
+				target.add(production.getLeft().getNonTerminalAlphabet());
 			}
 				
 		}
@@ -176,57 +165,68 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return target;
 	}
 	
-	public Set<String> getSententialsForNonTerminal(Character nonTerminal) {
+	public Set<String> getRightForNonTerminal(Character nonTerminal) {
 		Set<String> target = new ConcurrentSkipListSet<String>();
 		
 		for (Production production : this) {
-			if (production.getLeft() == nonTerminal)
-				target.add(production.getRight());
+			if (production.getLeft().contains(nonTerminal))
+				target.add(production.getRight().getValue());
 		}
 		
 		return target;
 	}
 	
-	public Alphabet getNonTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		target.add(this.getLeftNonTerminals());
-		target.add(this.getRightNonTerminals());
+	public Alphabet getAlphabet() {
+		Alphabet target = new Alphabet();
+		
+		target.add(this.getNonTerminalAlphabet());
+		target.add(this.getTerminalAlphabet());		
 		
 		return target;
 	}
 	
-	public Alphabet getTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
-		target.add(this.getRightTerminals());
-		
-		return target;
-	}
-	
-	public Alphabet getLeftNonTerminals() {
+	public Alphabet getNonTerminalAlphabet() {
 		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
-		for (Production production : this) {
-			target.add(production.getLeftNonTerminals());
-		}
+		target.add(this.getLeftNonTerminalAlphabet());
+		target.add(this.getRightNonTerminalAlphabet());
 		
 		return target;
 	}
 	
-	public Alphabet getRightNonTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		
-		for (Production production : this) {
-			target.add(production.getRightNonTerminals());
-		}
-		
-		return target;
-	}
-	
-	public Alphabet getRightTerminals() {
+	public Alphabet getTerminalAlphabet() {
 		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
 		
+		target.add(this.getRightTerminalAlphabet());
+		
+		return target;
+	}
+	
+	public Alphabet getLeftNonTerminalAlphabet() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		
 		for (Production production : this) {
-			target.add(production.getRightTerminals());
+			target.add(production.getLeft().getNonTerminalAlphabet());
+		}
+		
+		return target;
+	}
+	
+	public Alphabet getRightNonTerminalAlphabet() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		
+		for (Production production : this) {
+			target.add(production.getRight().getNonTerminalAlphabet());
+		}
+		
+		return target;
+	}
+	
+	public Alphabet getRightTerminalAlphabet() {
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
+		
+		for (Production production : this) {
+			target.add(production.getRight().getTerminalAlphabet());
 		}
 		
 		return target;
@@ -236,11 +236,11 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 	public String toString() {
 		String s = "[";
 		
-		Iterator<Character> nonTerminals = this.getLeftNonTerminals().iterator();
+		Iterator<Character> nonTerminals = this.getLeftNonTerminalAlphabet().iterator();
 		while(nonTerminals.hasNext()) {
 			Character nonTerminal = nonTerminals.next();
 			s += nonTerminal + Production.MEMBER_SEPARATOR;
-			Iterator<String> sententials = this.getSententialsForNonTerminal(nonTerminal).iterator();
+			Iterator<String> sententials = this.getRightForNonTerminal(nonTerminal).iterator();
 			while(sententials.hasNext()) {
 				String sentential = sententials.next();
 				s += sentential + ((sententials.hasNext()) ? INFIX_SEPARATOR : "");
@@ -252,4 +252,5 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		
 		return s;
 	}	
+	
 }

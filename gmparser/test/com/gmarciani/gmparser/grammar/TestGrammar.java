@@ -38,10 +38,10 @@ public class TestGrammar {
 	@Test
 	public void testGrammarBuilding() {		
 		
-		Production prodOne = new Production('S',"Aa");
-		Production prodTwo = new Production('S',"a");
-		Production prodThree = new Production('A',"a");
-		Production prodFour = new Production('A', Grammar.EMPTY);
+		Production prodOne = new Production("S","Aa");
+		Production prodTwo = new Production("S","a");
+		Production prodThree = new Production("A","a");
+		Production prodFour = new Production("A", Grammar.EMPTY);
 		
 		Productions productions = new Productions();
 		productions.add(prodOne);

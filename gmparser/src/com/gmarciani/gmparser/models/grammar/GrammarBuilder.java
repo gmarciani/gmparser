@@ -23,6 +23,7 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
+import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.grammar.production.ProductionsBuilder;
@@ -75,8 +76,21 @@ public class GrammarBuilder {
 	}
 	
 	//(S,Aa)
+		@SuppressWarnings("static-access")
+		public static GrammarBuilder hasProduction(Member left, Member right) {
+			Productions created = ProductionsBuilder
+					.hasProduction(left, right)
+					.create();
+			
+			for (Production prod : created)
+				grammarProductions.add(prod);
+			
+			return instance;
+		}	
+	
+	//(S,Aa)
 	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(Character left, String right) {
+	public static GrammarBuilder hasProduction(String left, String right) {
 		Productions created = ProductionsBuilder
 				.hasProduction(left, right)
 				.create();

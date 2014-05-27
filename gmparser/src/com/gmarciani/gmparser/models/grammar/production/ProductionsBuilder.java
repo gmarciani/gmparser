@@ -56,7 +56,15 @@ public class ProductionsBuilder {
 	}
 	
 	//(S,Aa)
-	public static ProductionsBuilder hasProduction(Character left, String right) {
+		public static ProductionsBuilder hasProduction(Member left, Member right) {
+			Production production = new Production(left, right);
+			productions.add(production);
+
+			return instance;
+		}	
+	
+	//(S,Aa)
+	public static ProductionsBuilder hasProduction(String left, String right) {
 		Production production = new Production(left, right);
 		productions.add(production);
 
@@ -105,7 +113,7 @@ public class ProductionsBuilder {
 	//S->Aa
 	private static ProductionsBuilder hasProductionAsString(String productions, String memberSeparator) {
 		String productionAsArray[] = productions.split(Pattern.quote(memberSeparator));
-		Character left = productionAsArray[0].charAt(0);
+		String left = productionAsArray[0];
 		String right = productionAsArray[1];
 		hasProduction(left, right);
 		

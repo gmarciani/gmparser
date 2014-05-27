@@ -208,9 +208,9 @@ public class AppController {
 	@SuppressWarnings("static-access")
 	private void parse(String strGrammar, String word, ParserType parser) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY)
-										.create();
+				.withAxiom('S')
+				.withEmpty(Grammar.EMPTY)
+				.create();
 		
 		//parsing
 		boolean accepted = Parser.parse(grammar, word, parser);
@@ -221,9 +221,9 @@ public class AppController {
 	@SuppressWarnings("static-access")
 	private void transform(String strGrammar, GrammarForm grammarForm) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY)
-										.create();
+				.withAxiom('S')
+				.withEmpty(Grammar.EMPTY)
+				.create();
 		
 		//trasformation
 		Grammar transformedGrammar = GrammarTransformer.transform(grammar, grammarForm);
@@ -234,9 +234,9 @@ public class AppController {
 	@SuppressWarnings("static-access")
 	private void check(String strGrammar) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-										.withAxiom('S')
-										.withEmpty(Grammar.EMPTY)
-										.create();
+				.withAxiom('S')
+				.withEmpty(Grammar.EMPTY)
+				.create();
 		
 		//checking
 		GrammarForm grammarForm = GrammarChecker.check(grammar);
