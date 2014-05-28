@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
@@ -45,7 +45,7 @@ public class TestUngenerativeRemoval {
 		
 		//System.out.println("UNGENERATIVE: " + grammar);
 		
-		GrammarTransformer.removeUngenerativeSymbols(grammar);
+		GrammarTransformerController.removeUngenerativeSymbols(grammar);
 		
 		//System.out.println("WITHOUT UNGENERATIVE: " + grammar);
 		

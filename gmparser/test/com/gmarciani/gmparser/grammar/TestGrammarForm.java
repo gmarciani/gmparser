@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarChecker;
+import com.gmarciani.gmparser.controllers.grammar.GrammarCheckerController;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
@@ -57,10 +57,10 @@ public class TestGrammarForm {
 		System.out.println("NOT CHOMSKY: " + grammarNotChomsky);*/
 		
 		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
-				(GrammarChecker.isChomsky(grammarChomsky)));
+				(GrammarCheckerController.isChomsky(grammarChomsky)));
 		
 		assertFalse("Uncorrect Chomsky Normal Form recognition (should not be recognized)", 
-				(GrammarChecker.isChomsky(grammarNotChomsky)));
+				(GrammarCheckerController.isChomsky(grammarNotChomsky)));
 	}
 
 	@SuppressWarnings("static-access")
@@ -80,10 +80,10 @@ public class TestGrammarForm {
 		System.out.println("NOT GREIBACH: " + grammarNotGreibach);*/
 		
 		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
-				(GrammarChecker.isGreibach(grammarGreibach)));
+				(GrammarCheckerController.isGreibach(grammarGreibach)));
 		
 		assertFalse("Uncorrect Greibach Normal Form recognition (should not be recognized)", 
-				(GrammarChecker.isGreibach(grammarNotGreibach)));
+				(GrammarCheckerController.isGreibach(grammarNotGreibach)));
 	}	
 
 }
