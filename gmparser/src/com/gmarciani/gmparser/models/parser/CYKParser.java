@@ -24,6 +24,7 @@
 package com.gmarciani.gmparser.models.parser;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.matrix.CYKMatrix;
 
 public class CYKParser implements Parser {
 
@@ -33,8 +34,14 @@ public class CYKParser implements Parser {
 
 	@Override
 	public boolean parse(Grammar grammar, String word) {
-		// TODO Auto-generated method stub
-		return false;
+		CYKMatrix matrix = this.buildMatrix(grammar, word);
+		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
+	}
+	
+	private CYKMatrix buildMatrix(Grammar grammar, String word) {
+		CYKMatrix matrix = new CYKMatrix(word);
+		
+		return matrix;
 	}
 
 }
