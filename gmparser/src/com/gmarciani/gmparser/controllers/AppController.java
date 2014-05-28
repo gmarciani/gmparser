@@ -36,9 +36,9 @@ import com.gmarciani.gmparser.controllers.App.AppInteractions;
 import com.gmarciani.gmparser.controllers.App.AppMenus;
 import com.gmarciani.gmparser.controllers.App.AppSettings;
 import com.gmarciani.gmparser.controllers.App.AppUI;
-import com.gmarciani.gmparser.controllers.grammar.GrammarChecker;
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
-import com.gmarciani.gmparser.controllers.grammar.Parser;
+import com.gmarciani.gmparser.controllers.grammar.GrammarCheckerController;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
+import com.gmarciani.gmparser.controllers.grammar.ParserController;
 import com.gmarciani.gmparser.controllers.io.IOController;
 import com.gmarciani.gmparser.controllers.ui.AppOutput;
 import com.gmarciani.gmparser.controllers.ui.Listener;
@@ -85,9 +85,9 @@ public class AppController {
 	
 	private void setupListeners() {
 		this.output = new AppOutput();
-		Parser.setOutput(this.output);
-		GrammarTransformer.setOutput(output);
-		GrammarChecker.setOutput(output);
+		ParserController.setOutput(this.output);
+		GrammarTransformerController.setOutput(output);
+		GrammarCheckerController.setOutput(output);
 	}
 	
 	public Listener getOutput() {
@@ -159,7 +159,7 @@ public class AppController {
 			case AppMenus.ParseMenu.CYK:
 				parser = ParserType.CYK;
 			case AppMenus.ParseMenu.LL1:
-				parser = ParserType.LL1;
+				parser = ParserType.LR1;
 			default:
 				parser = ParserType.CYK;
 				break;
@@ -213,7 +213,7 @@ public class AppController {
 				.create();
 		
 		//parsing
-		boolean accepted = Parser.parse(grammar, word, parser);
+		boolean accepted = ParserController.parse(grammar, word, parser);
 		
 		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nString: " + word + "\nParser: " + parser.getName() + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
 	}
@@ -226,7 +226,7 @@ public class AppController {
 				.create();
 		
 		//trasformation
-		Grammar transformedGrammar = GrammarTransformer.transform(grammar, grammarForm);
+		Grammar transformedGrammar = GrammarTransformerController.transform(grammar, grammarForm);
 		
 		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nGrammar form: " + grammarForm + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
 	}
@@ -239,7 +239,7 @@ public class AppController {
 				.create();
 		
 		//checking
-		GrammarForm grammarForm = GrammarChecker.check(grammar);
+		GrammarForm grammarForm = GrammarCheckerController.check(grammar);
 		
 		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);		
 	}

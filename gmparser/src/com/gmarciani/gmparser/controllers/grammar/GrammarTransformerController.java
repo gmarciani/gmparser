@@ -24,11 +24,11 @@
 package com.gmarciani.gmparser.controllers.grammar;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.commons.collections.CollectionUtils;
 
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -37,7 +37,7 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class GrammarTransformer {
+public class GrammarTransformerController {
 	
 	@SuppressWarnings("unused")
 	private static Listener output;	
@@ -116,7 +116,21 @@ public class GrammarTransformer {
 		Iterator<Production> iterProductions = grammar.getProductions().iterator();
 		while(iterProductions.hasNext()) {
 			Production production = iterProductions.next();
-			if (!CollectionUtils.intersection(production.getRight().getNonTerminalAlphabet(), nullables).isEmpty()) {
+			Alphabet nullablesForProduction = grammar.getNullablesForProduction(production);
+			if (!nullablesForProduction.isEmpty()) {
+				Map<Character, List<Integer>> nullablesOccurencesMap = production.getRight().getSymbolsOccurrences(nullablesForProduction);
+				for (Character nullable : nullablesForProduction) {
+					List<Integer> nullableOccurrences = nullablesOccurencesMap.get(nullable);
+					for (int nullableOccurrence : nullableOccurrences) {
+						String lhs = production.getLeft().getValue();
+						StringBuilder builder = new StringBuilder(production.getRight().getValue());
+						builder.insert(nullableOccurrence, Grammar.EMPTY);
+						String rhs = builder.toString();
+						Production productionWithoutNullable = new Production(lhs, rhs);
+						grammar.addProduction(productionWithoutNullable);
+					}						
+				}
+				
 				String lhs = production.getLeft().getValue();
 				String rhs = production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EMPTY);
 				Production productionWithoutNullables = new Production(lhs, rhs);

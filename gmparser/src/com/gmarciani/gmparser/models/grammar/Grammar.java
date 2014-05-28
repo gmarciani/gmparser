@@ -166,6 +166,18 @@ public class Grammar {
 		return this.productions.getNullables();
 	}
 	
+	public Alphabet getNullablesForProduction(Production production) {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		Alphabet nullables = this.getNullables();
+		
+		for (Character nonTerminal : production.getRight().getNonTerminalAlphabet()) {
+			if (nullables.contains(nonTerminal))
+				target.add(nonTerminal);
+		}		
+		
+		return target;
+	}
+	
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		return this.productions.getProductionsWithin(alphabet);
 	}

@@ -24,7 +24,9 @@
 package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -35,7 +37,7 @@ public class Member implements Comparable<Member> {
 	private String value;
 
 	public Member() {
-		
+		this.value = "";
 	}
 	
 	public Member(String value) {
@@ -51,8 +53,6 @@ public class Member implements Comparable<Member> {
 	}
 
 	public void setValue(String value) {
-		if (value == null)
-			System.out.println("member with null value");
 		this.value = value;
 		this.rebuild();
 	}
@@ -104,6 +104,21 @@ public class Member implements Comparable<Member> {
 			target.add(symbol);
 		
 		return target;
+	}
+	
+	public Map<Character, List<Integer>> getSymbolsOccurrences(Alphabet alphabet) {
+		Map<Character, List<Integer>> target = new HashMap<Character, List<Integer>>();
+		
+		for (int index = 0; index < this.getValue().length(); index ++) {
+			Character symbol = this.getValue().charAt(index);			
+			if (alphabet.contains(symbol)) {
+				if (!target.containsKey(symbol))
+					target.put(symbol, new ArrayList<Integer>());
+				target.get(symbol).add(index);
+			}			
+		}
+		
+		return target;		
 	}
 	
 	public List<Character> getNonTerminals() {

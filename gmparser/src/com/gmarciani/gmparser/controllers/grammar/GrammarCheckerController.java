@@ -29,7 +29,7 @@ import com.gmarciani.gmparser.models.grammar.GrammarForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class GrammarChecker {
+public class GrammarCheckerController {
 	
 	@SuppressWarnings("unused")
 	private static Listener output;	
