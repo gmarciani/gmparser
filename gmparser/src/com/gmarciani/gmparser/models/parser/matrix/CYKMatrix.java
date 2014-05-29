@@ -23,42 +23,114 @@
 
 package com.gmarciani.gmparser.models.parser.matrix;
 
-import java.util.HashMap;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
-public class CYKMatrix extends HashMap<Pair<Integer, Integer>, Alphabet>{
-
-	private static final long serialVersionUID = -4089291025909944905L;
+public class CYKMatrix {
+	
+	private Table<Integer, Integer, Alphabet> matrix;
+	private String word;
 
 	public CYKMatrix(String word) {
-		super();
-		this.build(word);
+		this.setWord(word);
+		this.initializeMatrix();		
+	}
+	
+	public Table<Integer, Integer, Alphabet> getMatrix() {
+		return this.matrix;
+	}
+	
+	public String getWord() {
+		return this.word;
+	}
+	
+	private void setWord(String word) {
+		this.word = word;
+	}
+	
+	public List<Integer> getWordLenghts() {
+		List<Integer> target = new ArrayList<Integer>();
+		
+		target.addAll(this.matrix.rowKeySet());
+		
+		return target;
+	}
+	
+	public List<Integer> getWordPositions() {
+		List<Integer> target = new ArrayList<Integer>();
+		
+		target.addAll(this.matrix.columnKeySet());
+		
+		return target;
+		
+	}
+	
+	private void initializeMatrix() {
+		int size = this.getWord().length();
+		this.matrix = HashBasedTable.create(size, size);
+		
+		for (int r = 1; r <= size; r ++) {
+			for (int c = 1; c <= size; c ++) {
+				this.matrix.put(r, c, new Alphabet(AlphabetType.NON_TERMINAL));
+			}
+		}
 	}
 	
 	public Alphabet get(int row, int column) {
-		Pair<Integer, Integer> coordinates = new ImmutablePair<Integer, Integer>(row, column);
-		return (this.get(coordinates));
+		return this.matrix.get(row, column);
 	}
 	
-	public boolean put(Character nonTerminal, int row, int column) {
-		Pair<Integer, Integer> coordinates = new ImmutablePair<Integer, Integer>(row, column);
-		return (this.get(coordinates).add(nonTerminal));
+	public boolean put(int row, int column, Character nonTerminal) {
+		return this.matrix.get(row, column).add(nonTerminal);
 	}
 	
-	private void build(String word) {
-		int size = word.length();
+	public boolean put(int row, int column, Alphabet nonTerminals) {
+		return this.matrix.get(row, column).addAll(nonTerminals);
+	}
+	
+	@Override public String toString() {
+		 StringWriter sw = new StringWriter();
+	        /*
+	        DataExporter exporter = new TextExporter(sw);
+	        exporter.addColumn("Hello");
+	        exporter.addRow("World!");
+	        exporter.finishExporting();
+	        
+	        System.out.println(sw.toString());*/
+		String target = "CYKMatrix(";
 		
-		for (int row = 0; row < size; row ++) {
-			for (int column = 0; column < size; column ++) {
-				Pair<Integer, Integer> coordinate = new ImmutablePair<Integer, Integer>(row, column);
-				this.put(coordinate, new Alphabet(AlphabetType.NON_TERMINAL));
-			}
+		Iterator<Table.Cell<Integer, Integer, Alphabet>> iter = this.matrix.cellSet().iterator();
+		while(iter.hasNext()) {
+			Table.Cell<Integer, Integer, Alphabet> cell = iter.next();
+			target += "(" + cell.getRowKey() + ";" + cell.getColumnKey() + ")" + cell.getValue();
+			target += (iter.hasNext() ? "," : "");
 		}
+		
+		target += ")";
+		
+		return target;
+	}
+	
+	@Override public boolean equals(Object obj) {
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		CYKMatrix other = (CYKMatrix) obj;
+		
+		return (this.getWord().equals(other.getWord())
+				&& this.getMatrix().equals(other.getMatrix()));
+	}
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.getWord(), this.getMatrix());
 	}
 
 }

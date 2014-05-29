@@ -25,13 +25,33 @@ package com.gmarciani.gmparser.parser;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
-public class TestCYKParser {
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.parser.CYKParser;
+import com.gmarciani.gmparser.models.parser.matrix.CYKMatrix;
 
+public class TestCYKParser {
+	
+	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
+	private static final String WORD = "aababb";
+
+	@SuppressWarnings("static-access")
 	@Test
 	public void testParse() {
-		fail("Not yet implemented"); // TODO
+		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		CYKParser parser = new CYKParser();
+		CYKMatrix matrix = parser.getMatrix(grammar.getProductions(), WORD);
+		
+		System.out.println(matrix);
 	}
 
 }

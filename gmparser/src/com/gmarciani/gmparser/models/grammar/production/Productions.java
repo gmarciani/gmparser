@@ -101,6 +101,26 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return target;
 	}
 	
+	public Productions getProductionsRightWithinAt(Alphabet ... entries) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			String rhs = production.getRight().getValue();
+			boolean match = true;
+			for (int index = 0; index < entries.length; index ++) {
+				Alphabet alphabet = entries[index];
+				match = (alphabet.contains(rhs.charAt(index)) ? match : false);
+				if (!match)
+					break;
+			}
+			
+			if (match)
+				target.add(production);
+		}		
+		
+		return target;
+	}
+	
 	public Productions getEpsilonProductions() {
 		Productions target = new Productions();
 		
@@ -232,8 +252,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return target;
 	}	
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		String s = "[";
 		
 		Iterator<Character> nonTerminals = this.getLeftNonTerminalAlphabet().iterator();
@@ -252,5 +271,16 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		
 		return s;
 	}	
+	
+	@Override public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		
+		Productions other = (Productions) obj;
+		
+		boolean byProductions = (this.containsAll(other) && other.containsAll(this));
+		
+		return byProductions;
+	}
 	
 }

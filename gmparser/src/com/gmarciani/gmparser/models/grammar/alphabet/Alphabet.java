@@ -23,7 +23,9 @@
 
 package com.gmarciani.gmparser.models.grammar.alphabet;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentSkipListSet;
+
 
 public class Alphabet extends ConcurrentSkipListSet<Character> {
 
@@ -88,12 +90,12 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 	}
 	
 	private boolean isAcceptableSymbol(Character symbol) {
-		if (this.type == null)
+		if (this.getType() == null)
 			return true;
-		if (this.type == AlphabetType.NON_TERMINAL
+		if (this.getType() == AlphabetType.NON_TERMINAL
 				&& isNonTerminal(symbol))
 			return true;
-		if (this.type == AlphabetType.TERMINAL
+		if (this.getType() == AlphabetType.TERMINAL
 				&& isTerminal(symbol))
 			return true;
 		
@@ -125,5 +127,21 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		
 		return target;
 	}	
+	
+	@Override public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		
+		Alphabet other = (Alphabet) obj;
+		
+		boolean byType = (this.getType() == other.getType());
+		boolean bySymbols = (this.containsAll(other) && other.containsAll(this));
+		
+		return byType && bySymbols;
+	}
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.type, this.toArray(new Character[this.size()]));
+	}
 	
 }

@@ -49,7 +49,7 @@ public class ParserController {
 	}	
 
 	public static boolean parseCYK(Grammar grammar, String word) {
-		Parser parser = new CYKParser();
+		CYKParser parser = new CYKParser();
 		return parser.parse(grammar, word);
 	}	
 	

@@ -23,6 +23,7 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -216,8 +217,7 @@ public class Grammar {
 		this.terminals = this.productions.getTerminalAlphabet();
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		String s = "Grammar(" + this.getTerminals() + "," + 
 								this.getNonTerminals() + "," + 
 								this.getAxiom() + "," + 
@@ -225,23 +225,23 @@ public class Grammar {
 		return s;
 	}	
 	
-	@Override
-	public boolean equals(Object obj) {
+	@Override public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
 		Grammar other = (Grammar) obj;
 		
-		if (!nonTerminals.equals(other.nonTerminals))
-			return false;
-		
-		if (!terminals.equals(other.terminals))
-			return false;
-		
-		if (!productions.equals(other.productions))
-			return false;		
-		
-		return true;
+		return (this.getNonTerminals().equals(other.getNonTerminals())
+				&& this.getTerminals().equals(other.getTerminals())
+				&& this.getAxiom().equals(other.getAxiom())
+				&& this.getProductions().equals(other.getProductions()));
 	}	
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.getNonTerminals(), 
+				this.getTerminals(), 
+				this.getAxiom(), 
+				this.getProductions());
+	}
 	
 }

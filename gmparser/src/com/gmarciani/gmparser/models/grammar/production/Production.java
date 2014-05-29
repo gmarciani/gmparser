@@ -23,6 +23,8 @@
 
 package com.gmarciani.gmparser.models.grammar.production;
 
+import java.util.Objects;
+
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class Production implements Comparable<Production> {
@@ -123,16 +125,19 @@ public class Production implements Comparable<Production> {
 				&& !this.getLeft().equals(this.getRight()));
 	}	
 	
-	@Override
-	public int compareTo(Production other) {
+	@Override public String toString() {
+		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
+		return s;
+	}
+	
+	@Override public int compareTo(Production other) {
 		int byLeft = this.getLeft().compareTo(other.getLeft());
 		if (byLeft == 0)
 			return this.getRight().compareTo(other.getRight());
 		return byLeft;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
+	@Override public boolean equals(Object obj) {
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 
@@ -140,21 +145,10 @@ public class Production implements Comparable<Production> {
 		
 		return (this.getLeft().equals(other.getLeft()) 
 				&& this.getRight().equals(other.getRight()));
-	}	
-	
-	@Override
-	public String toString() {
-		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
-		return s;
-	}
+	}		
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.getLeft() == null) ? 0 : this.getRight().hashCode());
-		result = prime * result + ((this.getRight() == null) ? 0 : this.getRight().hashCode());
-		return result;
+	@Override public int hashCode() {
+		return Objects.hash(this.getLeft(), this.getRight());
 	}
 	
 }

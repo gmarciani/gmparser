@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -169,32 +170,25 @@ public class Member implements Comparable<Member> {
 		}			
 	}
 	
-	@Override
-	public int compareTo(Member other) {
+	@Override public String toString() {
+		return this.getValue();
+	}
+	
+	@Override public int compareTo(Member other) {
 		return (this.getValue().compareTo(other.getValue()));
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
+	@Override public boolean equals(Object obj) {
 		if (obj == null || getClass() != obj.getClass())
 			return false;
 
 		Member other = (Member) obj;
 		
 		return (this.getValue().equals(other.getValue()));
-	}
-	
-	@Override
-	public String toString() {
-		return this.value;
-	}
+	}	
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.getValue() == null) ? 0 : this.getValue().hashCode());
-		return result;
+	@Override public int hashCode() {
+		return Objects.hash(this.getValue());
 	}
 
 }
