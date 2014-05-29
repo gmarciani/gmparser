@@ -24,6 +24,7 @@
 package com.gmarciani.gmparser.models.parser;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.matrix.LROneMatrix;
 
 public class LROneParser implements Parser {
 
@@ -35,6 +36,11 @@ public class LROneParser implements Parser {
 	public boolean parse(Grammar grammar, String word) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public LROneMatrix getMatrix(Grammar grammar, String word) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

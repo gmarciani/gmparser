@@ -27,11 +27,28 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class TestLROneParser {
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.parser.LROneParser;
+import com.gmarciani.gmparser.models.parser.matrix.LROneMatrix;
 
+public class TestLROneParser {
+	
+	private static final String GRAMMAR = "";
+	private static final String WORD = "";
+
+	@SuppressWarnings("static-access")
 	@Test
 	public void testParse() {
-		fail("Not yet implemented"); // TODO
+		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		LROneParser parser = new LROneParser();
+		LROneMatrix matrix = parser.getMatrix(grammar, WORD);
+		
+		System.out.println(matrix);
 	}
 
 }
