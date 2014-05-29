@@ -23,14 +23,25 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
-public enum GrammarForm {
+public enum NormalForm {
 	
-	CHOMSKY_NORMAL_FORM,
-	GREIBACH_NORMAL_FORM,
-	UNKNOWN;
+	CHOMSKY_NORMAL_FORM("Chomsky-Normal-Form", "CNF"),
+	GREIBACH_NORMAL_FORM("Greibach-Normal-Form", "GNF");
 	
-	private GrammarForm() {
-		
+	private String name;
+	private String shortName;
+	
+	private NormalForm(String name, String shortName) {
+		this.name = name;
+		this.shortName = shortName;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getShortName() {
+		return this.shortName;
 	}
 
 }

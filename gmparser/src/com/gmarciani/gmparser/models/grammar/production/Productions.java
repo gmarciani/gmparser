@@ -23,10 +23,14 @@
 
 package com.gmarciani.gmparser.models.grammar.production;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import com.gmarciani.gmparser.models.grammar.NormalForm;
+import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
@@ -119,6 +123,106 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		}		
 		
 		return target;
+	}
+	
+	public Type getType(Alphabet nonTerminals, Alphabet terminals) {
+		if (this.isRegular(nonTerminals, terminals))
+			return Type.REGULAR;
+		
+		if (this.isContextFree(nonTerminals, terminals))
+			return Type.CONTEXT_FREE;
+		
+		if (this.isContextSensitive(nonTerminals, terminals))
+			return Type.CONTEXT_SENSITIVE;
+		
+		if (this.isUnrestricted(nonTerminals, terminals))
+			return Type.UNRESTRICTED;
+		
+		return Type.UNKNOWN;
+	}
+	
+	public boolean isUnrestricted(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isUnrestricted(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isContextSensitive(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isContextSensitive(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isContextFree(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isContextFree(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isRegular(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isRegular(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isRegularLeftLinear(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isRegularLeftLinear(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isRegularRightLinear(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isRegularRightLinear(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}	
+	
+	public List<NormalForm> getNormalForm(Alphabet nonTerminals, Alphabet terminals) {
+		List<NormalForm> target = new ArrayList<NormalForm>();
+		
+		if (this.isChomskyNormalForm(nonTerminals, terminals))
+			target.add(NormalForm.CHOMSKY_NORMAL_FORM);
+		
+		if (this.isGreibachNormalForm(nonTerminals, terminals))
+			target.add(NormalForm.GREIBACH_NORMAL_FORM);
+		
+		return target;
+	}
+	
+	public boolean isChomskyNormalForm(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isChomskyNormalForm(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isGreibachNormalForm(Alphabet nonTerminals, Alphabet terminals) {
+		for (Production production : this) {
+			if (!production.isGreibachNormalForm(nonTerminals, terminals))
+				return false;
+		}
+		
+		return true;
 	}
 	
 	public Productions getEpsilonProductions() {

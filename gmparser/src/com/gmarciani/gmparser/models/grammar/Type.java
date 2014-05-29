@@ -21,41 +21,26 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.grammar;
+package com.gmarciani.gmparser.models.grammar;
 
-import com.gmarciani.gmparser.controllers.ui.Listener;
-import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.CYKParser;
-import com.gmarciani.gmparser.models.parser.LROneParser;
-import com.gmarciani.gmparser.models.parser.Parser;
-import com.gmarciani.gmparser.models.parser.ParserType;
-
-public class ParserController {
+public enum Type {
 	
-	private static Listener output;
+	UNRESTRICTED("Unrestricted"),
+	CONTEXT_SENSITIVE("Context-Sensitive"),
+	CONTEXT_FREE("Context-Free"),
+	REGULAR("Regular"),
+	REGULAR_RIGHT_LINEAR("Regular Right-Linear"),
+	REGULAR_LEFT_LINEAR("Regular Left-Linear"),
+	UNKNOWN("Unknown");
 	
-	public static void setOutput(Listener listener) {
-		output = listener;
+	private String name;
+	
+	private Type(final String name) {
+		this.name = name;
 	}
-
-	public static boolean parse(Grammar grammar, String word, ParserType parser) {
-		if (parser == ParserType.CYK) {
-			return parseCYK(grammar, word);
-		} else if (parser == ParserType.LR1) {
-			return parseLROne(grammar, word);
-		} else {
-			return false;
-		}
-	}	
-
-	public static boolean parseCYK(Grammar grammar, String word) {
-		CYKParser parser = new CYKParser();
-		return parser.parse(grammar, word);
-	}	
 	
-	public static boolean parseLROne(Grammar grammar, String word) {
-		Parser parser = new LROneParser();
-		return parser.parse(grammar, word);
+	public String getName() {
+		return this.name;
 	}
 
 }

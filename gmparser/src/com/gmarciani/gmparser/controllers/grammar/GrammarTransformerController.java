@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarForm;
+import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
@@ -46,7 +46,7 @@ public class GrammarTransformerController {
 		output = listener;
 	}
 
-	public static Grammar transform(Grammar grammar, GrammarForm grammarForm) {
+	public static Grammar transform(Grammar grammar, NormalForm grammarForm) {
 		return null;
 	}
 	

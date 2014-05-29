@@ -25,6 +25,7 @@ package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.Objects;
 
+import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class Production implements Comparable<Production> {
@@ -91,6 +92,14 @@ public class Production implements Comparable<Production> {
 		this.getRight().setValue(right);
 	}
 	
+	public int getLeftSize() {
+		return (this.getLeft().getSize());
+	}
+	
+	public int getRightSize() {
+		return (this.getRight().getSize());
+	}
+	
 	public boolean isWithin(Alphabet alphabet) {
 		return (this.getLeft().isWithin(alphabet)
 				&& this.getRight().isWithin(alphabet));
@@ -102,14 +111,99 @@ public class Production implements Comparable<Production> {
 	
 	public boolean isRightWithin(Alphabet alphabet) {
 		return (this.getRight().isWithin(alphabet));
+	}	
+	
+	public boolean isLeftEpsilon() {
+		return (this.getLeft().isEpsilon());
 	}
 	
+	public boolean isRightEpsilon() {
+		return (this.getRight().isEpsilon());
+	}
+	
+	public Type getType(Alphabet nonTerminals, Alphabet terminals) {
+		if (this.isRegular(nonTerminals, terminals))
+			return Type.REGULAR;
+		
+		if (this.isContextFree(nonTerminals, terminals))
+			return Type.CONTEXT_FREE;
+		
+		if (this.isContextSensitive(nonTerminals, terminals))
+			return Type.CONTEXT_SENSITIVE;
+		
+		if (this.isUnrestricted(nonTerminals, terminals))
+			return Type.UNRESTRICTED;
+		
+		return Type.UNKNOWN;
+	}
+	
+	public boolean isUnrestricted(Alphabet nonTerminals, Alphabet terminals) {
+		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
+		return (this.isLeftWithin(acceptedAlphabet)
+				&& (this.isRightWithin(acceptedAlphabet) || this.isRightEpsilon()));
+	}
+
+	public boolean isContextSensitive(Alphabet nonTerminals, Alphabet terminals) {
+		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
+		return (this.isLeftWithin(acceptedAlphabet)
+				&& this.isRightWithin(acceptedAlphabet)
+				&& this.getLeftSize() <= this.getRightSize());
+	}
+	
+	public boolean isContextFree(Alphabet nonTerminals, Alphabet terminals) {
+		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
+		return (this.isLeftWithin(nonTerminals)
+				&& this.getLeftSize() == 1
+				&& this.isRightWithin(acceptedAlphabet));
+	}
+	
+	public boolean isRegular(Alphabet nonTerminals, Alphabet terminals) {
+		return (this.isRegularLeftLinear(nonTerminals, terminals)
+				|| this.isRegularRightLinear(nonTerminals, terminals));
+	}
+	
+	public boolean isRegularLeftLinear(Alphabet nonTerminals, Alphabet terminals) {
+		return (this.isLeftWithin(nonTerminals)
+				&& this.getLeftSize() == 1
+				&& this.getRight().matches("^" + nonTerminals.getUnionRegex() + "{0,1}" + terminals.getUnionRegex() + "$"));
+	}
+	
+	public boolean isRegularRightLinear(Alphabet nonTerminals, Alphabet terminals) {
+		return (this.isLeftWithin(nonTerminals)
+				&& this.getLeftSize() == 1
+				&& this.getRight().matches("^" + terminals.getUnionRegex() + nonTerminals.getUnionRegex() + "{0,1}$"));
+	}		
+
+	public boolean isChomskyNormalForm(Alphabet nonTerminals, Alphabet terminals) {
+		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
+				&& this.isRightWithin(nonTerminals) && this.getRight().getSize() == 2)
+			return true;
+		
+		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
+				&& this.isRightWithin(terminals) && this.getRight().getSize() == 1)
+			return true;
+		
+		//aggiungere S->empty e S non sta nel rhs di alcuna produzione
+		
+		return false;
+	}
+	
+	public boolean isGreibachNormalForm(Alphabet nonTerminals, Alphabet terminals) {		
+		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
+				&& this.getRight().matches("^" + terminals.getUnionRegex() + nonTerminals.getUnionRegex() + "*$"))
+			return true;
+		
+		//aggiungere S->empty
+		
+		return false;
+	}
+
 	public boolean isEpsilonProduction() {
-		return this.getRight().isEpsilon();
+		return (this.isRightEpsilon());
 	}	
 	
 	public boolean isUnitProduction(Alphabet nonTerminals) {
-		return(this.getLeft().getSize() == 1
+		return (this.getLeft().getSize() == 1
 				&& this.getRight().getSize() == 1
 				&& this.getLeft().isWithin(nonTerminals)
 				&& this.getRight().isWithin(nonTerminals));

@@ -25,11 +25,12 @@ package com.gmarciani.gmparser.controllers.grammar;
 
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarForm;
+import com.gmarciani.gmparser.models.grammar.NormalForm;
+import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class GrammarCheckerController {
+public class GrammarAnalyzerController {
 	
 	@SuppressWarnings("unused")
 	private static Listener output;	
@@ -37,16 +38,16 @@ public class GrammarCheckerController {
 	public static void setOutput(Listener listener) {
 		output = listener;
 	}
-	
-	public static GrammarForm check(Grammar grammar) {
+	/*
+	public static NormalForm getGrammarNormalForm(Grammar grammar) {
 		
 		if (isChomsky(grammar)) 
-			return GrammarForm.CHOMSKY_NORMAL_FORM;
+			return NormalForm.CHOMSKY_NORMAL_FORM;
 		
 		if (isGreibach(grammar)) 
-			return GrammarForm.GREIBACH_NORMAL_FORM;		
+			return NormalForm.GREIBACH_NORMAL_FORM;		
 		
-		return GrammarForm.UNKNOWN;
+		return NormalForm.UNKNOWN;
 	}	
 	
 	public static boolean isChomsky(Grammar grammar) {
@@ -103,5 +104,5 @@ public class GrammarCheckerController {
 		
 		return false;
 	}	
-
+*/
 }

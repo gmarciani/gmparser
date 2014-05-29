@@ -24,6 +24,7 @@
 package com.gmarciani.gmparser.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -36,16 +37,16 @@ import com.gmarciani.gmparser.controllers.App.AppInteractions;
 import com.gmarciani.gmparser.controllers.App.AppMenus;
 import com.gmarciani.gmparser.controllers.App.AppSettings;
 import com.gmarciani.gmparser.controllers.App.AppUI;
-import com.gmarciani.gmparser.controllers.grammar.GrammarCheckerController;
+import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzerController;
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
-import com.gmarciani.gmparser.controllers.grammar.ParserController;
+import com.gmarciani.gmparser.controllers.grammar.WordParserController;
 import com.gmarciani.gmparser.controllers.io.IOController;
 import com.gmarciani.gmparser.controllers.ui.AppOutput;
 import com.gmarciani.gmparser.controllers.ui.Listener;
 import com.gmarciani.gmparser.controllers.ui.UiManager;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.grammar.GrammarForm;
+import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.views.interaction.Interactions;
 import com.gmarciani.gmparser.views.menu.Menus;
@@ -85,9 +86,9 @@ public class AppController {
 	
 	private void setupListeners() {
 		this.output = new AppOutput();
-		ParserController.setOutput(this.output);
+		WordParserController.setOutput(this.output);
 		GrammarTransformerController.setOutput(output);
-		GrammarCheckerController.setOutput(output);
+		GrammarAnalyzerController.setOutput(output);
 	}
 	
 	public Listener getOutput() {
@@ -132,7 +133,7 @@ public class AppController {
 			this.parse(grammar, string, parser);
 		} else if (cmd.hasOption("transform")) {
 			String vals[] = cmd.getOptionValues("transform");
-			final GrammarForm grammarForm = GrammarForm.valueOf(vals[0]);
+			final NormalForm grammarForm = NormalForm.valueOf(vals[0]);
 			final String grammar = vals[1];
 			this.transform(grammar, grammarForm);
 		} else if (cmd.hasOption("check")) {
@@ -170,15 +171,15 @@ public class AppController {
 			
 		case AppMenus.MainMenu.TRANSFORM:
 			String grammarToTransform = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
-			GrammarForm grammarForm = null;
+			NormalForm grammarForm = null;
 			int gChoice = this.menus.run(AppMenus.TransformMenu.IDENTIFIER);
 			switch(gChoice) {
 			case AppMenus.TransformMenu.CHOMSKY_NORMAL_FORM:
-				grammarForm = GrammarForm.CHOMSKY_NORMAL_FORM;
+				grammarForm = NormalForm.CHOMSKY_NORMAL_FORM;
 			case AppMenus.TransformMenu.GREIBACH_NORMAL_FORM:
-				grammarForm = GrammarForm.GREIBACH_NORMAL_FORM;
+				grammarForm = NormalForm.GREIBACH_NORMAL_FORM;
 			default:
-				grammarForm = GrammarForm.CHOMSKY_NORMAL_FORM;
+				grammarForm = NormalForm.CHOMSKY_NORMAL_FORM;
 				break;
 			}
 			AppSettings.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;
@@ -213,13 +214,13 @@ public class AppController {
 				.create();
 		
 		//parsing
-		boolean accepted = ParserController.parse(grammar, word, parser);
+		boolean accepted = WordParserController.parse(grammar, word, parser);
 		
 		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nString: " + word + "\nParser: " + parser.getName() + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
 	}
 	
 	@SuppressWarnings("static-access")
-	private void transform(String strGrammar, GrammarForm grammarForm) {
+	private void transform(String strGrammar, NormalForm grammarForm) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
 				.withAxiom('S')
 				.withEmpty(Grammar.EMPTY)
@@ -239,7 +240,7 @@ public class AppController {
 				.create();
 		
 		//checking
-		GrammarForm grammarForm = GrammarCheckerController.check(grammar);
+		List<NormalForm> normalForm = grammar.getNormalForm();
 		
 		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);		
 	}

@@ -23,6 +23,7 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -96,7 +97,7 @@ public class Grammar {
 	}
 	
 	public boolean addProduction(Production production) {
-		boolean added = this.productions.add(production);
+		boolean added = this.getProductions().add(production);
 		if (added)
 			this.rebuildAlphabet();
 		return added;
@@ -113,7 +114,7 @@ public class Grammar {
 	}
 	
 	public boolean removeProduction(Production production) {
-		boolean removed = this.productions.remove(production);
+		boolean removed = this.getProductions().remove(production);
 		if (removed)
 			this.rebuildAlphabet();
 		
@@ -121,8 +122,8 @@ public class Grammar {
 	}	
 	
 	public boolean retainAllProductionsWithin(Alphabet alphabet) {
-		Productions withinProductions = this.productions.getProductionsWithin(alphabet);
-		boolean modified = this.productions.retainAll(withinProductions);
+		Productions withinProductions = this.getProductions().getProductionsWithin(alphabet);
+		boolean modified = this.getProductions().retainAll(withinProductions);
 		if (modified)
 			this.rebuildAlphabet();
 		
@@ -130,8 +131,8 @@ public class Grammar {
 	}
 	
 	public boolean retainAllProductionsLeftWithin(Alphabet alphabet) {
-		Productions withinProductions = this.productions.getProductionsLeftWithin(alphabet);
-		boolean modified = this.productions.retainAll(withinProductions);
+		Productions withinProductions = this.getProductions().getProductionsLeftWithin(alphabet);
+		boolean modified = this.getProductions().retainAll(withinProductions);
 		if (modified)
 			this.rebuildAlphabet();
 		
@@ -139,32 +140,86 @@ public class Grammar {
 	}
 	
 	public boolean retainAllProductionsRightWithin(Alphabet alphabet) {
-		Productions withinProductions = this.productions.getProductionsRightWithin(alphabet);
-		boolean modified = this.productions.retainAll(withinProductions);
+		Productions withinProductions = this.getProductions().getProductionsRightWithin(alphabet);
+		boolean modified = this.getProductions().retainAll(withinProductions);
 		if (modified)
 			this.rebuildAlphabet();
 		
 		return modified;
 	}
 	
+	public Type getType() {
+		return this.getProductions().getType(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isUnrestricted() {
+		return this.getProductions().isUnrestricted(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isContextSensitive() {
+		return this.getProductions().isContextSensitive(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isContextFree() {
+		return this.getProductions().isContextFree(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isRegular() {
+		return this.getProductions().isRegular(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isRegularLeftLinear() {
+		return this.getProductions().isRegularLeftLinear(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isRegularRightLinear() {
+		return this.getProductions().isRegularRightLinear(this.getNonTerminals(), this.getTerminals());
+	}	
+	
+	public boolean isExtended() {
+		Productions epsilonProductions = this.getEpsilonProductions();
+		
+		return epsilonProductions.size() >= 1;
+	}
+	
+	public boolean isSExtended() {
+		Productions epsilonProductions = this.getEpsilonProductions();
+		Production productionSExtension = new Production(this.getAxiom(), this.getEmpty());
+		
+		return (epsilonProductions.contains(productionSExtension)
+				&& epsilonProductions.size() == 1);
+	}
+	
+	public List<NormalForm> getNormalForm() {
+		return this.getProductions().getNormalForm(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public boolean isChomskyNormalForm() {
+		return this.getProductions().isChomskyNormalForm(this.getNonTerminals(), this.getTerminals());
+	}
+
+	public boolean isGreibachNormalForm() {
+		return this.getProductions().isGreibachNormalForm(this.getNonTerminals(), this.getTerminals());
+	}
+	
 	public Productions getEpsilonProductions() {
-		return this.productions.getEpsilonProductions();
+		return this.getProductions().getEpsilonProductions();
 	}
 	
 	public Productions getUnitProductions() {
-		return this.productions.getUnitProductions(this.nonTerminals);
+		return this.getProductions().getUnitProductions(this.getNonTerminals());
 	}
 	
 	public Productions getTrivialUnitProductions() {
-		return this.productions.getTrivialUnitProductions(this.nonTerminals);
+		return this.getProductions().getTrivialUnitProductions(this.getNonTerminals());
 	}
 	
 	public Productions getNonTrivialUnitProductions() {
-		return this.productions.getNonTrivialUnitProductions(this.nonTerminals);
+		return this.getProductions().getNonTrivialUnitProductions(this.getNonTerminals());
 	}
 	
 	public Alphabet getNullables() {
-		return this.productions.getNullables();
+		return this.getProductions().getNullables();
 	}
 	
 	public Alphabet getNullablesForProduction(Production production) {
@@ -180,19 +235,19 @@ public class Grammar {
 	}
 	
 	public Productions getProductionsWithin(Alphabet alphabet) {
-		return this.productions.getProductionsWithin(alphabet);
+		return this.getProductions().getProductionsWithin(alphabet);
 	}
 	
 	public Productions getProductionsForNonTerminal(Character nonTerminal) {
-		return this.productions.getProductionsForNonTerminal(nonTerminal);
+		return this.getProductions().getProductionsForNonTerminal(nonTerminal);
 	}
 	
 	public Set<String> getRightForNonTerminal(Character nonTerminal) {
-		return this.productions.getRightForNonTerminal(nonTerminal);
+		return this.getProductions().getRightForNonTerminal(nonTerminal);
 	}
 	
 	public Alphabet getLeftNonTerminals() {
-		return this.productions.getLeftNonTerminalAlphabet();
+		return this.getProductions().getLeftNonTerminalAlphabet();
 	}
 	
 	public Alphabet getRightNonTerminals() {
@@ -200,12 +255,12 @@ public class Grammar {
 	}
 	
 	public Alphabet getRightTerminals() {
-		return this.productions.getRightTerminalAlphabet();
+		return this.getProductions().getRightTerminalAlphabet();
 	}
 	
 	public Character getNewNonTerminal() {
 		Alphabet totalNonTerminals = Alphabet.getTotalNonTerminals();
-		totalNonTerminals.removeAll(this.nonTerminals);
+		totalNonTerminals.removeAll(this.getNonTerminals());
 		Character target = totalNonTerminals.first();
 		
 		return target;
@@ -213,8 +268,8 @@ public class Grammar {
 	}
 	
 	private void rebuildAlphabet() {
-		this.nonTerminals = this.productions.getNonTerminalAlphabet();
-		this.terminals = this.productions.getTerminalAlphabet();
+		this.nonTerminals = this.getProductions().getNonTerminalAlphabet();
+		this.terminals = this.getProductions().getTerminalAlphabet();
 	}
 
 	@Override public String toString() {

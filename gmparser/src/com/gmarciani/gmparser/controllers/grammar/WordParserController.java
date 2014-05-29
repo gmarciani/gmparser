@@ -21,21 +21,41 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.controllers.grammar;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.gmarciani.gmparser.controllers.ui.Listener;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.CYKParser;
+import com.gmarciani.gmparser.models.parser.LROneParser;
+import com.gmarciani.gmparser.models.parser.Parser;
+import com.gmarciani.gmparser.models.parser.ParserType;
 
-import com.gmarciani.gmparser.analysis.AllTestsAnalysis;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.transformation.AllTestsTransformation;
+public class WordParserController {
+	
+	private static Listener output;
+	
+	public static void setOutput(Listener listener) {
+		output = listener;
+	}
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsAnalysis.class,
-	AllTestsTransformation.class})
-public class AllTests {
+	public static boolean parse(Grammar grammar, String word, ParserType parser) {
+		if (parser == ParserType.CYK) {
+			return parseCYK(grammar, word);
+		} else if (parser == ParserType.LR1) {
+			return parseLROne(grammar, word);
+		} else {
+			return false;
+		}
+	}	
+
+	public static boolean parseCYK(Grammar grammar, String word) {
+		CYKParser parser = new CYKParser();
+		return parser.parse(grammar, word);
+	}	
+	
+	public static boolean parseLROne(Grammar grammar, String word) {
+		Parser parser = new LROneParser();
+		return parser.parse(grammar, word);
+	}
 
 }

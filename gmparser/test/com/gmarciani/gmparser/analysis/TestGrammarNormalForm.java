@@ -21,17 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.grammar;
+package com.gmarciani.gmparser.analysis;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarCheckerController;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestGrammarForm {
+public class TestGrammarNormalForm {
 	
 	private static final String GRAMMAR_CHOMSKY = "E->EA|TB|LC|a;A->PT;P->+;T->TB|LC|a;B->MF;M->x;F->LC|a;C->ER;L->(;R->).";
 	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
@@ -57,10 +56,10 @@ public class TestGrammarForm {
 		System.out.println("NOT CHOMSKY: " + grammarNotChomsky);*/
 		
 		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
-				(GrammarCheckerController.isChomsky(grammarChomsky)));
+				(grammarChomsky.isChomskyNormalForm()));
 		
 		assertFalse("Uncorrect Chomsky Normal Form recognition (should not be recognized)", 
-				(GrammarCheckerController.isChomsky(grammarNotChomsky)));
+				(grammarNotChomsky.isChomskyNormalForm()));
 	}
 
 	@SuppressWarnings("static-access")
@@ -80,10 +79,10 @@ public class TestGrammarForm {
 		System.out.println("NOT GREIBACH: " + grammarNotGreibach);*/
 		
 		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
-				(GrammarCheckerController.isGreibach(grammarGreibach)));
+				(grammarGreibach.isGreibachNormalForm()));
 		
 		assertFalse("Uncorrect Greibach Normal Form recognition (should not be recognized)", 
-				(GrammarCheckerController.isGreibach(grammarNotGreibach)));
+				(grammarNotGreibach.isGreibachNormalForm()));
 	}	
 
 }
