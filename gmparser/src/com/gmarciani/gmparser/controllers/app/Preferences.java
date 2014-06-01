@@ -21,45 +21,110 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers;
+package com.gmarciani.gmparser.controllers.app;
 
 import org.fusesource.jansi.Ansi.Color;
 
+/**
+ * Static app preferences repo.
+ * 
+ * @see {@link App}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
+public final class Preferences {
+	
+	private Preferences() {
+		throw new AssertionError();
+	}
 
-public final class App {
-
-	public static final class AppUI {		
+	/**
+	 * Description
+	 * 
+	 * @see {@link App}
+	 * @see {@link Preferences}
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
+	public static final class AppUI {	
+		
+		private AppUI() {
+			throw new AssertionError();
+		}
+		
 		public static final String FILE_LOGO = "com/gmarciani/gmparser/views/res/logo.txt";
 		public static final String LOGO_PLACEHOLDER = "\nWELCOME TO GMPARSER\n";
 		
 		public static final Color LOGO_COLOR = Color.YELLOW;
+		public static final Color RESULT_COLOR = Color.GREEN;
 		public static final Color LOGON_COLOR = Color.DEFAULT;
 		public static final Color WARNING_COLOR = Color.YELLOW;
 		public static final Color EXCEPTION_COLOR = Color.RED;
 		public static final Color DEBUG_COLOR = Color.MAGENTA;
 	}	
 	
+	/**
+	 * Description
+	 * 
+	 * @see {@link App}
+	 * @see {@link Preferences}
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
 	public static final class AppMenus {
 		
-		public static final class MainMenu {			
+		private AppMenus() {
+			throw new AssertionError();
+		}
+		
+		/**
+		 * Description
+		 * 
+		 * @see {@link App}
+		 * @see {@link Preferences}
+		 * 
+		 * @author Giacomo Marciani
+		 * @version 1.0
+		 */
+		public static final class MainMenu {
+			
+			private MainMenu() {
+				throw new AssertionError();
+			}
+			
 			public static final String IDENTIFIER = "main-menu";
 			public static final String NAME = "Main Menu";
 			public static final String DESCRIPTION = "Main menu description placeholder";
 			
-			public static final int PARSE = 1;
-			public static final int TRANSFORM = 2;
-			public static final int CHECK = 3;
+			public static final int ANALYZE = 1;
+			public static final int PARSE = 2;
 			public static final int HELP = 4;
 			public static final int QUIT = 5;
 			
-			public static final String PARSE_DESCRIPTION = "Parse";
-			public static final String TRANSFORM_DESCRIPTION = "Transform";
-			public static final String CHECK_DESCRIPTION = "Check";
+			public static final String ANALYZE_DESCRIPTION = "Analyze";
+			public static final String PARSE_DESCRIPTION = "Parse";		
 			public static final String HELP_DESCRIPTION = "Help";
 			public static final String QUIT_DESCRIPTION = "Quit";			
 		}
 		
+		/**
+		 * Description
+		 * 
+		 * @see {@link App}
+		 * @see {@link Preferences}
+		 * 
+		 * @author Giacomo Marciani
+		 * @version 1.0
+		 */
 		public static final class ParseMenu {
+			
+			private ParseMenu() {
+				throw new AssertionError();
+			}
+			
 			public static final String IDENTIFIER = "parse-menu";
 			public static final String NAME = "Parse Menu";
 			public static final String DESCRIPTION = "Parser menu description placeholder";
@@ -71,19 +136,21 @@ public final class App {
 			public static final String LL1_DESCRIPTION = "LL(1) Parser";			
 		}
 		
-		public static final class TransformMenu {
-			public static final String IDENTIFIER = "transform-menu";
-			public static final String NAME = "Transform Menu";
-			public static final String DESCRIPTION = "Transform menu description placeholder";
-			
-			public static final int CHOMSKY_NORMAL_FORM = 1;
-			public static final int GREIBACH_NORMAL_FORM = 2;
-			
-			public static final String CHOMSKY_NORMAL_FORM_DESCRIPTION = "Chomsky Normal Form";
-			public static final String GREIBACH_NORMAL_FORM_DESCRIPTION = "Greibach Normal Form";			
-		}
-		
+		/**
+		 * Description
+		 * 
+		 * @see {@link App}
+		 * @see {@link Preferences}
+		 * 
+		 * @author Giacomo Marciani
+		 * @version 1.0
+		 */
 		public static final class LogonMenu {
+			
+			private LogonMenu() {
+				throw new AssertionError();
+			}
+			
 			public static final String IDENTIFIER = "logon-menu";
 			public static final String NAME = "Logon Menu";
 			public static final String DESCRIPTION = "Logon menu description placeholder";
@@ -97,32 +164,100 @@ public final class App {
 		
 	}	
 	
+	/**
+	 * Description
+	 * 
+	 * @see {@link App}
+	 * @see {@link Preferences}
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
 	public static final class AppInteractions {
 		
-		public static final class Grammar {
-			public static final String IDENTIFIER = "insert-grammar";
-			public static final String NAME = "Insert Grammar";
-			public static final String DESCRIPTION = "Insert grammar description placeholder";
+		private AppInteractions() {
+			throw new AssertionError();
 		}
 		
+		/**
+		 * Description
+		 * 
+		 * @see {@link App}
+		 * @see {@link Preferences}
+		 * 
+		 * @author Giacomo Marciani
+		 * @version 1.0
+		 */
+		public static final class Grammar {
+			
+			private Grammar() {
+				throw new AssertionError();
+			}
+			public static final String IDENTIFIER = "insert-grammar";
+			public static final String NAME = "YOUR GRAMMAR";
+			public static final String DESCRIPTION = "Insert your grammar (pattern: (lhs->rhs)+(;lhs->rhs).)";
+		}
+		
+		/**
+		 * Description
+		 * 
+		 * @see {@link App}
+		 * @see {@link Preferences}
+		 * 
+		 * @author Giacomo Marciani
+		 * @version 1.0
+		 */
 		public static final class InputString {
+			
+			private InputString() {
+				throw new AssertionError();
+			}
+			
 			public static final String IDENTIFIER = "insert-input-string";
-			public static final String NAME = "Insert Input String";
-			public static final String DESCRIPTION = "Insert input string description placeholder";
+			public static final String NAME = "YOUR WORD";
+			public static final String DESCRIPTION = "Insert your word";
 		}
 
 	}
 	
+	/**
+	 * Description
+	 * 
+	 * @see {@link App}
+	 * @see {@link Preferences}
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
 	public static final class AppOptions {
+		
+		private AppOptions() {
+			throw new AssertionError();
+		}
+		
 		public static final String DESCRIPTION_VERSION = "GMParser version.";
 		public static final String DESCRIPTION_HELP = "GMParser helper.";
 		public static final String DESCRIPTION_LOGON = "Turn logging on.";
-		public static final String DESCRIPTION_PARSE = "Parse the STRING on GRAMMAR with PARSER.";
-		public static final String DESCRIPTION_TRANSFORM = "Transform the GRAMMAR in GRAMMAR-NORMAL-FORM.";
-		public static final String DESCRIPTION_CHECK = "Check the GRAMMAR type and form.";
+		public static final String DESCRIPTION_ANALYZE = "Analyze the GRAMMAR.";
+		public static final String DESCRIPTION_PARSE = "Parse the WORD on GRAMMAR with PARSER.";
+		
 	}	
 	
-	public static final class AppSettings {
+	/**
+	 * Description
+	 * 
+	 * @see {@link App}
+	 * @see {@link Preferences}
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
+	public static final class AppLog {
+		
+		private AppLog() {
+			throw new AssertionError();
+		}
+		
 		public static final boolean DEBUG = true;
 		public static boolean logon = false;
 	}	

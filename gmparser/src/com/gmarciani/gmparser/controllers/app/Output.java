@@ -21,46 +21,65 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.ui;
+package com.gmarciani.gmparser.controllers.app;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import com.gmarciani.gmparser.controllers.App.AppSettings;
-import com.gmarciani.gmparser.controllers.App.AppUI;
+import com.gmarciani.gmparser.controllers.app.Preferences.AppLog;
+import com.gmarciani.gmparser.controllers.app.Preferences.AppUI;
 
-public class AppOutput implements Listener {
+/**
+ * The app output manager. It manages output format for standard outputs, warnings, exceptions, logon and debug.
+ * 
+ * @see com.gmarciani.gmparser.app.Output
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0 *
+ */
+public final class Output {
 
-	public AppOutput() {}
+	public Output() {}
+	
+	public void onResult(String resultMessage) {
+		System.out.println(ansi().fg(AppUI.RESULT_COLOR).a(resultMessage).reset());
+	}
 
-	@Override
+	/**
+	 * @param logonMessage
+	 */
 	public void onLogon(String logonMessage) {
-		if (AppSettings.logon) {
+		if (AppLog.logon) {
 			String warning = "[LOGON] " + logonMessage;
 			System.out.println(ansi().fg(AppUI.LOGON_COLOR).a(warning).reset());
 		}
 	}
 
-	@Override
+	/**
+	 * @param warningMessage
+	 */
 	public void onWarning(String warningMessage) {
 		String warning = "[WARNING] " + warningMessage;
 		System.out.println(ansi().fg(AppUI.WARNING_COLOR).a(warning).reset());
 	}
 
-	@Override
+	/**
+	 * @param exceptionMessage
+	 */
 	public void onException(String exceptionMessage) {
 		String warning = "[EXCEPTION] " + exceptionMessage;
 		System.out.println(ansi().fg(AppUI.EXCEPTION_COLOR).a(warning).reset());
 	}
 
-	@Override
+	/**
+	 * @param debugMessage
+	 */
 	public void onDebug(String debugMessage) {
-		if (AppSettings.DEBUG) {
+		if (AppLog.DEBUG) {
 			String message = "[DEBUG] " + debugMessage;
 			System.out.println(ansi().fg(AppUI.DEBUG_COLOR).a(message).reset());
 		}
 	}
 
-	@Override
 	public void onUnrecognizedArguments(String[] arguments) {
 		String unrecognizedArgs = "";
 		int uArgsNo = 0;

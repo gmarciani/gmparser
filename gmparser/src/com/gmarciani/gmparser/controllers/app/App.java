@@ -21,10 +21,9 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers;
+package com.gmarciani.gmparser.controllers.app;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -33,50 +32,66 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.gmarciani.gmparser.controllers.App.AppInteractions;
-import com.gmarciani.gmparser.controllers.App.AppMenus;
-import com.gmarciani.gmparser.controllers.App.AppSettings;
-import com.gmarciani.gmparser.controllers.App.AppUI;
-import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzerController;
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
-import com.gmarciani.gmparser.controllers.grammar.WordParserController;
+import com.gmarciani.gmparser.controllers.app.Preferences.*;
+import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.controllers.io.IOController;
-import com.gmarciani.gmparser.controllers.ui.AppOutput;
-import com.gmarciani.gmparser.controllers.ui.Listener;
-import com.gmarciani.gmparser.controllers.ui.UiManager;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.grammar.NormalForm;
+import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.views.interaction.Interactions;
 import com.gmarciani.gmparser.views.menu.Menus;
 
 import static org.fusesource.jansi.Ansi.*;
 
-public class AppController {	
+/**
+ * The main user-app interaction controller.
+ *  
+ * @see {@link GrammarAnalyzer}
+ * @see {@link GrammarTransformer}
+ * @see {@link WordParser}
+ * @see {@link UiManager}
+ * @see {@link Output}
+ * @see {@link Preferences}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
+public final class App {	
 	
-	private static AppController instance;
+	private static App instance;
+	private GrammarAnalyzer analyzer;
+	private WordParser parser;
+	
 	private Options options;
 	private Menus menus;	
 	private Interactions interactions;	
 	
-	private Listener output;
+	private Output output;
 	
-	private AppController() {
+	private App() {
 		this.setupCli();
-		this.setupListeners();
+		this.setupControllers();
 	}	
 
-	public static AppController getInstance() {
+	/**
+	 * Returns the {@link App} singleton instance.
+	 * 
+	 * @return the controller singleton instance.
+	 */
+	public synchronized static App getInstance() {
 		if (instance == null) {
-			instance = new AppController();
+			instance = new App();
 		}
 		
 		return instance;
 	}	
 	
-	//SETUP
-	
+	/**
+	 * Sets up the GMParser command-line interface environment.
+	 */
 	private void setupCli() {
 		UiManager.installAnsiConsole();
 		this.options = UiManager.buildCommandLineOptions();
@@ -84,17 +99,27 @@ public class AppController {
 		this.interactions = UiManager.buildInteractions();
 	}	
 	
-	private void setupListeners() {
-		this.output = new AppOutput();
-		WordParserController.setOutput(this.output);
-		GrammarTransformerController.setOutput(output);
-		GrammarAnalyzerController.setOutput(output);
+	/**
+	 * Sets up the GMParser controllers: GrammarAnalyzer, GrammarTransformer and WordParser.
+	 */
+	private void setupControllers() {
+		this.output = new Output();
+		this.analyzer = GrammarAnalyzer.getInstance();
+		this.parser = WordParser.getInstance();
 	}
 	
-	public Listener getOutput() {
+	/**
+	 * Returns the app output interface.
+	 * 
+	 * @return the output interface.
+	 */
+	public Output getOutput() {
 		return this.output;
 	}
 	
+	/**
+	 * Shows the GMParser welcome splash screen.
+	 */
 	public void printWelcome() {
 		String welcome = AppUI.LOGO_PLACEHOLDER;
 		try {
@@ -106,6 +131,12 @@ public class AppController {
 		}		
 	}
 
+	/**
+	 * The app entry-method.
+	 * 
+	 * @param args command-line arguments.
+	 * @throws ParseException
+	 */
 	public void play(String[] args) throws ParseException {
 		CommandLineParser cmdParser = new GnuParser();
 		CommandLine cmd = cmdParser.parse(this.options, args);
@@ -122,24 +153,19 @@ public class AppController {
 		}
 		
 		if (cmd.hasOption("logon")) {
-			AppSettings.logon = true;
+			AppLog.logon = true;
 		}
 		
-		if (cmd.hasOption("parse")) {
-			String vals[] = cmd.getOptionValues("parse");
+		if (cmd.hasOption("analyze")) {
+			final String vals[] = cmd.getOptionValues("parse");
 			final String grammar = vals[0];
-			final String string = vals[1];
-			final ParserType parser = ParserType.valueOf(vals[2]);
-			this.parse(grammar, string, parser);
-		} else if (cmd.hasOption("transform")) {
-			String vals[] = cmd.getOptionValues("transform");
-			final NormalForm grammarForm = NormalForm.valueOf(vals[0]);
-			final String grammar = vals[1];
-			this.transform(grammar, grammarForm);
-		} else if (cmd.hasOption("check")) {
-			String vals[] = cmd.getOptionValues("check");
+			this.analyze(grammar);
+		} else if (cmd.hasOption("parse")) {
+			final String vals[] = cmd.getOptionValues("parse");
 			final String grammar = vals[0];
-			this.check(grammar);
+			final String word = vals[1];
+			final ParserType parserType = ParserType.valueOf(vals[2]);
+			this.parse(grammar, word, parserType);
 		} else if (cmd.hasOption("help")) {
 			this.help();
 		} else if (cmd.hasOption("version")) {
@@ -147,10 +173,19 @@ public class AppController {
 		}
 	}	
 
+	/**
+	 * 
+	 */
 	private void playMenu() {		
 		int choice = this.menus.run(AppMenus.MainMenu.IDENTIFIER);
 		
 		switch(choice) {
+		case AppMenus.MainMenu.ANALYZE:
+			String grammarToAnalyze = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
+			AppLog.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;	
+			this.analyze(grammarToAnalyze);
+			this.playMenu();
+			
 		case AppMenus.MainMenu.PARSE:
 			String grammarToParseWith = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
 			String stringToParse = this.interactions.run(AppInteractions.InputString.IDENTIFIER);			
@@ -165,31 +200,8 @@ public class AppController {
 				parser = ParserType.CYK;
 				break;
 			}			
-			AppSettings.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;			
+			AppLog.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;			
 			this.parse(grammarToParseWith, stringToParse, parser);
-			this.playMenu();
-			
-		case AppMenus.MainMenu.TRANSFORM:
-			String grammarToTransform = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
-			NormalForm grammarForm = null;
-			int gChoice = this.menus.run(AppMenus.TransformMenu.IDENTIFIER);
-			switch(gChoice) {
-			case AppMenus.TransformMenu.CHOMSKY_NORMAL_FORM:
-				grammarForm = NormalForm.CHOMSKY_NORMAL_FORM;
-			case AppMenus.TransformMenu.GREIBACH_NORMAL_FORM:
-				grammarForm = NormalForm.GREIBACH_NORMAL_FORM;
-			default:
-				grammarForm = NormalForm.CHOMSKY_NORMAL_FORM;
-				break;
-			}
-			AppSettings.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;
-			this.transform(grammarToTransform, grammarForm);
-			this.playMenu();
-			
-		case AppMenus.MainMenu.CHECK:
-			String grammarToCheck = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
-			AppSettings.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;
-			this.check(grammarToCheck);
 			this.playMenu();
 			
 		case AppMenus.MainMenu.HELP:
@@ -205,55 +217,57 @@ public class AppController {
 			break;
 		}
 	}	
+	
+	/**
+	 * @param grammar
+	 */
+	@SuppressWarnings("static-access")
+	private void analyze(String strGrammar) {
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		GrammarAnalysis analysis = this.analyzer.analyze(grammar);
+		
+		this.getOutput().onResult(analysis.toString());
+	}
 
+	/**
+	 * @param strGrammar
+	 * @param word
+	 * @param parser
+	 */
 	@SuppressWarnings("static-access")
 	private void parse(String strGrammar, String word, ParserType parser) {
 		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom('S')
+				.withAxiom(Grammar.AXIOM)
 				.withEmpty(Grammar.EMPTY)
 				.create();
 		
-		//parsing
-		boolean accepted = WordParserController.parse(grammar, word, parser);
+		boolean accepted = this.parser.parse(grammar, word, parser);
 		
-		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nString: " + word + "\nParser: " + parser.getName() + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
-	}
+		this.getOutput().onResult("" + accepted);
+	}	
 	
-	@SuppressWarnings("static-access")
-	private void transform(String strGrammar, NormalForm grammarForm) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
-				.create();
-		
-		//trasformation
-		Grammar transformedGrammar = GrammarTransformerController.transform(grammar, grammarForm);
-		
-		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nGrammar form: " + grammarForm + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);
-	}
-	
-	@SuppressWarnings("static-access")
-	private void check(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
-				.create();
-		
-		//checking
-		List<NormalForm> normalForm = grammar.getNormalForm();
-		
-		this.getOutput().onDebug("Grammar in: " + strGrammar + "\nlogon: " + AppSettings.logon + "\nGrammar out: " + grammar);		
-	}
-	
+	/**
+	 * Shows the GMParser helper. This method is activated by the command-line option {@code -help}.
+	 */
 	private void help() {
 		HelpFormatter helper = new HelpFormatter();
 		helper.printHelp("GMParser", this.options);
 	}
 
+	/**
+	 * Shows the GMParser version. This method is activated by the command-line option {@code -version}.
+	 */
 	private void version() {
 		System.out.println("GMParser version: 1.0");
 	}
 
+	/**
+	 * Quits the app.
+	 */
 	public void quit() {
 		UiManager.uninstallAnsiConsole();
 		System.exit(0);

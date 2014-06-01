@@ -23,9 +23,8 @@
 
 package com.gmarciani.gmparser.models.grammar.production;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -48,7 +47,8 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 	}
 	
 	public Productions(Productions productions) {
-		super(productions);
+		super();
+		this.addAll(productions);
 	}
 		
 	public boolean add(Member left, Member right) {
@@ -195,8 +195,8 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return true;
 	}	
 	
-	public List<NormalForm> getNormalForm(Alphabet nonTerminals, Alphabet terminals) {
-		List<NormalForm> target = new ArrayList<NormalForm>();
+	public Set<NormalForm> getNormalForm(Alphabet nonTerminals, Alphabet terminals) {
+		Set<NormalForm> target = new HashSet<NormalForm>();
 		
 		if (this.isChomskyNormalForm(nonTerminals, terminals))
 			target.add(NormalForm.CHOMSKY_NORMAL_FORM);

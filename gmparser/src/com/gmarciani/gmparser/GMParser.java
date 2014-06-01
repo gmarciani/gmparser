@@ -21,18 +21,39 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.ui;
+package com.gmarciani.gmparser;
 
-public interface Listener {
+import org.apache.commons.cli.ParseException;
+
+import com.gmarciani.gmparser.controllers.app.App;
+
+/**
+ * The GMParser entry-point.
+ * 
+ * @see {@link App}
+ * @see {@link Output}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
+public final class GMParser {
 	
-	public void onLogon(String logonMessage);
-	
-	public void onWarning(String warningMessage);
-	
-	public void onException(String exceptionMessage);
-	
-	public void onDebug(String debugMessage);
-	
-	public void onUnrecognizedArguments(String[] arguments);
+	protected GMParser() {}
+
+	/**
+	 * The GMParser app main.
+	 * 
+	 * @param args command-line arguments.
+	 */
+	public static void main(String[] args) {	
+		App app = App.getInstance();
+		app.printWelcome();
+		try {
+			app.play(args);
+		} catch (ParseException exc) {
+			app.getOutput().onWarning(exc.getMessage());
+			app.quit();
+		}	
+	}	
 
 }

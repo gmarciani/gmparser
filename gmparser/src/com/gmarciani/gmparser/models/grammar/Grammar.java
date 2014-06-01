@@ -23,7 +23,6 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -69,6 +68,14 @@ public class Grammar {
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
 		this.empty = empty;
+	}
+	
+	public Grammar(Grammar grammar) {
+		this.axiom = grammar.getAxiom();
+		this.nonTerminals = new Alphabet(grammar.getNonTerminals());
+		this.terminals = new Alphabet(grammar.getTerminals());
+		this.productions = new Productions(grammar.getProductions());
+		this.empty = grammar.getEmpty();
 	}
 	
 	public Alphabet getTerminals() {
@@ -190,7 +197,7 @@ public class Grammar {
 				&& epsilonProductions.size() == 1);
 	}
 	
-	public List<NormalForm> getNormalForm() {
+	public Set<NormalForm> getNormalForm() {
 		return this.getProductions().getNormalForm(this.getNonTerminals(), this.getTerminals());
 	}
 	

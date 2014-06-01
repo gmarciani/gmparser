@@ -21,41 +21,29 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.grammar;
+package com.gmarciani.gmparser.analysis;
 
-import com.gmarciani.gmparser.controllers.ui.Listener;
+import org.junit.Test;
+
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.CYKParser;
-import com.gmarciani.gmparser.models.parser.LROneParser;
-import com.gmarciani.gmparser.models.parser.Parser;
-import com.gmarciani.gmparser.models.parser.ParserType;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
-public class WordParserController {
+public class TestGrammarAnalysis {
 	
-	private static Listener output;
+	private static final String GRAMMAR = "S->AS|A;A->B|a;B->A|S|b.";
 	
-	public static void setOutput(Listener listener) {
-		output = listener;
-	}
-
-	public static boolean parse(Grammar grammar, String word, ParserType parser) {
-		if (parser == ParserType.CYK) {
-			return parseCYK(grammar, word);
-		} else if (parser == ParserType.LR1) {
-			return parseLROne(grammar, word);
-		} else {
-			return false;
-		}
-	}	
-
-	public static boolean parseCYK(Grammar grammar, String word) {
-		CYKParser parser = new CYKParser();
-		return parser.parse(grammar, word);
-	}	
-	
-	public static boolean parseLROne(Grammar grammar, String word) {
-		Parser parser = new LROneParser();
-		return parser.parse(grammar, word);
+	@SuppressWarnings("static-access")
+	@Test
+	public void test() {
+		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		GrammarAnalysis analysis = new GrammarAnalysis(grammar);
+		
+		System.out.println(analysis);
 	}
 
 }

@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
@@ -43,7 +43,7 @@ public class TestUnitProductionsRemoval {
 				.hasProductions(GRAMMAR_WITH_UNIT_PRODUCTIONS)
 				.create();
 		
-		GrammarTransformerController.removeUnitProductions(grammar);
+		GrammarTransformer.removeUnitProductions(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNIT_PRODUCTIONS)

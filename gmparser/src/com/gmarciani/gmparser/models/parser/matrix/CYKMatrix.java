@@ -23,7 +23,6 @@
 
 package com.gmarciani.gmparser.models.parser.matrix;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,14 +96,6 @@ public class CYKMatrix {
 	}
 	
 	@Override public String toString() {
-		 StringWriter sw = new StringWriter();
-	        /*
-	        DataExporter exporter = new TextExporter(sw);
-	        exporter.addColumn("Hello");
-	        exporter.addRow("World!");
-	        exporter.finishExporting();
-	        
-	        System.out.println(sw.toString());*/
 		String target = "CYKMatrix(";
 		
 		Iterator<Table.Cell<Integer, Integer, Alphabet>> iter = this.matrix.cellSet().iterator();

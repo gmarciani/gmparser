@@ -29,12 +29,14 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.gmarciani.gmparser.analysis.AllTestsAnalysis;
 import com.gmarciani.gmparser.grammar.AllTestsGrammar;
+import com.gmarciani.gmparser.parser.AllTestsParser;
 import com.gmarciani.gmparser.transformation.AllTestsTransformation;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 	AllTestsGrammar.class,
 	AllTestsAnalysis.class,
+	AllTestsParser.class,
 	AllTestsTransformation.class})
 public class AllTests {
 

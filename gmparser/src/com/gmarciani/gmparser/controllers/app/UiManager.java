@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.ui;
+package com.gmarciani.gmparser.controllers.app;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -29,9 +29,9 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.gmarciani.gmparser.controllers.App.AppInteractions;
-import com.gmarciani.gmparser.controllers.App.AppMenus;
-import com.gmarciani.gmparser.controllers.App.AppOptions;
+import com.gmarciani.gmparser.controllers.app.Preferences.AppInteractions;
+import com.gmarciani.gmparser.controllers.app.Preferences.AppMenus;
+import com.gmarciani.gmparser.controllers.app.Preferences.AppOptions;
 import com.gmarciani.gmparser.views.interaction.Interaction;
 import com.gmarciani.gmparser.views.interaction.InteractionBuilder;
 import com.gmarciani.gmparser.views.interaction.Interactions;
@@ -39,10 +39,30 @@ import com.gmarciani.gmparser.views.menu.Menu;
 import com.gmarciani.gmparser.views.menu.MenuBuilder;
 import com.gmarciani.gmparser.views.menu.Menus;
 
+/**
+ * The command-line interface manager.
+ * 
+ * @see {@link App}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public final class UiManager {
 
+	/**
+	 * Builds available command-line options.
+	 * 
+	 * @return command-line options
+	 */
 	@SuppressWarnings("static-access")
 	public static Options buildCommandLineOptions() {			
+		
+		Option analyze = OptionBuilder.withLongOpt("analyze")
+				.withDescription(AppOptions.DESCRIPTION_ANALYZE)
+				.hasArgs(3)
+				.withValueSeparator(' ')
+				.withArgName("GRAMMAR")
+				.create("analyze");
 		
 		Option parse = OptionBuilder.withLongOpt("parse")
 				.withDescription(AppOptions.DESCRIPTION_PARSE)
@@ -50,19 +70,6 @@ public final class UiManager {
 				.withValueSeparator(' ')
 				.withArgName("GRAMMAR STRING PARSER")
 				.create("parse");
-		
-		Option transform = OptionBuilder.withLongOpt("transform")
-				.withDescription(AppOptions.DESCRIPTION_TRANSFORM)
-				.hasArgs(2)
-				.withValueSeparator(' ')
-				.withArgName("GRAMMAR-FORM GRAMMAR")
-				.create("transform");
-		
-		Option check = OptionBuilder.withLongOpt("check")
-				.withDescription(AppOptions.DESCRIPTION_CHECK)
-				.hasArg()
-				.withArgName("GRAMMAR")
-				.create("check");
 		
 		Option help = OptionBuilder.withLongOpt("help")
 				.withDescription(AppOptions.DESCRIPTION_HELP)
@@ -80,9 +87,8 @@ public final class UiManager {
 				.create();
 		
 		OptionGroup optionGroup = new OptionGroup();
-		optionGroup.addOption(parse);
-		optionGroup.addOption(transform);
-		optionGroup.addOption(check);
+		optionGroup.addOption(analyze);
+		optionGroup.addOption(parse);		
 		optionGroup.addOption(help);
 		optionGroup.addOption(version);
 		
@@ -93,13 +99,16 @@ public final class UiManager {
 		return options;
 	}	
 	
+	/**
+	 * Builds available menus entries.
+	 * 
+	 * @return menus entries
+	 */
 	@SuppressWarnings("static-access")
 	public static Menus buildMenus() {
 		Menu mainMenu = MenuBuilder.hasName(AppMenus.MainMenu.NAME)
 				.withDescription(AppMenus.MainMenu.DESCRIPTION)
 				.hasChoice(AppMenus.MainMenu.PARSE, AppMenus.MainMenu.PARSE_DESCRIPTION)
-				.hasChoice(AppMenus.MainMenu.TRANSFORM, AppMenus.MainMenu.TRANSFORM_DESCRIPTION)
-				.hasChoice(AppMenus.MainMenu.CHECK, AppMenus.MainMenu.CHECK_DESCRIPTION)
 				.hasChoice(AppMenus.MainMenu.HELP, AppMenus.MainMenu.HELP_DESCRIPTION)
 				.hasChoice(AppMenus.MainMenu.QUIT, AppMenus.MainMenu.QUIT_DESCRIPTION)
 				.create();
@@ -108,12 +117,6 @@ public final class UiManager {
 				.withDescription(AppMenus.ParseMenu.DESCRIPTION)
 				.hasChoice(AppMenus.ParseMenu.CYK, AppMenus.ParseMenu.CYK_DESCRIPTION)
 				.hasChoice(AppMenus.ParseMenu.LL1, AppMenus.ParseMenu.LL1_DESCRIPTION)
-				.create();
-		
-		Menu transformMenu = MenuBuilder.hasName(AppMenus.TransformMenu.NAME)
-				.withDescription(AppMenus.TransformMenu.DESCRIPTION)
-				.hasChoice(AppMenus.TransformMenu.CHOMSKY_NORMAL_FORM, AppMenus.TransformMenu.CHOMSKY_NORMAL_FORM_DESCRIPTION)
-				.hasChoice(AppMenus.TransformMenu.GREIBACH_NORMAL_FORM, AppMenus.TransformMenu.GREIBACH_NORMAL_FORM_DESCRIPTION)
 				.create();
 		
 		Menu logonMenu = MenuBuilder.hasName(AppMenus.LogonMenu.NAME)
@@ -125,12 +128,16 @@ public final class UiManager {
 		Menus menus = new Menus();
 		menus.addMenu(mainMenu);
 		menus.addMenu(parseMenu);
-		menus.addMenu(transformMenu);
 		menus.addMenu(logonMenu);
 		
 		return menus;
 	}
 	
+	/**
+	 * Builds available interactions.
+	 * 
+	 * @return interactions entries.
+	 */
 	@SuppressWarnings("static-access")
 	public static Interactions buildInteractions() {
 		Interaction grammar = InteractionBuilder.hasName(AppInteractions.Grammar.NAME)
@@ -148,10 +155,16 @@ public final class UiManager {
 		return interactions;
 	}
 
+	/**
+	 * Installs ANSI Console for colored command-line interface.
+	 */
 	public static void installAnsiConsole() {
 		AnsiConsole.systemInstall();
 	}
 
+	/**
+	 * Uninstalls ANSI Console to set the default system console.
+	 */
 	public static void uninstallAnsiConsole() {
 		AnsiConsole.systemUninstall();
 	}

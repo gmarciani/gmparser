@@ -51,7 +51,7 @@ public class TestCYKParser {
 		CYKParser parser = new CYKParser();
 		CYKMatrix matrix = parser.getMatrix(grammar.getProductions(), WORD);
 		
-		System.out.println(matrix);
+		//System.out.println(matrix);
 	}
 
 }

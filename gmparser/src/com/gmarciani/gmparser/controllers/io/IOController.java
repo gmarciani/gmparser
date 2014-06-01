@@ -28,8 +28,24 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * The I/O stream controller, for general I/O operations.
+ * 
+ * @see {@link App}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class IOController {
 	
+	/**
+	 * <p>Returns a string representation of the file that resides at the specified {@code path}.<p>
+	 * <p>This method is used, for example, to retrive the ASCII-art representation of the GMParser logo for the welcome splash screen.<p>
+	 * 
+	 * @param path the relative (to the project) path of the file.
+	 * @return string representation of the specified file content.
+	 * @throws IOException
+	 */
 	public static String getFileAsString(String path) throws IOException {
 		InputStream stream = IOController.class.getClassLoader().getResourceAsStream(path);
 		byte[] encoded = IOUtils.toByteArray(stream);

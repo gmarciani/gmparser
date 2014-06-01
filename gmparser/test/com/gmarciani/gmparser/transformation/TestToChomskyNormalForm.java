@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformerController;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
@@ -48,7 +48,7 @@ public class TestToChomskyNormalForm {
 		assertFalse("Grammar should not be recognized as Chomsky",
 				grammar.isChomskyNormalForm());
 		
-		GrammarTransformerController.toChomskyNormalForm(grammar);
+		GrammarTransformer.toChomskyNormalForm(grammar);
 		
 		//System.out.println("GRAMMAR (SHOULD BE) CHOMSKY: " + grammar);
 		

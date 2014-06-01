@@ -30,26 +30,52 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.gmarciani.gmparser.controllers.ui.Listener;
+import com.gmarciani.gmparser.controllers.app.App;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class GrammarTransformerController {
+/**
+ * The grammar transformation controller.
+ * 
+ * @see {@link App}
+ * @see {@link GrammarAnalyzer}
+ * @see {@link WordParser}
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
+public class GrammarTransformer {
 	
-	@SuppressWarnings("unused")
-	private static Listener output;	
+	private static GrammarTransformer instance;
 	
-	public static void setOutput(Listener listener) {
-		output = listener;
+	private GrammarTransformer() {}
+	
+	/**
+	 * Returns the {@link GrammarTransformer} singleton instance.
+	 * 
+	 * @return the controller singleton instance.
+	 */
+	public synchronized static GrammarTransformer getInstance() {
+		if (instance == null) {
+			instance = new GrammarTransformer();
+		}
+		
+		return instance;
 	}
 
 	public static Grammar transform(Grammar grammar, NormalForm grammarForm) {
 		return null;
 	}
 	
+	/**
+	 * <p>Removes ungenerative symbols from the specified {@code grammar}.<p>
+	 * <p>An ungenerative symbol is ...<p>
+	 * 
+	 * @param grammar the target grammar.
+	 */
 	public static void removeUngenerativeSymbols(Grammar grammar) {	
 		
 		//Vn'={}
@@ -75,8 +101,13 @@ public class GrammarTransformerController {
 		
 		grammar.retainAllProductionsWithin(acceptedAlphabet);
 	}
-	
-	//to check!
+		
+	/**
+	 * <p>Removes unreacheables symbols from the specified {@code grammar}.<p>
+	 * <p>An unreacheable symbol is ...<p>
+	 * 
+	 * @param grammar the target grammar.
+	 */
 	public static void removeUnreacheableSymbols(Grammar grammar) {		
 		//Vt'={}
 		Alphabet acceptedTerminals = new Alphabet(AlphabetType.TERMINAL);
@@ -105,6 +136,12 @@ public class GrammarTransformerController {
 		grammar.retainAllProductionsWithin(acceptedAlphabet);
 	}
 	
+	/**
+	 * <p>Removes useless symbols from the specified {@code grammar}.<p>
+	 * <p>A useless symbol is ...<p>
+	 * 
+	 * @param grammar the target grammar.
+	 */
 	public static void removeUselessSymbols(Grammar grammar) {
 		removeUngenerativeSymbols(grammar);
 		removeUnreacheableSymbols(grammar);
@@ -148,6 +185,12 @@ public class GrammarTransformerController {
 			grammar.addProduction(grammar.getAxiom(), Grammar.EMPTY);
 	}
 	
+	/**
+	 * <p>Removes unit productions from the specified {@code grammar}.<p>
+	 * <p>A unit production is ...<p>
+	 * 
+	 * @param grammar the target grammar.
+	 */
 	public static void removeUnitProductions(Grammar grammar) {
 		removeEpsilonProductions(grammar);
 		
@@ -179,6 +222,12 @@ public class GrammarTransformerController {
 		}
 	}	
 	
+	/**
+	 * <p>Converts to Chomsky Normal Form the specified {@code grammar}.<p>
+	 * <p>The Chomsky Normal Form is ...<p>
+	 * 
+	 * @param grammar the target grammar.
+	 */
 	public static void toChomskyNormalForm(Grammar grammar) {
 		removeEpsilonProductions(grammar);
 		removeUnitProductions(grammar);

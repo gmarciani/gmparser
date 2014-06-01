@@ -29,8 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	TestCYKParser.class, 
-	TestLROneParser.class })
+	TestCYKParser.class})
 public class AllTestsParser {
 
 }
