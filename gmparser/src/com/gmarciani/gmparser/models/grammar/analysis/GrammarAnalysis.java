@@ -23,18 +23,28 @@
 
 package com.gmarciani.gmparser.models.grammar.analysis;
 
-import java.io.StringWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
-import com.brsanthu.dataexporter.DataExporter;
-import com.brsanthu.dataexporter.output.texttable.TextTableExporter;
+import com.bethecoder.ascii_table.ASCIITable;
+import com.gmarciani.gmparser.controllers.app.UiManager;
+import com.gmarciani.gmparser.models.grammar.Extension;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
+/**
+ * Grammar analysis report.
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class GrammarAnalysis {
+	
+	private String title;
 	
 	private Character axiom;
 	private String empty;
@@ -42,29 +52,64 @@ public class GrammarAnalysis {
 	private Alphabet terminalAlphabet;
 	private Productions productions;
 	private Type grammarType;
+	private Extension grammarExtension;
 	private Set<NormalForm> normalForms;
 	private Productions epsilonProductions;
 	private Productions unitProductions;
 	private Productions nonTrivialUnitProductions;
 	private Productions trivialUnitProductions;
 	private Alphabet nullables;
+	private Alphabet ungeneratives;
+	private Alphabet unreacheables;
+	private Alphabet useless;
+	
+	private Map<String, String> parameters;
 
 	public GrammarAnalysis(Grammar grammar) {
-		System.out.println(grammar);
+		this.title = "GRAMMAR ANALYSIS";
 		Grammar copy = new Grammar(grammar);
-		System.out.println(copy);
+		this.productions = new Productions(copy.getProductions());
+		this.nonTerminalAlphabet = new Alphabet(copy.getNonTerminals());
+		this.terminalAlphabet = new Alphabet(copy.getTerminals());		
 		this.axiom = copy.getAxiom();
 		this.empty = copy.getEmpty();
-		this.nonTerminalAlphabet = new Alphabet(copy.getNonTerminals());
-		this.terminalAlphabet = new Alphabet(copy.getTerminals());
-		this.productions = new Productions(copy.getProductions());
 		this.grammarType = copy.getType();
+		this.grammarExtension = copy.getExtension();
 		this.normalForms = copy.getNormalForm();
 		this.epsilonProductions = new Productions(copy.getEpsilonProductions());
 		this.unitProductions = new Productions(copy.getUnitProductions());
 		this.nonTrivialUnitProductions = new Productions(copy.getNonTrivialUnitProductions());
 		this.trivialUnitProductions = new Productions(copy.getTrivialUnitProductions());
-		//this.nullables = new Alphabet(copy.getNullables());		
+		this.nullables = new Alphabet(copy.getNullables());	
+		this.ungeneratives = new Alphabet(copy.getUngeneratives());
+		this.unreacheables = new Alphabet(copy.getUnreacheables());
+		this.useless = new Alphabet(copy.getUseless());
+		
+		this.parameters = new LinkedHashMap<String, String>();
+		this.parameters.put("Productions", this.getProductions().toString());		
+		this.parameters.put("Non Terminals", this.getNonTerminalAlphabet().toString());
+		this.parameters.put("Terminals", this.getTerminalAlphabet().toString());
+		this.parameters.put("Axiom", this.getAxiom().toString());
+		this.parameters.put("Epsilon", this.getEmpty());
+		this.parameters.put("Grammar Type", this.getGrammarType().getName());
+		this.parameters.put("Extension", this.getExtension().getName());
+		this.parameters.put("Normal Forms", this.getNormalForms().toString());
+		this.parameters.put("Epsilon Productions", this.getEpsilonProductions().toString());
+		this.parameters.put("Unit Productions", this.getUnitProductions().toString());
+		this.parameters.put("Non Trivial Unit Productions", this.getNonTrivialUnitProductions().toString());
+		this.parameters.put("Trivial Unit Productions", this.getTrivialUnitProductions().toString());
+		this.parameters.put("Nullables", this.getNullables().toString());
+		this.parameters.put("Ungeneratives", this.getUngeneratives().toString());
+		this.parameters.put("Unreacheables", this.getUnreacheables().toString());
+		this.parameters.put("Useless", this.getUseless().toString());
+	}
+	
+	public String getTitle() {
+		return this.title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Character getAxiom() {
@@ -89,6 +134,10 @@ public class GrammarAnalysis {
 
 	public Type getGrammarType() {
 		return this.grammarType;
+	}
+	
+	public Extension getExtension() {
+		return this.grammarExtension;
 	}
 
 	public Set<NormalForm> getNormalForms() {
@@ -115,15 +164,35 @@ public class GrammarAnalysis {
 		return this.nullables;
 	}
 	
+	public Alphabet getUngeneratives() {
+		return this.ungeneratives;
+	}
+	
+	public Alphabet getUnreacheables() {
+		return this.unreacheables;
+	}
+	
+	public Alphabet getUseless() {
+		return this.useless;
+	}
+	
+	public Map<String, String> getParameters() {
+		return this.parameters;
+	}
+	
 	@Override public String toString() {
-		StringWriter sw = new StringWriter();
+		String header[] = {UiManager.makeBold(this.getTitle())};
+		String data[][] = new String[this.getParameters().size()][1];
+		
+        int i = 0;
+        for (Map.Entry<String, String> parameter : this.getParameters().entrySet()) {
+        	data[i][0] = UiManager.makeBold(UiManager.getBullet() + " " + parameter.getKey()) + parameter.getValue();
+        	i ++;
+        }
         
-        DataExporter exporter = new TextTableExporter(sw);
-        exporter.addColumn("Hello");
-        exporter.addRow("World!");
-        exporter.finishExporting();
+        String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
         
-        return sw.toString();
+        return table;
 	}
 
 }

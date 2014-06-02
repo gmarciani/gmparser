@@ -23,7 +23,9 @@
 
 package com.gmarciani.gmparser.controllers.app;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -38,23 +40,25 @@ import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.controllers.io.IOController;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
+import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 import com.gmarciani.gmparser.models.parser.ParserType;
-import com.gmarciani.gmparser.views.interaction.Interactions;
+import com.gmarciani.gmparser.views.app.MainMenu;
+import com.gmarciani.gmparser.views.app.ParserMenu;
+import com.gmarciani.gmparser.views.app.TransformationMenu;
 import com.gmarciani.gmparser.views.menu.Menus;
 
 import static org.fusesource.jansi.Ansi.*;
 
 /**
- * The main user-app interaction controller.
+ * <p>Main user-app interaction controller.<p>
+ * <p>It manages the whole app flow.<p>
  *  
- * @see {@link GrammarAnalyzer}
- * @see {@link GrammarTransformer}
- * @see {@link WordParser}
- * @see {@link UiManager}
- * @see {@link Output}
- * @see {@link Preferences}
+ * @see com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer
+ * @see com.gmarciani.gmparser.controllers.grammar.WordParser
+ * @see com.gmarciani.gmparser.controllers.app.UiManager
+ * @see com.gmarciani.gmparser.controllers.app.Output
+ * @see com.gmarciani.gmparser.controllers.app.Preferences
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -63,11 +67,11 @@ public final class App {
 	
 	private static App instance;
 	private GrammarAnalyzer analyzer;
+	private GrammarTransformer transformer;
 	private WordParser parser;
 	
 	private Options options;
-	private Menus menus;	
-	private Interactions interactions;	
+	private Menus menus;		
 	
 	private Output output;
 	
@@ -77,7 +81,7 @@ public final class App {
 	}	
 
 	/**
-	 * Returns the {@link App} singleton instance.
+	 * Returns the app controller singleton instance.
 	 * 
 	 * @return the controller singleton instance.
 	 */
@@ -96,15 +100,15 @@ public final class App {
 		UiManager.installAnsiConsole();
 		this.options = UiManager.buildCommandLineOptions();
 		this.menus = UiManager.buildMenus();
-		this.interactions = UiManager.buildInteractions();
 	}	
 	
 	/**
 	 * Sets up the GMParser controllers: GrammarAnalyzer, GrammarTransformer and WordParser.
 	 */
 	private void setupControllers() {
-		this.output = new Output();
+		this.output = Output.getInstance();
 		this.analyzer = GrammarAnalyzer.getInstance();
+		this.transformer = GrammarTransformer.getInstance();
 		this.parser = WordParser.getInstance();
 	}
 	
@@ -149,128 +153,243 @@ public final class App {
 		}
 		
 		if (cmd.getOptions().length == 0) {
-			this.playMenu();
+			boolean loop = true;
+			while(loop) {
+				this.playMenu();
+				loop = this.getContinued();
+			}				
 		}
 		
 		if (cmd.hasOption("logon")) {
-			AppLog.logon = true;
+			AppLog.LOGON = true;
 		}
 		
 		if (cmd.hasOption("analyze")) {
-			final String vals[] = cmd.getOptionValues("parse");
+			final String vals[] = cmd.getOptionValues("analyze");
 			final String grammar = vals[0];
+			if (!this.validateGrammar(grammar))				
+				return;
 			this.analyze(grammar);
+		} else if (cmd.hasOption("transform")) {
+			final String vals[] = cmd.getOptionValues("transform");			
+			final String grammar = vals[0];
+			final GrammarTransformation transformation = GrammarTransformation.valueOf(vals[1]);
+			if (!this.validateGrammar(grammar))				
+				return;
+			this.transform(grammar, transformation);
 		} else if (cmd.hasOption("parse")) {
 			final String vals[] = cmd.getOptionValues("parse");
 			final String grammar = vals[0];
 			final String word = vals[1];
 			final ParserType parserType = ParserType.valueOf(vals[2]);
+			if (!this.validateGrammar(grammar))				
+				return;
 			this.parse(grammar, word, parserType);
 		} else if (cmd.hasOption("help")) {
+			this.printWelcome();
 			this.help();
 		} else if (cmd.hasOption("version")) {
 			this.version();
 		}
+		
+		this.quit();
 	}	
 
 	/**
-	 * 
+	 * Plays the main menu.
 	 */
 	private void playMenu() {		
-		int choice = this.menus.run(AppMenus.MainMenu.IDENTIFIER);
+		int choice = this.menus.run(MainMenu.IDENTIFIER);
 		
-		switch(choice) {
-		case AppMenus.MainMenu.ANALYZE:
-			String grammarToAnalyze = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
-			AppLog.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;	
-			this.analyze(grammarToAnalyze);
-			this.playMenu();
-			
-		case AppMenus.MainMenu.PARSE:
-			String grammarToParseWith = this.interactions.run(AppInteractions.Grammar.IDENTIFIER);
-			String stringToParse = this.interactions.run(AppInteractions.InputString.IDENTIFIER);			
-			ParserType parser = null;
-			int pChoice = this.menus.run(AppMenus.ParseMenu.IDENTIFIER);
-			switch (pChoice) {
-			case AppMenus.ParseMenu.CYK:
-				parser = ParserType.CYK;
-			case AppMenus.ParseMenu.LL1:
-				parser = ParserType.LR1;
-			default:
-				parser = ParserType.CYK;
-				break;
-			}			
-			AppLog.logon = (this.menus.run(AppMenus.LogonMenu.IDENTIFIER) == AppMenus.LogonMenu.LOGON) ? true : false;			
-			this.parse(grammarToParseWith, stringToParse, parser);
-			this.playMenu();
-			
-		case AppMenus.MainMenu.HELP:
+		if (choice == MainMenu.ANALYZE) {
+			String grammar = this.getGrammar();
+			if (!this.validateGrammar(grammar))				
+				return;
+			this.analyze(grammar);
+		} else if (choice == MainMenu.TRANSFORM) {
+			String grammar = this.getGrammar();
+			GrammarTransformation transformation = this.getGrammarTransformation();
+			if (!this.validateGrammar(grammar))				
+				return;
+			this.transform(grammar, transformation);
+		} else if (choice == MainMenu.PARSE) {
+			String grammar = this.getGrammar();
+			String word = this.getWord();
+			ParserType parser = this.getParser();
+			if (!this.validateGrammar(grammar))				
+				return;
+			this.parse(grammar, word, parser);
+		} else if (choice == MainMenu.HELP) {
 			this.help();
-			this.playMenu();
-			
-		case AppMenus.MainMenu.QUIT:
+		} else if (choice == MainMenu.QUIT) {
 			this.quit();
-			
-		default:
-			this.output.onWarning("Unrecognized choice");
-			this.playMenu();
-			break;
+		} else {
+			this.getOutput().onWarning("Unrecognized choice\n");
 		}
 	}	
 	
 	/**
-	 * @param grammar
+	 * <p>Analyzes the specified grammar, represented as string.<p> 
+	 * <p>This method is activated by the command-line option {@code -analyze}.<p>
+	 * 
+	 * @param strGrammar grammar to analyze, represented as string.
 	 */
-	@SuppressWarnings("static-access")
 	private void analyze(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
-				.create();
+		GrammarAnalysis analysis = this.analyzer.analyze(strGrammar);
 		
-		GrammarAnalysis analysis = this.analyzer.analyze(grammar);
+		this.getOutput().onResult("Here we are! This is your grammar analysis");		
+		this.getOutput().onDefault(analysis.toString());
+	}
+	
+	/**
+	 * <p>Executes the specified transformation to the specified grammar, represented as string.<p> 
+	 * <p>This method is activated by the command-line option {@code -transform}.<p>
+	 * 
+	 * @param strGrammar grammar to transform, represented as string.
+	 * @param transformation target transformation.
+	 */
+	private void transform(String strGrammar, GrammarTransformation transformation) {
+		GrammarAnalysis analysisIn = this.analyzer.analyze(strGrammar);
+		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");
 		
-		this.getOutput().onResult(analysis.toString());
+		Grammar grammarOut = this.transformer.transform(strGrammar, transformation);
+		GrammarAnalysis analysisOut = this.analyzer.analyze(grammarOut);
+		analysisOut.setTitle("GRAMMAR ANALYSIS: output grammar");
+		
+		this.getOutput().onResult("Here we are! This is your transformation (" + transformation + ")");
+		this.getOutput().onDefault(analysisIn.toString());
+		this.getOutput().onDefault(analysisOut.toString());
 	}
 
 	/**
-	 * @param strGrammar
-	 * @param word
-	 * @param parser
+	 * <p>Parses the specified word by the specified parse, according to the specified grammar, represented as string.<p> 
+	 * <p>This method is activated by the command-line option {@code -parse}.<p>
+	 * 
+	 * @param strGrammar grammar to parse with, represented as string.
+	 * @param word word to parse.
+	 * @param parser parser type to parse with.
 	 */
-	@SuppressWarnings("static-access")
-	private void parse(String strGrammar, String word, ParserType parser) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
-				.create();
+	private void parse(String strGrammar, String word, ParserType parser) {		
+		boolean accepted = this.parser.parse(strGrammar, word, parser);
 		
-		boolean accepted = this.parser.parse(grammar, word, parser);
-		
+		this.getOutput().onResult("Here we are! This is your parsing result");
 		this.getOutput().onResult("" + accepted);
 	}	
 	
 	/**
-	 * Shows the GMParser helper. This method is activated by the command-line option {@code -help}.
+	 * <p>Shows the GMParser helper.<p> 
+	 * <p>This method is activated by the command-line option {@code -help}.<p>
 	 */
 	private void help() {
 		HelpFormatter helper = new HelpFormatter();
-		helper.printHelp("GMParser", this.options);
+		helper.printHelp("gmparser", this.options);
+		System.out.print("\n");
+		System.out.flush();
 	}
 
 	/**
-	 * Shows the GMParser version. This method is activated by the command-line option {@code -version}.
+	 * <p>Shows the GMParser version.<p> 
+	 * <p>This method is activated by the command-line option {@code -version}.<p>
 	 */
 	private void version() {
 		System.out.println("GMParser version: 1.0");
+		System.out.flush();
 	}
 
 	/**
 	 * Quits the app.
 	 */
 	public void quit() {
+		this.getOutput().onResult("Good bye!");
 		UiManager.uninstallAnsiConsole();
 		System.exit(0);
 	}	
+	
+	private boolean getContinued() {
+		System.out.print("[continue? (y/n)]> ");
+		System.out.flush();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+	    try {
+	    	input = br.readLine();
+		} catch (NumberFormatException | IOException e) {
+			
+		}
+	    
+	    System.out.print("\n");
+	  
+		return (input.equals("y") ? true : false);
+	}
+	
+	private String getGrammar() {
+		System.out.print("[grammar]> ");
+		System.out.flush();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+	    try {
+	    	input = br.readLine();
+		} catch (NumberFormatException | IOException e) {
+			
+		}
+	    
+	    System.out.print("\n");
+	    
+		return input;
+	}
+	
+	private String getWord() {
+		System.out.print("[word]> ");
+		System.out.flush();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+	    try {
+	    	input = br.readLine();
+		} catch (NumberFormatException | IOException e) {
+			
+		}
+	    
+	    System.out.print("\n");
+	    
+		return input;
+	}
+	
+	private GrammarTransformation getGrammarTransformation() {
+		int choice = this.menus.run(TransformationMenu.IDENTIFIER);
+		
+		if (choice == TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS) {
+			return GrammarTransformation.REMOVE_UNGENERATIVE_SYMBOLS;
+		} else if (choice == TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS) {
+			return GrammarTransformation.REMOVE_UNREACHEABLES_SYMBOLS;
+		} else if (choice == TransformationMenu.REMOVE_USELESS_SYMBOLS) {
+			return GrammarTransformation.REMOVE_USELESS_SYMBOLS;
+		} else if (choice == TransformationMenu.REMOVE_EPSILON_PRODUCTIONS) {
+			return GrammarTransformation.REMOVE_EPSILON_PRODUCTIONS;
+		} else if (choice == TransformationMenu.REMOVE_UNIT_PRODUCTIONS) {
+			return GrammarTransformation.REMOVE_UNIT_PRODUCTIONS;
+		} else {
+			return null;
+		}
+	}
+	
+	private ParserType getParser() {
+		int choice = this.menus.run(ParserMenu.IDENTIFIER);
+		
+		if (choice == ParserMenu.CYK) {
+			return ParserType.CYK;
+		} else if (choice == ParserMenu.LL1) {
+			return ParserType.LR1;
+		} else {
+			return null;
+		}
+	}
+	
+	private boolean validateGrammar(String strGrammar) {
+		if (!Grammar.validate(strGrammar)) {
+			this.getOutput().onWarning("Grammar syntax error\n");
+			return false;
+		}
+		
+		return true;		
+	}
 
 }

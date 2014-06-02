@@ -30,19 +30,21 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.gmarciani.gmparser.controllers.app.App;
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
+import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 
 /**
- * The grammar transformation controller.
+ * <p>The grammar transformation controller.<p>
+ * <p>Deep description<p>
  * 
- * @see {@link App}
- * @see {@link GrammarAnalyzer}
- * @see {@link WordParser}
+ * @see com.gmarciani.gmparser.controllers.app.App
+ * @see com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer
+ * @see com.gmarciani.gmparser.controllers.grammar.WordParser
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -54,9 +56,10 @@ public class GrammarTransformer {
 	private GrammarTransformer() {}
 	
 	/**
-	 * Returns the {@link GrammarTransformer} singleton instance.
+	 * <p>Returns the grammar transformer controller {@code singleton} instance.<p>
+	 * <p>Singleton descrition<p>
 	 * 
-	 * @return the controller singleton instance.
+	 * @return controller singleton instance.
 	 */
 	public synchronized static GrammarTransformer getInstance() {
 		if (instance == null) {
@@ -65,89 +68,119 @@ public class GrammarTransformer {
 		
 		return instance;
 	}
+	
+	/**
+	 * <p>Executes the specified transformation to the specified grammar, represented as string.<p>
+	 * <p>All available transformation<p>
+	 * 
+	 * @param grammar target grammar, represented as string.
+	 * @param transformation target grammar transformation. 
+	 * @return transformed grammar.
+	 */
+	@SuppressWarnings("static-access")
+	public Grammar transform(String strGrammar, GrammarTransformation transformation) {
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		this.transform(grammar, transformation);
+		
+		return grammar;
+	}
 
-	public static Grammar transform(Grammar grammar, NormalForm grammarForm) {
-		return null;
+	/**
+	 * <p>Executes the specified transformation to the specified grammar.<p>
+	 * <p>All available transformation<p>
+	 * 
+	 * @param grammar target grammar.
+	 * @param transformation target grammar transformation. 
+	 * @return transformed grammar.
+	 */
+	public void transform(Grammar grammar, GrammarTransformation transformation) {
+		if (transformation == GrammarTransformation.REMOVE_UNGENERATIVE_SYMBOLS) {
+			this.removeUngenerativeSymbols(grammar);
+		} else if (transformation == GrammarTransformation.REMOVE_UNREACHEABLES_SYMBOLS) {
+			this.removeUnreacheableSymbols(grammar);
+		} else if (transformation == GrammarTransformation.REMOVE_USELESS_SYMBOLS) {
+			this.removeUselessSymbols(grammar);
+		} else if (transformation == GrammarTransformation.REMOVE_EPSILON_PRODUCTIONS) {
+			this.removeEpsilonProductions(grammar);
+		} else if (transformation == GrammarTransformation.REMOVE_UNIT_PRODUCTIONS) {
+			this.removeUnitProductions(grammar);
+		} else {
+			System.out.println("Unavailable grammar transformation");
+		}		
 	}
 	
 	/**
 	 * <p>Removes ungenerative symbols from the specified {@code grammar}.<p>
-	 * <p>An ungenerative symbol is ...<p>
+	 * <p>An ungenerative symbol is a non terminal symbol that does not generate any terminal symbol.<p>
 	 * 
 	 * @param grammar the target grammar.
 	 */
-	public static void removeUngenerativeSymbols(Grammar grammar) {	
-		
-		//Vn'={}
-		Alphabet acceptedNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
-		
-		//(Vt U Vn')
-		Alphabet acceptedAlphabet = new Alphabet();
-		acceptedAlphabet.addAll(grammar.getTerminals());
-		acceptedAlphabet.addAll(acceptedNonTerminals);
+	public void removeUngenerativeSymbols(Grammar grammar) {	
+		Alphabet generativeNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		Alphabet generativeAlphabet = new Alphabet(grammar.getTerminals(), generativeNonTerminals);
 		
 		boolean loop = true;
 		while(loop) {
 			loop = false;		
 			
-			acceptedAlphabet.addAll(acceptedNonTerminals);
+			generativeAlphabet.addAll(generativeNonTerminals);
 			
 			for (Production production : grammar.getProductions()) {
-				if (production.isRightWithin(acceptedAlphabet)) {
-					loop = acceptedNonTerminals.add(production.getLeft().getNonTerminalAlphabet());
-				}		
+				if (production.isRightWithin(generativeAlphabet))
+					loop = generativeNonTerminals.add(production.getLeft().getNonTerminalAlphabet()) ? true : loop;	
 			}			
 		}		
 		
-		grammar.retainAllProductionsWithin(acceptedAlphabet);
+		grammar.retainAllProductionsWithin(generativeAlphabet);
 	}
 		
 	/**
 	 * <p>Removes unreacheables symbols from the specified {@code grammar}.<p>
-	 * <p>An unreacheable symbol is ...<p>
+	 * <p>An unreacheable symbol is a non terminal symbol that is not reacheable from the axiom.<p>
 	 * 
 	 * @param grammar the target grammar.
 	 */
-	public static void removeUnreacheableSymbols(Grammar grammar) {		
-		//Vt'={}
-		Alphabet acceptedTerminals = new Alphabet(AlphabetType.TERMINAL);
-		//Vn'={S}
-		Alphabet acceptedNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
-		acceptedNonTerminals.add(grammar.getAxiom());
+	public void removeUnreacheableSymbols(Grammar grammar) {		
+		Alphabet reacheableTerminals = new Alphabet(AlphabetType.TERMINAL);
+		Alphabet reacheableNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
+		reacheableNonTerminals.add(grammar.getAxiom());
 		
 		boolean loop = true;
 		while(loop) {
 			loop = false;
 			
 			for (Production production : grammar.getProductions()) {	
-				if (production.isLeftWithin(acceptedNonTerminals)
-						&& acceptedNonTerminals.containsAll(production.getRight().getNonTerminalAlphabet()))
-					loop = acceptedNonTerminals.add(production.getRight().getNonTerminalAlphabet());
+				if (production.isLeftWithin(reacheableNonTerminals))
+					loop = reacheableNonTerminals.addAll(production.getRight().getNonTerminalAlphabet()) ? true : loop;
 				
-				if (production.isLeftWithin(acceptedNonTerminals))
-					acceptedTerminals.add(production.getRight().getTerminalAlphabet());
+				if (production.isLeftWithin(reacheableNonTerminals))
+					reacheableTerminals.addAll(production.getRight().getTerminalAlphabet());
 			}
 		}		
 		
 		Alphabet acceptedAlphabet = new Alphabet();
-		acceptedAlphabet.addAll(acceptedTerminals);
-		acceptedAlphabet.addAll(acceptedNonTerminals);
+		acceptedAlphabet.addAll(reacheableTerminals);
+		acceptedAlphabet.addAll(reacheableNonTerminals);
 		
 		grammar.retainAllProductionsWithin(acceptedAlphabet);
 	}
 	
 	/**
 	 * <p>Removes useless symbols from the specified {@code grammar}.<p>
-	 * <p>A useless symbol is ...<p>
+	 * <p>A useless symbol is a non terminal symbol that is ungenerative and/or unreacheable.<p>
 	 * 
 	 * @param grammar the target grammar.
 	 */
-	public static void removeUselessSymbols(Grammar grammar) {
-		removeUngenerativeSymbols(grammar);
-		removeUnreacheableSymbols(grammar);
+	public void removeUselessSymbols(Grammar grammar) {
+		this.removeUngenerativeSymbols(grammar);
+		this.removeUnreacheableSymbols(grammar);
 	}
 	
-	public static void removeEpsilonProductions(Grammar grammar) {
+	public void removeEpsilonProductions(Grammar grammar) {
 		Alphabet nullables = grammar.getNullables();	
 		
 		Iterator<Production> iterProductions = grammar.getProductions().iterator();
@@ -191,8 +224,8 @@ public class GrammarTransformer {
 	 * 
 	 * @param grammar the target grammar.
 	 */
-	public static void removeUnitProductions(Grammar grammar) {
-		removeEpsilonProductions(grammar);
+	public void removeUnitProductions(Grammar grammar) {
+		this.removeEpsilonProductions(grammar);
 		
 		Iterator<Production> iterTrivialUnitProductions = grammar.getTrivialUnitProductions().iterator();
 		while(iterTrivialUnitProductions.hasNext()) {
@@ -228,9 +261,9 @@ public class GrammarTransformer {
 	 * 
 	 * @param grammar the target grammar.
 	 */
-	public static void toChomskyNormalForm(Grammar grammar) {
-		removeEpsilonProductions(grammar);
-		removeUnitProductions(grammar);
+	public void toChomskyNormalForm(Grammar grammar) {
+		this.removeEpsilonProductions(grammar);
+		this.removeUnitProductions(grammar);
 		
 		boolean emptyGeneration = grammar.getNullables().contains(grammar.getAxiom());
 		

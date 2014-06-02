@@ -43,14 +43,10 @@ public class TestToChomskyNormalForm {
 				.withEmpty(Grammar.EMPTY)
 				.create();
 		
-		//System.out.println("GRAMMAR NOT CHOMSKY: " + grammar);
-		
 		assertFalse("Grammar should not be recognized as Chomsky",
 				grammar.isChomskyNormalForm());
 		
-		GrammarTransformer.toChomskyNormalForm(grammar);
-		
-		//System.out.println("GRAMMAR (SHOULD BE) CHOMSKY: " + grammar);
+		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
 		
 		assertTrue("Grammar should be recognized as Chomsky",
 				grammar.isChomskyNormalForm());

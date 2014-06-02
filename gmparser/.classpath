@@ -18,6 +18,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/giacomo/Downloads/btc-ascii-table-1.0.jar" sourcepath="/home/giacomo/Downloads/btc-ascii-table-1.0-sources.jar"/>
-	<classpathentry kind="lib" path="/home/giacomo/Downloads/data-exporter-1.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -28,10 +28,10 @@ import org.apache.commons.cli.ParseException;
 import com.gmarciani.gmparser.controllers.app.App;
 
 /**
- * The GMParser entry-point.
+ * GMParser entry-point.
  * 
- * @see {@link App}
- * @see {@link Output}
+ * @see com.gmarciani.gmparser.controllers.app.App
+ * @see com.gmarciani.gmparser.controllers.app.Output
  * 
  * @author Giacomo Marciani
  * @version 1.0

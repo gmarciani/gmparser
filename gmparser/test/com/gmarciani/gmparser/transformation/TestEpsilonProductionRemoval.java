@@ -43,17 +43,11 @@ public class TestEpsilonProductionRemoval {
 				.hasProductions(GRAMMAR_WITH_EPSILON_PRODUCTIONS)
 				.create();
 		
-		//System.out.println("EPSILONS: " + grammar);
-		
-		GrammarTransformer.removeEpsilonProductions(grammar);
-		
-		//System.out.println("WITHOUT EPSILONS: " + grammar);
+		GrammarTransformer.getInstance().removeEpsilonProductions(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS)
 				.create();	
-		
-		//System.out.println("SHOULD BE: " + shouldBe);
 		
 		assertTrue("Incorrect removal of epsilon productions", 
 				grammar.equals(shouldBe));

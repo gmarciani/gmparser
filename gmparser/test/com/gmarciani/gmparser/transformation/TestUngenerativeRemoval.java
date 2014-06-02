@@ -43,17 +43,11 @@ public class TestUngenerativeRemoval {
 				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
 				.create();
 		
-		//System.out.println("UNGENERATIVE: " + grammar);
-		
-		GrammarTransformer.removeUngenerativeSymbols(grammar);
-		
-		//System.out.println("WITHOUT UNGENERATIVE: " + grammar);
+		GrammarTransformer.getInstance().removeUngenerativeSymbols(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
 				.create();		
-		
-		//System.out.println("SHOULD BE: " + shouldBe);
 		
 		assertTrue("Incorrect removal of ungenerative symbols", 
 				grammar.equals(shouldBe));

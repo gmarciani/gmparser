@@ -24,5 +24,25 @@
 package com.gmarciani.gmparser.models.grammar.transformation;
 
 public enum GrammarTransformation {
+	
+	REMOVE_UNGENERATIVE_SYMBOLS("Remove ungenerative symbols"),
+	REMOVE_UNREACHEABLES_SYMBOLS("Remove unreacheable symbols"),
+	REMOVE_USELESS_SYMBOLS("Remove useless symbols"),
+	REMOVE_EPSILON_PRODUCTIONS("Remove epsilon productions"),
+	REMOVE_UNIT_PRODUCTIONS("Remove unit productions");
+	
+	private String name;
+	
+	private GrammarTransformation(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	@Override public String toString() {
+		return this.getName();
+	}
 
 }

@@ -25,12 +25,26 @@ package com.gmarciani.gmparser.models.grammar;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
+/**
+ * Grammar.
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.production.Productions
+ * @see com.gmarciani.gmparser.models.grammar.production.Production
+ * @see com.gmarciani.gmparser.models.alphabet.Alphabet
+ * @see com.gmarciani.gmparser.models.grammar.Type
+ * @see com.gmarciani.gmparser.models.grammar.Extension
+ * @see com.gmarciani.gmparser.models.grammar.NormalForm
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Grammar {	
 	
 	private Alphabet terminals;
@@ -183,6 +197,16 @@ public class Grammar {
 		return this.getProductions().isRegularRightLinear(this.getNonTerminals(), this.getTerminals());
 	}	
 	
+	public Extension getExtension() {
+		if (this.isExtended() && !this.isSExtended())
+			return Extension.EXTENDED;
+		
+		if (this.isSExtended())
+			return Extension.S_EXTENDED;
+		
+		return Extension.NONE;
+	}
+	
 	public boolean isExtended() {
 		Productions epsilonProductions = this.getEpsilonProductions();
 		
@@ -241,6 +265,18 @@ public class Grammar {
 		return target;
 	}
 	
+	public Alphabet getUngeneratives() {
+		return this.getProductions().getUngeneratives(this.getNonTerminals(), this.getTerminals());
+	}
+	
+	public Alphabet getUnreacheables() {
+		return this.getProductions().getUnreacheables(this.getNonTerminals(), this.getTerminals(), this.getAxiom());
+	}
+	
+	public Alphabet getUseless() {
+		return this.getProductions().getUseless(this.getNonTerminals(), this.getTerminals(), this.getAxiom());
+	}
+	
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		return this.getProductions().getProductionsWithin(alphabet);
 	}
@@ -277,6 +313,12 @@ public class Grammar {
 	private void rebuildAlphabet() {
 		this.nonTerminals = this.getProductions().getNonTerminalAlphabet();
 		this.terminals = this.getProductions().getTerminalAlphabet();
+	}
+	
+	public static boolean validate(String strGrammar) {
+		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
+		
+		return Pattern.matches(regex, strGrammar);
 	}
 
 	@Override public String toString() {

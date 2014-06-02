@@ -95,6 +95,15 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		return added;
 	}
 	
+	public boolean remove(String symbols) {
+		boolean removed = false;
+		for (Character symbol : symbols.toCharArray()) {
+			removed = this.remove(symbol) ? true : removed;
+		}
+		
+		return removed;
+	}
+	
 	private boolean isAcceptableSymbol(Character symbol) {
 		if (this.getType() == null)
 			return true;

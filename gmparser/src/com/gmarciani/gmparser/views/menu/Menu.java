@@ -72,7 +72,8 @@ public class Menu {
 	
 	public int run() {
 		this.show();
-		System.out.println("choice: ");
+		System.out.print("[choice]> ");
+		System.out.flush();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    int choice = -1;
 	    try {
@@ -80,7 +81,9 @@ public class Menu {
 		} catch (NumberFormatException | IOException e) {
 			
 		}
-	    System.out.println("\n");
+	    
+	    System.out.print("\n");
+	    
 		return choice;
 	}
 	
@@ -94,7 +97,7 @@ public class Menu {
 			c++;
 		}	
 		
-		ASCIITable.getInstance().printTable(header, -1, data, -1);
+		ASCIITable.getInstance().printTable(header, ASCIITable.ALIGN_LEFT, data, ASCIITable.ALIGN_LEFT);
 	}
 	
 	@Override

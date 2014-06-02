@@ -33,6 +33,17 @@ import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
+/**
+ * LHS/RHS member of a production.
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar 
+ * @see com.gmarciani.gmparser.models.grammar.production.Production
+ * @see com.gmarciani.gmparser.models.grammar.production.Member
+ * @see com.gmarciani.gmparser.models.alphabet.Alphabet
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Productions extends ConcurrentSkipListSet<Production> {
 
 	private static final long serialVersionUID = 9062194540654802369L;
@@ -285,6 +296,67 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 			}
 				
 		}
+		
+		return target;
+	}
+	
+	public Alphabet getUngeneratives(Alphabet nonTerminals, Alphabet terminals) {
+		Alphabet target = new Alphabet(nonTerminals);
+		
+		Alphabet generativeTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		Alphabet generativeAlphabet = new Alphabet(terminals, generativeTerminals);
+				
+		boolean loop = true;
+		while(loop) {
+			loop = false;		
+					
+			generativeAlphabet.addAll(generativeTerminals);
+					
+			for (Production production : this) {
+				if (production.isRightWithin(generativeAlphabet)) {
+					loop = generativeTerminals.add(production.getLeft().getNonTerminalAlphabet()) ? true : loop;
+				}		
+			}			
+		}		
+				
+		target.removeAll(generativeTerminals);
+		
+		return target;
+	}
+	
+	public Alphabet getUnreacheables(Alphabet nonTerminals, Alphabet terminals, Character axiom) {
+		Alphabet target = new Alphabet(nonTerminals);
+		
+		Alphabet reacheableTerminals = new Alphabet(AlphabetType.TERMINAL);
+		Alphabet reacheableNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
+		reacheableNonTerminals.add(axiom);
+				
+		boolean loop = true;
+		while(loop) {
+			loop = false;
+					
+			for (Production production : this) {	
+				if (production.isLeftWithin(reacheableNonTerminals))
+					loop = reacheableNonTerminals.addAll(production.getRight().getNonTerminalAlphabet()) ? true : loop;
+						
+				if (production.isLeftWithin(reacheableNonTerminals))
+					reacheableTerminals.addAll(production.getRight().getTerminalAlphabet());
+			}
+		}			
+		
+		target.removeAll(reacheableNonTerminals);
+		
+		return target;
+	}
+	
+	public Alphabet getUseless(Alphabet nonTerminals, Alphabet terminals, Character axiom) {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		
+		Alphabet ungeneratives = this.getUngeneratives(nonTerminals, terminals);
+		Alphabet unreacheables = this.getUnreacheables(nonTerminals, terminals, axiom);
+		
+		target.addAll(ungeneratives);
+		target.addAll(unreacheables);
 		
 		return target;
 	}

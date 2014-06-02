@@ -29,20 +29,19 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.gmarciani.gmparser.controllers.app.Preferences.AppInteractions;
-import com.gmarciani.gmparser.controllers.app.Preferences.AppMenus;
-import com.gmarciani.gmparser.controllers.app.Preferences.AppOptions;
-import com.gmarciani.gmparser.views.interaction.Interaction;
-import com.gmarciani.gmparser.views.interaction.InteractionBuilder;
-import com.gmarciani.gmparser.views.interaction.Interactions;
+import com.gmarciani.gmparser.views.app.AppOptions;
+import com.gmarciani.gmparser.views.app.MainMenu;
+import com.gmarciani.gmparser.views.app.ParserMenu;
+import com.gmarciani.gmparser.views.app.TransformationMenu;
 import com.gmarciani.gmparser.views.menu.Menu;
 import com.gmarciani.gmparser.views.menu.MenuBuilder;
 import com.gmarciani.gmparser.views.menu.Menus;
 
 /**
- * The command-line interface manager.
+ * <p>Command-line interface manager.<p>
+ * <p>It manages options, menus and interactions <p>
  * 
- * @see {@link App}
+ * @see com.gmarciani.gmparser.controllers.app.App
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -59,35 +58,43 @@ public final class UiManager {
 		
 		Option analyze = OptionBuilder.withLongOpt("analyze")
 				.withDescription(AppOptions.DESCRIPTION_ANALYZE)
-				.hasArgs(3)
+				.hasArgs(1)
 				.withValueSeparator(' ')
 				.withArgName("GRAMMAR")
-				.create("analyze");
+				.create("a");
+		
+		Option transform = OptionBuilder.withLongOpt("transform")
+				.withDescription(AppOptions.DESCRIPTION_TRANSFORM)
+				.hasArgs(2)
+				.withValueSeparator(' ')
+				.withArgName("GRAMMAR TRANSFORMATION")
+				.create("t");
 		
 		Option parse = OptionBuilder.withLongOpt("parse")
 				.withDescription(AppOptions.DESCRIPTION_PARSE)
 				.hasArgs(3)
 				.withValueSeparator(' ')
-				.withArgName("GRAMMAR STRING PARSER")
-				.create("parse");
+				.withArgName("GRAMMAR WORD PARSER")
+				.create("p");
 		
 		Option help = OptionBuilder.withLongOpt("help")
 				.withDescription(AppOptions.DESCRIPTION_HELP)
 				.hasArg(false)
-				.create("help");
+				.create("h");
 		
 		Option version = OptionBuilder.withLongOpt("version")
 				.withDescription(AppOptions.DESCRIPTION_VERSION)
 				.hasArg(false)
-				.create();
+				.create("v");
 		
 		Option logon = OptionBuilder.withLongOpt("logon")
 				.withDescription(AppOptions.DESCRIPTION_LOGON)
 				.hasArg(false)
-				.create();
+				.create("l");
 		
 		OptionGroup optionGroup = new OptionGroup();
 		optionGroup.addOption(analyze);
+		optionGroup.addOption(transform);
 		optionGroup.addOption(parse);		
 		optionGroup.addOption(help);
 		optionGroup.addOption(version);
@@ -106,53 +113,44 @@ public final class UiManager {
 	 */
 	@SuppressWarnings("static-access")
 	public static Menus buildMenus() {
-		Menu mainMenu = MenuBuilder.hasName(AppMenus.MainMenu.NAME)
-				.withDescription(AppMenus.MainMenu.DESCRIPTION)
-				.hasChoice(AppMenus.MainMenu.PARSE, AppMenus.MainMenu.PARSE_DESCRIPTION)
-				.hasChoice(AppMenus.MainMenu.HELP, AppMenus.MainMenu.HELP_DESCRIPTION)
-				.hasChoice(AppMenus.MainMenu.QUIT, AppMenus.MainMenu.QUIT_DESCRIPTION)
+		Menu mainMenu = MenuBuilder.hasName(MainMenu.NAME)
+				.withDescription(MainMenu.DESCRIPTION)
+				.hasChoice(MainMenu.ANALYZE, MainMenu.ANALYZE_DESCRIPTION)
+				.hasChoice(MainMenu.TRANSFORM, MainMenu.TRANSFORM_DESCRIPTION)
+				.hasChoice(MainMenu.PARSE, MainMenu.PARSE_DESCRIPTION)
+				.hasChoice(MainMenu.HELP, MainMenu.HELP_DESCRIPTION)
+				.hasChoice(MainMenu.QUIT, MainMenu.QUIT_DESCRIPTION)
 				.create();
 		
-		Menu parseMenu = MenuBuilder.hasName(AppMenus.ParseMenu.NAME)
-				.withDescription(AppMenus.ParseMenu.DESCRIPTION)
-				.hasChoice(AppMenus.ParseMenu.CYK, AppMenus.ParseMenu.CYK_DESCRIPTION)
-				.hasChoice(AppMenus.ParseMenu.LL1, AppMenus.ParseMenu.LL1_DESCRIPTION)
+		Menu parserMenu = MenuBuilder.hasName(ParserMenu.NAME)
+				.withDescription(ParserMenu.DESCRIPTION)
+				.hasChoice(ParserMenu.CYK, ParserMenu.CYK_DESCRIPTION)
+				.hasChoice(ParserMenu.LL1, ParserMenu.LL1_DESCRIPTION)
 				.create();
 		
-		Menu logonMenu = MenuBuilder.hasName(AppMenus.LogonMenu.NAME)
-				.withDescription(AppMenus.LogonMenu.DESCRIPTION)
-				.hasChoice(AppMenus.LogonMenu.LOGOFF, AppMenus.LogonMenu.LOGOFF_DESCRIPTION)
-				.hasChoice(AppMenus.LogonMenu.LOGON, AppMenus.LogonMenu.LOGON_DESCRIPTION)
+		Menu transformationMenu = MenuBuilder.hasName(TransformationMenu.NAME)
+				.withDescription(TransformationMenu.DESCRIPTION)
+				.hasChoice(TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS, TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS_DESCRIPTION)
+				.hasChoice(TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS, TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS_DESCRIPTION)
+				.hasChoice(TransformationMenu.REMOVE_USELESS_SYMBOLS, TransformationMenu.REMOVE_USELESS_SYMBOLS_DESCRIPTION)
+				.hasChoice(TransformationMenu.REMOVE_EPSILON_PRODUCTIONS, TransformationMenu.REMOVE_EPSILON_PRODUCTIONS_DESCRIPTION)
+				.hasChoice(TransformationMenu.REMOVE_UNIT_PRODUCTIONS, TransformationMenu.REMOVE_UNIT_PRODUCTIONS_DESCRIPTION)
 				.create();
 		
 		Menus menus = new Menus();
 		menus.addMenu(mainMenu);
-		menus.addMenu(parseMenu);
-		menus.addMenu(logonMenu);
+		menus.addMenu(parserMenu);
+		menus.addMenu(transformationMenu);
 		
 		return menus;
 	}
 	
-	/**
-	 * Builds available interactions.
-	 * 
-	 * @return interactions entries.
-	 */
-	@SuppressWarnings("static-access")
-	public static Interactions buildInteractions() {
-		Interaction grammar = InteractionBuilder.hasName(AppInteractions.Grammar.NAME)
-				.withDescription(AppInteractions.Grammar.DESCRIPTION)
-				.create();
-		
-		Interaction inputString = InteractionBuilder.hasName(AppInteractions.InputString.NAME)
-				.withDescription(AppInteractions.InputString.DESCRIPTION)
-				.create();
-		
-		Interactions interactions = new Interactions();
-		interactions.addInteraction(grammar);
-		interactions.addInteraction(inputString);
-		
-		return interactions;
+	public static String makeBold(String string) {
+		return "\033[0;1m " + string + " \033[0;0m";
+	}
+	
+	public static String getBullet() {
+		return "\u0700 ";
 	}
 
 	/**

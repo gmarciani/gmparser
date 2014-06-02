@@ -43,17 +43,11 @@ public class TestUselessRemoval {
 				.hasProductions(GRAMMAR_WITH_USELESS_SYMBOLS)
 				.create();
 		
-		//System.out.println("USELESS: " + grammar);
-		
-		GrammarTransformer.removeUselessSymbols(grammar);
-		
-		//System.out.println("WITHOUT USELESS: " + grammar);
+		GrammarTransformer.getInstance().removeUselessSymbols(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_USELESS_SYMBOLS)
 				.create();		
-		
-		//System.out.println("SHOULD BE: " + shouldBe);
 		
 		assertTrue("Incorrect removal of useless symbols", 
 				grammar.equals(shouldBe));

@@ -23,8 +23,8 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-import com.gmarciani.gmparser.controllers.app.App;
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 import com.gmarciani.gmparser.models.parser.CYKParser;
 import com.gmarciani.gmparser.models.parser.LROneParser;
 import com.gmarciani.gmparser.models.parser.Parser;
@@ -33,9 +33,9 @@ import com.gmarciani.gmparser.models.parser.ParserType;
 /**
  * The word parsing controller.
  * 
- * @see {@link App}
- * @see {@link GrammarAnalyzer}
- * @see {@link GrammarTransformer}
+ * @see com.gmarciani.gmparser.controllers.app.App
+ * @see com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer
+ * @see com.gmarciani.gmparser.controllers.grammar.GrammarTransformer
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -47,7 +47,7 @@ public class WordParser {
 	private WordParser() {}
 	
 	/**
-	 * Returns the {@link WordParser} singleton instance.
+	 * Returns the word parser controller singleton instance.
 	 * 
 	 * @return the controller singleton instance.
 	 */
@@ -58,6 +58,24 @@ public class WordParser {
 		
 		return instance;
 	}
+	
+	/**
+	 * Parses the specified {@code word} by the specified {@code parser}, according to the specified {@code grammar}.
+	 * 
+	 * @param grammar the grammar to parse according to.
+	 * @param word the word to parse.
+	 * @param parser parser class: can be Cock-Younger-Kasami, or LR(1).
+	 * @return true, if the {@code word} can be parsed by the {@code parser} according to the {@code grammar}; false, otherwise.
+	 */
+	@SuppressWarnings("static-access")
+	public boolean parse(String strGrammar, String word, ParserType parser) {
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		return this.parse(grammar, word, parser);
+	}	
 
 	/**
 	 * Parses the specified {@code word} by the specified {@code parser}, according to the specified {@code grammar}.
@@ -67,7 +85,7 @@ public class WordParser {
 	 * @param parser parser class: can be Cock-Younger-Kasami, or LR(1).
 	 * @return true, if the {@code word} can be parsed by the {@code parser} according to the {@code grammar}; false, otherwise.
 	 */
-	public static boolean parse(Grammar grammar, String word, ParserType parser) {
+	public boolean parse(Grammar grammar, String word, ParserType parser) {
 		if (parser == ParserType.CYK) {
 			return parseCYK(grammar, word);
 		} else if (parser == ParserType.LR1) {
@@ -84,7 +102,7 @@ public class WordParser {
 	 * @param word the word to parse.
 	 * @return true, if the {@code word} can be parsed by the Cock-Younger-Kasami parser, according to the {@code grammar}; false, otherwise.
 	 */
-	public static boolean parseCYK(Grammar grammar, String word) {
+	public boolean parseCYK(Grammar grammar, String word) {
 		CYKParser parser = new CYKParser();
 		return parser.parse(grammar, word);
 	}	
@@ -96,7 +114,7 @@ public class WordParser {
 	 * @param word word the word to parse.
 	 * @return true, if the {@code word} can be parsed by the LR(1) parser, according to the {@code grammar}; false, otherwise.
 	 */
-	public static boolean parseLROne(Grammar grammar, String word) {
+	public boolean parseLROne(Grammar grammar, String word) {
 		Parser parser = new LROneParser();
 		return parser.parse(grammar, word);
 	}

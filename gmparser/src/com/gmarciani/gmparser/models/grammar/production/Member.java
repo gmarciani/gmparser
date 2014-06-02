@@ -33,6 +33,17 @@ import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
+/**
+ * LHS/RHS member of a production.
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * @see com.gmarciani.gmparser.models.grammar.production.Productions
+ * @see com.gmarciani.gmparser.models.grammar.production.Production
+ * @see com.gmarciani.gmparser.models.alphabet.Alphabet
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Member implements Comparable<Member> {
 	
 	private String value;

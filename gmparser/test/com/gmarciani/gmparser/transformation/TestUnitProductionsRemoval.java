@@ -43,7 +43,7 @@ public class TestUnitProductionsRemoval {
 				.hasProductions(GRAMMAR_WITH_UNIT_PRODUCTIONS)
 				.create();
 		
-		GrammarTransformer.removeUnitProductions(grammar);
+		GrammarTransformer.getInstance().removeUnitProductions(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNIT_PRODUCTIONS)

@@ -27,7 +27,19 @@ import java.util.Objects;
 
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
+/**
+ * LHS/RHS member of a production.
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * @see com.gmarciani.gmparser.models.grammar.production.Productions
+ * @see com.gmarciani.gmparser.models.grammar.production.Member
+ * @see com.gmarciani.gmparser.models.alphabet.Alphabet
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Production implements Comparable<Production> {
 	
 	private Member left;
@@ -98,6 +110,33 @@ public class Production implements Comparable<Production> {
 	
 	public int getRightSize() {
 		return (this.getRight().getSize());
+	}
+	
+	public Alphabet getAlphabet() {
+		Alphabet target = new Alphabet();
+		
+		target.addAll(this.getNonTerminalAlphabet());
+		target.addAll(this.getTerminalAlphabet());
+		
+		return target;
+	}
+	
+	public Alphabet getNonTerminalAlphabet() {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
+		
+		target.addAll(this.getLeft().getNonTerminalAlphabet());
+		target.addAll(this.getRight().getNonTerminalAlphabet());
+		
+		return target;
+	}
+	
+	public Alphabet getTerminalAlphabet() {
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
+		
+		target.addAll(this.getLeft().getTerminalAlphabet());
+		target.addAll(this.getRight().getTerminalAlphabet());
+		
+		return target;
 	}
 	
 	public boolean isWithin(Alphabet alphabet) {

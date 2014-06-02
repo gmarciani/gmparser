@@ -33,8 +33,8 @@ import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
 public class TestUnreacheableRemoval {
 	
-	private static final String GRAMMAR_WITH_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a.";
-	private static final String GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS = "S->a.";
+	private static final String GRAMMAR_WITH_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a;Z->c.";
+	private static final String GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a.";
 
 	@SuppressWarnings("static-access")
 	@Test
@@ -43,17 +43,11 @@ public class TestUnreacheableRemoval {
 				.hasProductions(GRAMMAR_WITH_UNREACHEABLE_SYMBOLS)
 				.create();
 		
-		//System.out.println("UNREACHEABLE: " + grammar);
-		
-		GrammarTransformer.removeUnreacheableSymbols(grammar);
-		
-		//System.out.println("WITHOUT UNREACHEABLE: " + grammar);
+		GrammarTransformer.getInstance().removeUnreacheableSymbols(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
 				.hasProductions(GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS)
 				.create();
-		
-		//System.out.println("SHOULD BE: " + shouldBe);		
 		
 		assertTrue("Incorrect removal of unreacheable symbols", 
 				grammar.equals(shouldBe));

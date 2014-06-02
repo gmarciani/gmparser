@@ -43,5 +43,9 @@ public enum NormalForm {
 	public String getShortName() {
 		return this.shortName;
 	}
+	
+	@Override public String toString() {
+		return this.getName();
+	}
 
 }

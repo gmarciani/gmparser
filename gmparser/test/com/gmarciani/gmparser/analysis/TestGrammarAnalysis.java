@@ -25,23 +25,18 @@ package com.gmarciani.gmparser.analysis;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
 public class TestGrammarAnalysis {
 	
-	private static final String GRAMMAR = "S->AS|A;A->B|a;B->A|S|b.";
+	private static final String GRAMMAR = "S->AS|A|" + Grammar.EMPTY + ";A->B|a;B->A|B|S|b;C->A|B|C|D;D->C.";
 	
-	@SuppressWarnings("static-access")
 	@Test
 	public void test() {
-		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
-				.create();
 		
-		GrammarAnalysis analysis = new GrammarAnalysis(grammar);
+		GrammarAnalysis analysis = GrammarAnalyzer.getInstance().analyze(GRAMMAR);
 		
 		System.out.println(analysis);
 	}

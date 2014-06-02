@@ -31,7 +31,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	TestGrammarNormalForm.class, 
 	TestGrammarType.class,
-	TestGrammarAnalysis.class})
+	TestGrammarAnalysis.class,
+	TestGrammarSyntax.class})
 public class AllTestsAnalysis {
 
 }

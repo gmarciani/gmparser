@@ -29,26 +29,48 @@ import com.gmarciani.gmparser.controllers.app.Preferences.AppLog;
 import com.gmarciani.gmparser.controllers.app.Preferences.AppUI;
 
 /**
- * The app output manager. It manages output format for standard outputs, warnings, exceptions, logon and debug.
+ * <p>App output manager.<p> 
+ * <p>It manages output format for standard outputs, warnings, exceptions, logon and debug.<p>
  * 
- * @see com.gmarciani.gmparser.app.Output
+ * @see com.gmarciani.gmparser.controllers.app.App
  * 
  * @author Giacomo Marciani
- * @version 1.0 *
+ * @version 1.0
  */
 public final class Output {
-
-	public Output() {}
 	
+	private static Output instance;
+
+	private Output() {}
+	
+	public static Output getInstance() {
+		if (instance == null) {
+			instance = new Output();
+		}
+		
+		return instance;
+	}
+	
+	/**
+	 * @param message
+	 */
+	public void onDefault(String message) {
+		System.out.println(message);
+	}
+	
+	/**
+	 * @param resultMessage
+	 */
 	public void onResult(String resultMessage) {
-		System.out.println(ansi().fg(AppUI.RESULT_COLOR).a(resultMessage).reset());
+		String result = "[gmparser] " + resultMessage;
+		System.out.println(ansi().fg(AppUI.RESULT_COLOR).a(result).reset());
 	}
 
 	/**
 	 * @param logonMessage
 	 */
 	public void onLogon(String logonMessage) {
-		if (AppLog.logon) {
+		if (AppLog.LOGON) {
 			String warning = "[LOGON] " + logonMessage;
 			System.out.println(ansi().fg(AppUI.LOGON_COLOR).a(warning).reset());
 		}
@@ -68,16 +90,6 @@ public final class Output {
 	public void onException(String exceptionMessage) {
 		String warning = "[EXCEPTION] " + exceptionMessage;
 		System.out.println(ansi().fg(AppUI.EXCEPTION_COLOR).a(warning).reset());
-	}
-
-	/**
-	 * @param debugMessage
-	 */
-	public void onDebug(String debugMessage) {
-		if (AppLog.DEBUG) {
-			String message = "[DEBUG] " + debugMessage;
-			System.out.println(ansi().fg(AppUI.DEBUG_COLOR).a(message).reset());
-		}
 	}
 
 	public void onUnrecognizedArguments(String[] arguments) {

@@ -29,9 +29,9 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 
 /**
- * The I/O stream controller, for general I/O operations.
+ * I/O stream controller, for general I/O operations.
  * 
- * @see {@link App}
+ * @see com.gmarciani.gmparser.controllers.app.App
  * 
  * @author Giacomo Marciani
  * @version 1.0
