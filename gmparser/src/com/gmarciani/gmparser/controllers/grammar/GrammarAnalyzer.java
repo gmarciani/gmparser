@@ -57,17 +57,29 @@ public class GrammarAnalyzer {
 	}
 	
 	/**
+	 * Generates the target grammar, represented as string.
+	 * 
+	 * @param strGrammar string representation of the grammar to generate.
+	 * @return grammar.
+	 */
+	@SuppressWarnings("static-access")
+	public Grammar generateGrammar(String strGrammar) {
+		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+				.withAxiom(Grammar.AXIOM)
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		return grammar;
+	}
+	
+	/**
 	 * Analyzes the target grammar, represented as string.
 	 * 
 	 * @param strGrammar string representation of the grammar to analyze.
 	 * @return grammar analysis report.
 	 */
-	@SuppressWarnings("static-access")
 	public GrammarAnalysis analyze(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
-				.create();
+		Grammar grammar = this.generateGrammar(strGrammar);
 		
 		return this.analyze(grammar);
 	}

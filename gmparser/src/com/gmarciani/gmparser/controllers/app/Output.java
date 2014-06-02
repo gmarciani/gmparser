@@ -71,7 +71,7 @@ public final class Output {
 	 */
 	public void onLogon(String logonMessage) {
 		if (AppLog.LOGON) {
-			String warning = "[LOGON] " + logonMessage;
+			String warning = "[gmparser] " + logonMessage;
 			System.out.println(ansi().fg(AppUI.LOGON_COLOR).a(warning).reset());
 		}
 	}

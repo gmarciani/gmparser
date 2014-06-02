@@ -11,9 +11,9 @@ public final class ParserMenu {
 	public static final String DESCRIPTION = "Choose your parser";
 	
 	public static final int CYK = 1;
-	public static final int LL1 = 2;
+	public static final int LR1 = 2;
 	
-	public static final String CYK_DESCRIPTION = "Cock-Young-Kasami";
-	public static final String LL1_DESCRIPTION = "LL(1) Parser";
+	public static final String CYK_DESCRIPTION = "Cock-Younger-Kasami";
+	public static final String LR1_DESCRIPTION = "LR(1) Parser";
 
 }

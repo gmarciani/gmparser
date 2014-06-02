@@ -152,17 +152,18 @@ public final class App {
 			this.quit();
 		}
 		
-		if (cmd.getOptions().length == 0) {
+		if (cmd.hasOption("logon")) {
+			AppLog.LOGON = true;
+		}
+		
+		if (cmd.getOptions().length == 1 && cmd.hasOption("logon")
+				|| cmd.getOptions().length == 0) {
 			boolean loop = true;
 			while(loop) {
 				this.playMenu();
 				loop = this.getContinued();
 			}				
-		}
-		
-		if (cmd.hasOption("logon")) {
-			AppLog.LOGON = true;
-		}
+		}		
 		
 		if (cmd.hasOption("analyze")) {
 			final String vals[] = cmd.getOptionValues("analyze");
@@ -235,8 +236,10 @@ public final class App {
 	 * @param strGrammar grammar to analyze, represented as string.
 	 */
 	private void analyze(String strGrammar) {
-		GrammarAnalysis analysis = this.analyzer.analyze(strGrammar);
+		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
+		this.getOutput().onResult("This is your grammar: " + grammar.toString());
 		
+		GrammarAnalysis analysis = this.analyzer.analyze(grammar);		
 		this.getOutput().onResult("Here we are! This is your grammar analysis");		
 		this.getOutput().onDefault(analysis.toString());
 	}
@@ -249,6 +252,10 @@ public final class App {
 	 * @param transformation target transformation.
 	 */
 	private void transform(String strGrammar, GrammarTransformation transformation) {
+		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
+		this.getOutput().onResult("This is your grammar: " + grammar.toString());
+		this.getOutput().onResult("This is your transformation: " + transformation);
+		
 		GrammarAnalysis analysisIn = this.analyzer.analyze(strGrammar);
 		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");
 		
@@ -256,7 +263,7 @@ public final class App {
 		GrammarAnalysis analysisOut = this.analyzer.analyze(grammarOut);
 		analysisOut.setTitle("GRAMMAR ANALYSIS: output grammar");
 		
-		this.getOutput().onResult("Here we are! This is your transformation (" + transformation + ")");
+		this.getOutput().onResult("Here we are! This is your transformation result");
 		this.getOutput().onDefault(analysisIn.toString());
 		this.getOutput().onDefault(analysisOut.toString());
 	}
@@ -269,11 +276,15 @@ public final class App {
 	 * @param word word to parse.
 	 * @param parser parser type to parse with.
 	 */
-	private void parse(String strGrammar, String word, ParserType parser) {		
+	private void parse(String strGrammar, String word, ParserType parser) {
+		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
+		this.getOutput().onResult("This is your grammar: " + grammar.toString());
+		this.getOutput().onResult("This is your word: " + word);
+		this.getOutput().onResult("This is your parser: " + parser);
+		
 		boolean accepted = this.parser.parse(strGrammar, word, parser);
 		
-		this.getOutput().onResult("Here we are! This is your parsing result");
-		this.getOutput().onResult("" + accepted);
+		this.getOutput().onResult("Here we are! Your word has " + (accepted ? "" : "NOT") + " been parsed!");
 	}	
 	
 	/**
@@ -357,15 +368,15 @@ public final class App {
 		int choice = this.menus.run(TransformationMenu.IDENTIFIER);
 		
 		if (choice == TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS) {
-			return GrammarTransformation.REMOVE_UNGENERATIVE_SYMBOLS;
+			return GrammarTransformation.RGS;
 		} else if (choice == TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS) {
-			return GrammarTransformation.REMOVE_UNREACHEABLES_SYMBOLS;
+			return GrammarTransformation.RRS;
 		} else if (choice == TransformationMenu.REMOVE_USELESS_SYMBOLS) {
-			return GrammarTransformation.REMOVE_USELESS_SYMBOLS;
+			return GrammarTransformation.RUS;
 		} else if (choice == TransformationMenu.REMOVE_EPSILON_PRODUCTIONS) {
-			return GrammarTransformation.REMOVE_EPSILON_PRODUCTIONS;
+			return GrammarTransformation.REP;
 		} else if (choice == TransformationMenu.REMOVE_UNIT_PRODUCTIONS) {
-			return GrammarTransformation.REMOVE_UNIT_PRODUCTIONS;
+			return GrammarTransformation.RUP;
 		} else {
 			return null;
 		}
@@ -376,7 +387,7 @@ public final class App {
 		
 		if (choice == ParserMenu.CYK) {
 			return ParserType.CYK;
-		} else if (choice == ParserMenu.LL1) {
+		} else if (choice == ParserMenu.LR1) {
 			return ParserType.LR1;
 		} else {
 			return null;

@@ -125,7 +125,7 @@ public final class UiManager {
 		Menu parserMenu = MenuBuilder.hasName(ParserMenu.NAME)
 				.withDescription(ParserMenu.DESCRIPTION)
 				.hasChoice(ParserMenu.CYK, ParserMenu.CYK_DESCRIPTION)
-				.hasChoice(ParserMenu.LL1, ParserMenu.LL1_DESCRIPTION)
+				.hasChoice(ParserMenu.LR1, ParserMenu.LR1_DESCRIPTION)
 				.create();
 		
 		Menu transformationMenu = MenuBuilder.hasName(TransformationMenu.NAME)

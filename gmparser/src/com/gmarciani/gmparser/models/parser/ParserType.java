@@ -25,7 +25,7 @@ package com.gmarciani.gmparser.models.parser;
 
 public enum ParserType {
 	
-	CYK("Cock-Young-Kasami", "CYK"),
+	CYK("Cock-Younger-Kasami", "CYK"),
 	LR1("LR1", "LR1");	
 	
 	private String name;
@@ -42,6 +42,10 @@ public enum ParserType {
 
 	public String getShortName() {
 		return shortName;
+	}
+	
+	@Override public String toString() {
+		return this.getName();
 	}
 
 }

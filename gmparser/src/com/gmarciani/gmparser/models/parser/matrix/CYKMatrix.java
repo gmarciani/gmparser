@@ -28,12 +28,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
-public class CYKMatrix {
+public class CYKMatrix implements Matrix {
 	
 	private Table<Integer, Integer, Alphabet> matrix;
 	private String word;
@@ -96,18 +97,28 @@ public class CYKMatrix {
 	}
 	
 	@Override public String toString() {
-		String target = "CYKMatrix(";
+		String header[] = new String[this.word.length() + 1];
+		header[0] = "#";
+		int c = 1;
+		for (Character symbol: this.word.toCharArray()) {			
+			header[c] = String.valueOf(symbol);
+			c ++;
+		}
+		
+		String data[][] = new String[this.word.length()][this.word.length() + 1];
+		for (int r = 0; r < this.word.length(); r ++) {			
+			data[r][0] = String.valueOf(r + 1);
+		}
 		
 		Iterator<Table.Cell<Integer, Integer, Alphabet>> iter = this.matrix.cellSet().iterator();
 		while(iter.hasNext()) {
 			Table.Cell<Integer, Integer, Alphabet> cell = iter.next();
-			target += "(" + cell.getRowKey() + ";" + cell.getColumnKey() + ")" + cell.getValue();
-			target += (iter.hasNext() ? "," : "");
+			data[cell.getRowKey() - 1][cell.getColumnKey()] = cell.getValue().toString();
 		}
 		
-		target += ")";
-		
-		return target;
+		String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+        
+        return table;
 	}
 	
 	@Override public boolean equals(Object obj) {

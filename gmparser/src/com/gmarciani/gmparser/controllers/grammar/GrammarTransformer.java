@@ -98,15 +98,15 @@ public class GrammarTransformer {
 	 * @return transformed grammar.
 	 */
 	public void transform(Grammar grammar, GrammarTransformation transformation) {
-		if (transformation == GrammarTransformation.REMOVE_UNGENERATIVE_SYMBOLS) {
+		if (transformation == GrammarTransformation.RGS) {
 			this.removeUngenerativeSymbols(grammar);
-		} else if (transformation == GrammarTransformation.REMOVE_UNREACHEABLES_SYMBOLS) {
+		} else if (transformation == GrammarTransformation.RRS) {
 			this.removeUnreacheableSymbols(grammar);
-		} else if (transformation == GrammarTransformation.REMOVE_USELESS_SYMBOLS) {
+		} else if (transformation == GrammarTransformation.RUS) {
 			this.removeUselessSymbols(grammar);
-		} else if (transformation == GrammarTransformation.REMOVE_EPSILON_PRODUCTIONS) {
+		} else if (transformation == GrammarTransformation.REP) {
 			this.removeEpsilonProductions(grammar);
-		} else if (transformation == GrammarTransformation.REMOVE_UNIT_PRODUCTIONS) {
+		} else if (transformation == GrammarTransformation.RUP) {
 			this.removeUnitProductions(grammar);
 		} else {
 			System.out.println("Unavailable grammar transformation");
