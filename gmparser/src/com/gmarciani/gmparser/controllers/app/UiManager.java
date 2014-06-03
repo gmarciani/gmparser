@@ -145,6 +145,12 @@ public final class UiManager {
 		return menus;
 	}
 	
+	public static String getLogo() {
+		final String logo = "\n   ___|   \\  |   _ \\                               \n  |      |\\/ |  |   |  _` |   __|  __|   _ \\   __| \n  |   |  |   |  ___/  (   |  |   \\__ \\   __/  |    \n \\____| _|  _| _|    \\__,_| _|   ____/ \\___| _|    \n";
+		
+		return logo;
+	}
+	
 	public static String makeBold(String string) {
 		return "\033[0;1m " + string + " \033[0;0m";
 	}

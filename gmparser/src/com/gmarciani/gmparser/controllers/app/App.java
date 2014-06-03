@@ -38,7 +38,6 @@ import com.gmarciani.gmparser.controllers.app.Preferences.*;
 import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.controllers.grammar.WordParser;
-import com.gmarciani.gmparser.controllers.io.IOController;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
@@ -125,14 +124,8 @@ public final class App {
 	 * Shows the GMParser welcome splash screen.
 	 */
 	public void printWelcome() {
-		String welcome = AppUI.LOGO_PLACEHOLDER;
-		try {
-			welcome = IOController.getFileAsString(AppUI.FILE_LOGO);
-			System.out.println(ansi().fg(AppUI.LOGO_COLOR).bold().a(welcome).reset());
-		} catch (IOException exc) {
-			this.output.onException(exc.getMessage());
-			this.playMenu();
-		}		
+		String welcome = UiManager.getLogo();
+		System.out.println(ansi().fg(AppUI.LOGO_COLOR).bold().a(welcome).reset());
 	}
 
 	/**
