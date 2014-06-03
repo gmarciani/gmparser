@@ -21,35 +21,24 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
-
-import static org.junit.Assert.*;
+package com.gmarciani.gmparser.grammar.analysis;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
-public class TestUnreacheableRemoval {
+public class TestGrammarAnalysis {
 	
-	private static final String GRAMMAR_WITH_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a;Z->c.";
-	private static final String GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a.";
-
-	@SuppressWarnings("static-access")
+	private static final String GRAMMAR = "S->AS|A|" + Grammar.EMPTY + ";A->B|a;B->A|B|S|b;C->A|B|C|D;D->C.";
+	
 	@Test
-	public void testRemoveUnreacheableSymbols() {
-		Grammar grammar = GrammarBuilder
-				.hasProductions(GRAMMAR_WITH_UNREACHEABLE_SYMBOLS)
-				.create();
+	public void test() {
 		
-		GrammarTransformer.getInstance().removeUnreacheableSymbols(grammar);
+		GrammarAnalysis analysis = GrammarAnalyzer.getInstance().analyze(GRAMMAR);
 		
-		Grammar shouldBe = GrammarBuilder
-				.hasProductions(GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS)
-				.create();
-		
-		assertTrue("Incorrect removal of unreacheable symbols", 
-				grammar.equals(shouldBe));
+		//System.out.println(analysis);
 	}
+
 }

@@ -30,7 +30,6 @@ import com.gmarciani.gmparser.models.parser.CYKParser;
 import com.gmarciani.gmparser.models.parser.LROneParser;
 import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.ParserType;
-import com.gmarciani.gmparser.models.parser.matrix.Matrix;
 
 /**
  * The word parsing controller.
@@ -120,12 +119,6 @@ public class WordParser {
 	public boolean parseLROne(Grammar grammar, String word) {
 		Parser parser = new LROneParser();
 		return parser.parse(grammar, word);
-	}
-
-	public Matrix getRecognitionMatrix(Grammar grammar, String word,
-			ParserType parser) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -81,8 +81,8 @@ public class Member implements Comparable<Member> {
 	public Alphabet getAlphabet() {
 		Alphabet target = new Alphabet();
 		
-		target.add(this.getNonTerminalAlphabet());
-		target.add(this.getTerminalAlphabet());		
+		target.addAll(this.getNonTerminalAlphabet());
+		target.addAll(this.getTerminalAlphabet());		
 		
 		return target;
 	}

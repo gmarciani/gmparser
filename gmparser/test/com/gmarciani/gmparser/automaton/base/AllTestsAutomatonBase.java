@@ -21,34 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.parser;
+package com.gmarciani.gmparser.automaton.base;
 
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import org.junit.Test;
-
-import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.parser.LROneParser;
-import com.gmarciani.gmparser.models.parser.matrix.LROneMatrix;
-
-public class TestLROneParser {
-	
-	private static final String GRAMMAR = "";
-	private static final String WORD = "";
-
-	@SuppressWarnings("static-access")
-	@Test
-	public void testParse() {
-		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
-				.create();
-		
-		LROneParser parser = new LROneParser();
-		LROneMatrix matrix = parser.getMatrix(grammar, WORD);
-		
-		System.out.println(matrix);
-	}
+@RunWith(Suite.class)
+@SuiteClasses({
+	TestTransitionFunction.class
+})
+public class AllTestsAutomatonBase {
 
 }

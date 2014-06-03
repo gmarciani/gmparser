@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
+package com.gmarciani.gmparser.grammar.transformation;
 
 import static org.junit.Assert.*;
 
@@ -31,25 +31,25 @@ import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestEpsilonProductionRemoval {
+public class TestUnreacheableRemoval {
 	
-	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A->" + Grammar.EMPTY + ".";
-	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->A|" + Grammar.EMPTY + ".";
+	private static final String GRAMMAR_WITH_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a;Z->c.";
+	private static final String GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS = "S->XY|a;X->a.";
 
 	@SuppressWarnings("static-access")
 	@Test
-	public void testRemoveEpsilonProductions() {
+	public void testRemoveUnreacheableSymbols() {
 		Grammar grammar = GrammarBuilder
-				.hasProductions(GRAMMAR_WITH_EPSILON_PRODUCTIONS)
+				.hasProductions(GRAMMAR_WITH_UNREACHEABLE_SYMBOLS)
 				.create();
 		
-		GrammarTransformer.getInstance().removeEpsilonProductions(grammar);
+		GrammarTransformer.getInstance().removeUnreacheableSymbols(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
-				.hasProductions(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS)
-				.create();	
+				.hasProductions(GRAMMAR_WITHOUT_UNREACHEABLE_SYMBOLS)
+				.create();
 		
-		assertTrue("Incorrect removal of epsilon productions", 
+		assertTrue("Incorrect removal of unreacheable symbols", 
 				grammar.equals(shouldBe));
 	}
 }

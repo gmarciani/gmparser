@@ -21,24 +21,35 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.analysis;
+package com.gmarciani.gmparser.grammar.transformation;
+
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestGrammarAnalysis {
+public class TestUngenerativeRemoval {
 	
-	private static final String GRAMMAR = "S->AS|A|" + Grammar.EMPTY + ";A->B|a;B->A|B|S|b;C->A|B|C|D;D->C.";
-	
+	private static final String GRAMMAR_WITH_UNGENERATIVE_SYMBOLS = "S->XY|a;X->a.";
+	private static final String GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS = "S->a;X->a.";
+
+	@SuppressWarnings("static-access")
 	@Test
-	public void test() {
+	public void testRemoveUngenerativeSymbols() {
+		Grammar grammar = GrammarBuilder
+				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
+				.create();
 		
-		GrammarAnalysis analysis = GrammarAnalyzer.getInstance().analyze(GRAMMAR);
+		GrammarTransformer.getInstance().removeUngenerativeSymbols(grammar);
 		
-		System.out.println(analysis);
+		Grammar shouldBe = GrammarBuilder
+				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
+				.create();		
+		
+		assertTrue("Incorrect removal of ungenerative symbols", 
+				grammar.equals(shouldBe));
 	}
-
 }

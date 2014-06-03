@@ -21,8 +21,18 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.grammar.analysis;
 
-public class Automaton {
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	TestGrammarNormalForm.class, 
+	TestGrammarType.class,
+	TestGrammarAnalysis.class,
+	TestGrammarSyntax.class})
+public class AllTestsGrammarAnalysis {
 
 }

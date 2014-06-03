@@ -285,14 +285,14 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		
 		for (Production production : this) {
 			if (production.isEpsilonProduction()) {
-				target.add(production.getLeft().getNonTerminalAlphabet());
+				target.addAll(production.getLeft().getNonTerminalAlphabet());
 			}
 				
 		}
 		
 		for (Production production : this) {
 			if (target.containsAll(production.getRight().getAlphabet())) {
-				target.add(production.getLeft().getNonTerminalAlphabet());
+				target.addAll(production.getLeft().getNonTerminalAlphabet());
 			}
 				
 		}
@@ -314,7 +314,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 					
 			for (Production production : this) {
 				if (production.isRightWithin(generativeAlphabet)) {
-					loop = generativeTerminals.add(production.getLeft().getNonTerminalAlphabet()) ? true : loop;
+					loop = generativeTerminals.addAll(production.getLeft().getNonTerminalAlphabet()) ? true : loop;
 				}		
 			}			
 		}		
@@ -375,8 +375,8 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 	public Alphabet getAlphabet() {
 		Alphabet target = new Alphabet();
 		
-		target.add(this.getNonTerminalAlphabet());
-		target.add(this.getTerminalAlphabet());		
+		target.addAll(this.getNonTerminalAlphabet());
+		target.addAll(this.getTerminalAlphabet());		
 		
 		return target;
 	}
@@ -384,8 +384,8 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 	public Alphabet getNonTerminalAlphabet() {
 		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
-		target.add(this.getLeftNonTerminalAlphabet());
-		target.add(this.getRightNonTerminalAlphabet());
+		target.addAll(this.getLeftNonTerminalAlphabet());
+		target.addAll(this.getRightNonTerminalAlphabet());
 		
 		return target;
 	}
@@ -393,7 +393,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 	public Alphabet getTerminalAlphabet() {
 		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
 		
-		target.add(this.getRightTerminalAlphabet());
+		target.addAll(this.getRightTerminalAlphabet());
 		
 		return target;
 	}
@@ -402,7 +402,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
 		for (Production production : this) {
-			target.add(production.getLeft().getNonTerminalAlphabet());
+			target.addAll(production.getLeft().getNonTerminalAlphabet());
 		}
 		
 		return target;
@@ -412,7 +412,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 		
 		for (Production production : this) {
-			target.add(production.getRight().getNonTerminalAlphabet());
+			target.addAll(production.getRight().getNonTerminalAlphabet());
 		}
 		
 		return target;
@@ -422,7 +422,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
 		
 		for (Production production : this) {
-			target.add(production.getRight().getTerminalAlphabet());
+			target.addAll(production.getRight().getTerminalAlphabet());
 		}
 		
 		return target;
@@ -430,7 +430,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 
 	@Override public String toString() {
 		String s = "[";
-		
+
 		Iterator<Character> nonTerminals = this.getLeftNonTerminalAlphabet().iterator();
 		while(nonTerminals.hasNext()) {
 			Character nonTerminal = nonTerminals.next();

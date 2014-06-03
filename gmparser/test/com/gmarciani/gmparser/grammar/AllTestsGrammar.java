@@ -27,10 +27,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.gmarciani.gmparser.grammar.analysis.AllTestsGrammarAnalysis;
+import com.gmarciani.gmparser.grammar.base.AllTestsGrammarBase;
+import com.gmarciani.gmparser.grammar.transformation.AllTestsGrammarTransformation;
+
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	TestGrammar.class, 
-	TestProduction.class })
+	AllTestsGrammarBase.class,
+	AllTestsGrammarAnalysis.class, 
+	AllTestsGrammarTransformation.class })
 public class AllTestsGrammar {
 
 }

@@ -26,7 +26,6 @@ package com.gmarciani.gmparser.models.grammar.alphabet;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-
 public class Alphabet extends ConcurrentSkipListSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
@@ -61,14 +60,14 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 	
 	public Alphabet(String symbols) {
 		super();
-		this.add(symbols);
+		this.addAll(symbols);
 	}	
 	
 	public AlphabetType getType() {
 		return this.type;
 	}
 	
-	public boolean add(Alphabet symbols) {
+	public boolean addAll(Alphabet symbols) {
 		boolean added = false;
 		for (Character symbol : symbols) {
 			if (this.isAcceptableSymbol(symbol)) {
@@ -82,7 +81,7 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		return added;
 	}
 	
-	public boolean add(String symbols) {
+	public boolean addAll(String symbols) {
 		boolean added = false;
 		for (Character symbol : symbols.toCharArray()) {
 			if (this.isAcceptableSymbol(symbol)) {
@@ -95,7 +94,16 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		return added;
 	}
 	
-	public boolean remove(String symbols) {
+	public boolean removeAll(Alphabet alphabet) {
+		boolean removed = false;
+		for (Character symbol : alphabet) {
+			removed = this.remove(symbol) ? true : removed;
+		}
+		
+		return removed;
+	}
+	
+	public boolean removeAll(String symbols) {
 		boolean removed = false;
 		for (Character symbol : symbols.toCharArray()) {
 			removed = this.remove(symbol) ? true : removed;

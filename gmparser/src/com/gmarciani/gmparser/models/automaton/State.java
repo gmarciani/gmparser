@@ -21,21 +21,41 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.models.automaton;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import java.util.Objects;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+public class State implements Comparable<State> {
+	
+	private Integer id;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsAutomaton.class,
-	AllTestsParser.class})
-public class AllTests {
+	public State(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+	
+	@Override public String toString() {
+		return "Q" + this.getId();
+	}
+	
+	@Override public boolean equals(Object obj) {
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		State other = (State) obj;
+		
+		return this.getId() == other.getId();
+	}
+	
+	@Override public int compareTo(State other) {
+		return this.getId().compareTo(other.getId());
+	}
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.getId());
+	}
 
 }

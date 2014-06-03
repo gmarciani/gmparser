@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
+package com.gmarciani.gmparser.grammar.transformation;
 
 import static org.junit.Assert.*;
 
@@ -31,25 +31,25 @@ import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
-public class TestUngenerativeRemoval {
+public class TestEpsilonProductionRemoval {
 	
-	private static final String GRAMMAR_WITH_UNGENERATIVE_SYMBOLS = "S->XY|a;X->a.";
-	private static final String GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS = "S->a;X->a.";
+	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A->" + Grammar.EMPTY + ".";
+	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->A|" + Grammar.EMPTY + ".";
 
 	@SuppressWarnings("static-access")
 	@Test
-	public void testRemoveUngenerativeSymbols() {
+	public void testRemoveEpsilonProductions() {
 		Grammar grammar = GrammarBuilder
-				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
+				.hasProductions(GRAMMAR_WITH_EPSILON_PRODUCTIONS)
 				.create();
 		
-		GrammarTransformer.getInstance().removeUngenerativeSymbols(grammar);
+		GrammarTransformer.getInstance().removeEpsilonProductions(grammar);
 		
 		Grammar shouldBe = GrammarBuilder
-				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
-				.create();		
+				.hasProductions(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS)
+				.create();	
 		
-		assertTrue("Incorrect removal of ungenerative symbols", 
+		assertTrue("Incorrect removal of epsilon productions", 
 				grammar.equals(shouldBe));
 	}
 }

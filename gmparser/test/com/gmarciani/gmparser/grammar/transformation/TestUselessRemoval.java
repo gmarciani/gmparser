@@ -21,37 +21,35 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.parser;
+package com.gmarciani.gmparser.grammar.transformation;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.parser.CYKParser;
-import com.gmarciani.gmparser.models.parser.matrix.CYKMatrix;
 
-public class TestCYKParser {
+public class TestUselessRemoval {
 	
-	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
-	private static final String WORD = "aababb";
+	private static final String GRAMMAR_WITH_USELESS_SYMBOLS = "S->XY|XZ|a;X->a;Y->YZ.";
+	private static final String GRAMMAR_WITHOUT_USELESS_SYMBOLS = "S->a.";	
 
 	@SuppressWarnings("static-access")
 	@Test
-	public void testParse() {
-		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR)
-				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+	public void testRemoveUselessSymbols() {
+		Grammar grammar = GrammarBuilder
+				.hasProductions(GRAMMAR_WITH_USELESS_SYMBOLS)
 				.create();
 		
-		CYKParser parser = new CYKParser();
-		CYKMatrix matrix = parser.getMatrix(grammar.getProductions(), WORD);
+		GrammarTransformer.getInstance().removeUselessSymbols(grammar);
 		
-		//System.out.println(matrix);
+		Grammar shouldBe = GrammarBuilder
+				.hasProductions(GRAMMAR_WITHOUT_USELESS_SYMBOLS)
+				.create();		
+		
+		assertTrue("Incorrect removal of useless symbols", 
+				grammar.equals(shouldBe));
 	}
-
 }

@@ -21,35 +21,28 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
+package com.gmarciani.gmparser.parser.cyk;
+
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
-import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.controllers.grammar.WordParser;
+import com.gmarciani.gmparser.models.parser.ParserType;
 
-public class TestToChomskyNormalForm {
+public class TestParse {
 	
-	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
+	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
+	private static final String WORD = "aababb";
 
-	@SuppressWarnings("static-access")
 	@Test
-	public void testToChomskyNormalForm() {
-		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR_NOT_CHOMSKY)
-				.withAxiom('E')
-				.withEmpty(Grammar.EMPTY)
-				.create();
+	public void testParse() {
 		
-		assertFalse("Grammar should not be recognized as Chomsky",
-				grammar.isChomskyNormalForm());
+		boolean parsed = WordParser.getInstance().parse(GRAMMAR, WORD, ParserType.CYK);
 		
-		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
-		
-		assertTrue("Grammar should be recognized as Chomsky",
-				grammar.isChomskyNormalForm());
+		assertTrue("Uncorrect parsing (should be parsed)",
+				parsed);
 	}
-	
+
 }

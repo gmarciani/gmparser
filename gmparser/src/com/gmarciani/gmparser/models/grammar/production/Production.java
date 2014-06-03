@@ -261,14 +261,7 @@ public class Production implements Comparable<Production> {
 	@Override public String toString() {
 		String s = this.getLeft() + MEMBER_SEPARATOR + this.getRight();
 		return s;
-	}
-	
-	@Override public int compareTo(Production other) {
-		int byLeft = this.getLeft().compareTo(other.getLeft());
-		if (byLeft == 0)
-			return this.getRight().compareTo(other.getRight());
-		return byLeft;
-	}
+	}	
 	
 	@Override public boolean equals(Object obj) {
 		if (obj == null || getClass() != obj.getClass())
@@ -278,7 +271,14 @@ public class Production implements Comparable<Production> {
 		
 		return (this.getLeft().equals(other.getLeft()) 
 				&& this.getRight().equals(other.getRight()));
-	}		
+	}	
+	
+	@Override public int compareTo(Production other) {
+		int byLeft = this.getLeft().compareTo(other.getLeft());
+		if (byLeft == 0)
+			return this.getRight().compareTo(other.getRight());
+		return byLeft;
+	}
 
 	@Override public int hashCode() {
 		return Objects.hash(this.getLeft(), this.getRight());

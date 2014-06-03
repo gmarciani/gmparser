@@ -27,9 +27,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.gmarciani.gmparser.parser.cyk.AllTestsCYK;
+import com.gmarciani.gmparser.parser.lr.AllTestsLR;
+
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	TestCYKParser.class})
+	AllTestsCYK.class,
+	AllTestsLR.class})
 public class AllTestsParser {
 
 }

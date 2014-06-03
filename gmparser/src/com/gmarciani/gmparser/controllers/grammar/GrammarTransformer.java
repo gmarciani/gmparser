@@ -23,7 +23,6 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -32,7 +31,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
@@ -131,7 +129,7 @@ public class GrammarTransformer {
 			
 			for (Production production : grammar.getProductions()) {
 				if (production.isRightWithin(generativeAlphabet))
-					loop = generativeNonTerminals.add(production.getLeft().getNonTerminalAlphabet()) ? true : loop;	
+					loop = generativeNonTerminals.addAll(production.getLeft().getNonTerminalAlphabet()) ? true : loop;	
 			}			
 		}		
 		
@@ -183,9 +181,7 @@ public class GrammarTransformer {
 	public void removeEpsilonProductions(Grammar grammar) {
 		Alphabet nullables = grammar.getNullables();	
 		
-		Iterator<Production> iterProductions = grammar.getProductions().iterator();
-		while(iterProductions.hasNext()) {
-			Production production = iterProductions.next();
+		for (Production production : grammar.getProductions()) {
 			Alphabet nullablesForProduction = grammar.getNullablesForProduction(production);
 			if (!nullablesForProduction.isEmpty()) {
 				Map<Character, List<Integer>> nullablesOccurencesMap = production.getRight().getSymbolsOccurrences(nullablesForProduction);
@@ -208,11 +204,8 @@ public class GrammarTransformer {
 			}
 		}
 		
-		Iterator<Production> iterEpsilonProductions = grammar.getEpsilonProductions().iterator();
-		while(iterEpsilonProductions.hasNext()) {
-			Production epsilonProduction = iterEpsilonProductions.next();
+		for (Production epsilonProduction : grammar.getEpsilonProductions())
 			grammar.removeProduction(epsilonProduction);
-		}
 		
 		if (nullables.contains(grammar.getAxiom()))
 			grammar.addProduction(grammar.getAxiom(), Grammar.EMPTY);
@@ -227,11 +220,8 @@ public class GrammarTransformer {
 	public void removeUnitProductions(Grammar grammar) {
 		this.removeEpsilonProductions(grammar);
 		
-		Iterator<Production> iterTrivialUnitProductions = grammar.getTrivialUnitProductions().iterator();
-		while(iterTrivialUnitProductions.hasNext()) {
-			Production trivialUnitProduction = iterTrivialUnitProductions.next();
+		for (Production trivialUnitProduction : grammar.getTrivialUnitProductions())
 			grammar.removeProduction(trivialUnitProduction);
-		}
 		
 		Queue<Production> queue = new ConcurrentLinkedQueue<Production>(grammar.getNonTrivialUnitProductions());
 		while(!queue.isEmpty()) {
@@ -245,11 +235,8 @@ public class GrammarTransformer {
 			
 			grammar.removeProduction(nonTrivialUnitProduction);
 			
-			Iterator<Production> iterGeneratedTrivialUnitProductions = grammar.getTrivialUnitProductions().iterator();
-			while(iterGeneratedTrivialUnitProductions.hasNext()) {
-				Production trivialUnitProduction = iterGeneratedTrivialUnitProductions.next();
+			for (Production trivialUnitProduction : grammar.getTrivialUnitProductions())
 				grammar.removeProduction(trivialUnitProduction);
-			}			
 			
 			queue.addAll(grammar.getNonTrivialUnitProductions());
 		}
@@ -271,9 +258,7 @@ public class GrammarTransformer {
 		while(loop) {
 			loop = false;
 			
-			Iterator<Production> iterProductions = grammar.getProductions().iterator();
-			while(iterProductions.hasNext()) {
-				Production production = iterProductions.next();
+			for (Production production : grammar.getProductions()) {
 				if (production.getRight().getSize() > 2) {
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
@@ -296,9 +281,7 @@ public class GrammarTransformer {
 		while(loop) {
 			loop = false;
 			
-			Iterator<Production> iterProductions = grammar.getProductions().iterator();
-			while(iterProductions.hasNext()) {
-				Production production = iterProductions.next();
+			for (Production production : grammar.getProductions()) {
 				if (production.getRight().getSize() > 1
 						&& !production.getRight().getTerminalAlphabet().isEmpty()) {
 					

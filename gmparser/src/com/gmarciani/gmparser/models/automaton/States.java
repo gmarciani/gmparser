@@ -21,37 +21,32 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.grammar;
+package com.gmarciani.gmparser.models.automaton;
 
-import static org.junit.Assert.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-import org.junit.Test;
+public class States extends ConcurrentSkipListSet<State> {
 
-import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.production.Production;
+	private static final long serialVersionUID = -971990098522233593L;
 
-public class TestProduction {
-
-	@Test
-	public void testProductionEmpty() {		
-		Production prodOne = new Production("S", Grammar.EMPTY);
-		Production prodTwo = new Production("S", Grammar.EMPTY + Grammar.EMPTY + Grammar.EMPTY);
-		Production prodThree = new Production("S", Grammar.EMPTY + "A");
-		Production prodFour = new Production("S", "A" + Grammar.EMPTY);
-		Production prodFive = new Production("S", Grammar.EMPTY + "A" + Grammar.EMPTY);
-		/*
-		System.out.println("PRODUCTION ONE: " + prodOne);
-		System.out.println("PRODUCTION TWO: " + prodTwo);
-		System.out.println("PRODUCTION THREE: " + prodThree);
-		System.out.println("PRODUCTION FOUR: " + prodFour);
-		System.out.println("PRODUCTION FIVE: " + prodFive);*/
+	public States() {
+		super();
+	}
+	
+	public boolean addAll(States states) {
+		boolean added = false;
+		for (State state : states)
+			added = this.add(state) ? true : added;
 		
-		assertTrue("Uncorrect equality of one or more epsilons",
-				prodOne.equals(prodTwo));
+		return added;
+	}
+	
+	public boolean addAll(Integer ... statesId) {
+		boolean added = false;
+		for (int stateId : statesId)
+			added = this.add(new State(stateId)) ? true : added;
 		
-		assertTrue("Uncorrect equality of mixed epsilons",
-				prodThree.equals(prodFour)
-				&& prodFour.equals(prodFive));		
+		return added;
 	}
 
 }

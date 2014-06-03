@@ -21,35 +21,37 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
+package com.gmarciani.gmparser.grammar.base;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class TestUselessRemoval {
-	
-	private static final String GRAMMAR_WITH_USELESS_SYMBOLS = "S->XY|XZ|a;X->a;Y->YZ.";
-	private static final String GRAMMAR_WITHOUT_USELESS_SYMBOLS = "S->a.";	
+public class TestProduction {
 
-	@SuppressWarnings("static-access")
 	@Test
-	public void testRemoveUselessSymbols() {
-		Grammar grammar = GrammarBuilder
-				.hasProductions(GRAMMAR_WITH_USELESS_SYMBOLS)
-				.create();
+	public void testProductionEmpty() {		
+		Production prodOne = new Production("S", Grammar.EMPTY);
+		Production prodTwo = new Production("S", Grammar.EMPTY + Grammar.EMPTY + Grammar.EMPTY);
+		Production prodThree = new Production("S", Grammar.EMPTY + "A");
+		Production prodFour = new Production("S", "A" + Grammar.EMPTY);
+		Production prodFive = new Production("S", Grammar.EMPTY + "A" + Grammar.EMPTY);
+		/*
+		System.out.println("PRODUCTION ONE: " + prodOne);
+		System.out.println("PRODUCTION TWO: " + prodTwo);
+		System.out.println("PRODUCTION THREE: " + prodThree);
+		System.out.println("PRODUCTION FOUR: " + prodFour);
+		System.out.println("PRODUCTION FIVE: " + prodFive);*/
 		
-		GrammarTransformer.getInstance().removeUselessSymbols(grammar);
+		assertTrue("Uncorrect equality of one or more epsilons",
+				prodOne.equals(prodTwo));
 		
-		Grammar shouldBe = GrammarBuilder
-				.hasProductions(GRAMMAR_WITHOUT_USELESS_SYMBOLS)
-				.create();		
-		
-		assertTrue("Incorrect removal of useless symbols", 
-				grammar.equals(shouldBe));
+		assertTrue("Uncorrect equality of mixed epsilons",
+				prodThree.equals(prodFour)
+				&& prodFour.equals(prodFive));		
 	}
+
 }

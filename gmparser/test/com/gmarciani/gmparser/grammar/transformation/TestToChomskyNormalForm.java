@@ -21,21 +21,35 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.grammar.transformation;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsAutomaton.class,
-	AllTestsParser.class})
-public class AllTests {
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
 
+public class TestToChomskyNormalForm {
+	
+	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
+
+	@SuppressWarnings("static-access")
+	@Test
+	public void testToChomskyNormalForm() {
+		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR_NOT_CHOMSKY)
+				.withAxiom('E')
+				.withEmpty(Grammar.EMPTY)
+				.create();
+		
+		assertFalse("Grammar should not be recognized as Chomsky",
+				grammar.isChomskyNormalForm());
+		
+		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
+		
+		assertTrue("Grammar should be recognized as Chomsky",
+				grammar.isChomskyNormalForm());
+	}
+	
 }

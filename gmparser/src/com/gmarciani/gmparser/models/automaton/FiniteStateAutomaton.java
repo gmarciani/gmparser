@@ -21,20 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.transformation;
+package com.gmarciani.gmparser.models.automaton;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	TestEpsilonProductionRemoval.class,
-	TestToChomskyNormalForm.class, 
-	TestUngenerativeRemoval.class,
-	TestUnitProductionsRemoval.class, 
-	TestUnreacheableRemoval.class,
-	TestUselessRemoval.class })
-public class AllTestsTransformation {
+public class FiniteStateAutomaton {
+	
+	private States states;
+	private Alphabet alphabet;
+	private State initialState;
+	private States finalStates;
+	private TransitionFunction transitionFunction;
 
 }

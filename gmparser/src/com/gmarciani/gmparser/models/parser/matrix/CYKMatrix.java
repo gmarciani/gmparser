@@ -24,7 +24,7 @@
 package com.gmarciani.gmparser.models.parser.matrix;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,14 +34,14 @@ import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
-public class CYKMatrix implements Matrix {
+public class CYKMatrix {
 	
 	private Table<Integer, Integer, Alphabet> matrix;
 	private String word;
 
 	public CYKMatrix(String word) {
 		this.setWord(word);
-		this.initializeMatrix();		
+		this.initializeMatrix(word);		
 	}
 	
 	public Table<Integer, Integer, Alphabet> getMatrix() {
@@ -59,7 +59,7 @@ public class CYKMatrix implements Matrix {
 	public List<Integer> getWordLenghts() {
 		List<Integer> target = new ArrayList<Integer>();
 		
-		target.addAll(this.matrix.rowKeySet());
+		target.addAll(this.getMatrix().rowKeySet());
 		
 		return target;
 	}
@@ -67,14 +67,14 @@ public class CYKMatrix implements Matrix {
 	public List<Integer> getWordPositions() {
 		List<Integer> target = new ArrayList<Integer>();
 		
-		target.addAll(this.matrix.columnKeySet());
+		target.addAll(this.getMatrix().columnKeySet());
 		
 		return target;
 		
 	}
 	
-	private void initializeMatrix() {
-		int size = this.getWord().length();
+	private void initializeMatrix(String word) {
+		int size = word.length();
 		this.matrix = HashBasedTable.create(size, size);
 		
 		for (int r = 1; r <= size; r ++) {
@@ -85,35 +85,45 @@ public class CYKMatrix implements Matrix {
 	}
 	
 	public Alphabet get(int row, int column) {
-		return this.matrix.get(row, column);
+		return this.getMatrix().get(row, column);
 	}
 	
 	public boolean put(int row, int column, Character nonTerminal) {
-		return this.matrix.get(row, column).add(nonTerminal);
+		return this.getMatrix().get(row, column).add(nonTerminal);
 	}
 	
 	public boolean put(int row, int column, Alphabet nonTerminals) {
-		return this.matrix.get(row, column).addAll(nonTerminals);
+		return this.getMatrix().get(row, column).addAll(nonTerminals);
 	}
 	
 	@Override public String toString() {
-		String header[] = new String[this.word.length() + 1];
+		List<Integer> lengths = new LinkedList<Integer>();
+		lengths.addAll(this.getMatrix().rowKeySet());
+		List<Character> symbols = new LinkedList<Character>();
+		for (Character symbol : this.getWord().toCharArray())
+			symbols.add(symbol);
+		
+		String header[] = new String[symbols.size() + 1];
 		header[0] = "#";
 		int c = 1;
-		for (Character symbol: this.word.toCharArray()) {			
+		for (Character symbol : symbols) {
 			header[c] = String.valueOf(symbol);
 			c ++;
 		}
 		
-		String data[][] = new String[this.word.length()][this.word.length() + 1];
-		for (int r = 0; r < this.word.length(); r ++) {			
-			data[r][0] = String.valueOf(r + 1);
+		String data[][] = new String[lengths.size()][symbols.size() + 1];
+		int r = 0;
+		for (Integer length : lengths) {
+			data[r][0] = String.valueOf(length);
+			r ++;
 		}
 		
-		Iterator<Table.Cell<Integer, Integer, Alphabet>> iter = this.matrix.cellSet().iterator();
-		while(iter.hasNext()) {
-			Table.Cell<Integer, Integer, Alphabet> cell = iter.next();
-			data[cell.getRowKey() - 1][cell.getColumnKey()] = cell.getValue().toString();
+		for (Table.Cell<Integer, Integer, Alphabet> cell : this.getMatrix().cellSet()) {
+			int symbolPosition = cell.getColumnKey();
+			int length = cell.getRowKey();
+			Alphabet alphabet = cell.getValue();
+			
+			data[length - 1][symbolPosition] = alphabet.toString();			
 		}
 		
 		String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);

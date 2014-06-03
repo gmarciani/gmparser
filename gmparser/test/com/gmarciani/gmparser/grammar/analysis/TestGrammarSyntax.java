@@ -21,21 +21,28 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.grammar.analysis;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+import java.util.regex.Pattern;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsAutomaton.class,
-	AllTestsParser.class})
-public class AllTests {
+import org.junit.Test;
+
+import com.gmarciani.gmparser.models.grammar.Grammar;
+
+public class TestGrammarSyntax {
+	
+	private static final String GRAMMAR = "SB->BC|bc|" + Grammar.EMPTY + ";BC->b|a.";
+
+	@Test
+	public void test() {
+		
+		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
+		
+		boolean m = Pattern.matches(regex, GRAMMAR);
+		
+		assertTrue("Error in validation (should be true)", m);
+	}
 
 }

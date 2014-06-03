@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.grammar;
+package com.gmarciani.gmparser.grammar.base;
 
 import static org.junit.Assert.*;
 

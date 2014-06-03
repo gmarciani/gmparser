@@ -21,21 +21,20 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.grammar.transformation;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
-
 @RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsAutomaton.class,
-	AllTestsParser.class})
-public class AllTests {
+@SuiteClasses({ 
+	TestEpsilonProductionRemoval.class,
+	TestToChomskyNormalForm.class, 
+	TestUngenerativeRemoval.class,
+	TestUnitProductionsRemoval.class, 
+	TestUnreacheableRemoval.class,
+	TestUselessRemoval.class })
+public class AllTestsGrammarTransformation {
 
 }
