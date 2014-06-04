@@ -52,10 +52,10 @@ public class Grammar {
 	private Productions productions;
 	private Character axiom;
 	
-	private String empty;
+	private Character epsilon;
 	
 	public static final Character AXIOM = 'S';
-	public static final String EMPTY = "\u03B5"; //on terminal Ctrl+Shift+u+03b5
+	public static final Character EPSILON = Character.toChars(Integer.parseInt("03B5", 16))[0]; //on terminal Ctrl+Shift+u+03b5
 	
 	public Grammar() {	
 		this.axiom = AXIOM;
@@ -63,7 +63,7 @@ public class Grammar {
 		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
-		this.empty = EMPTY;
+		this.epsilon = EPSILON;
 	}	
 	
 	public Grammar(Character axiom) {	
@@ -72,16 +72,16 @@ public class Grammar {
 		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
-		this.empty = EMPTY;
+		this.epsilon = EPSILON;
 	}
 	
-	public Grammar(Character axiom, String empty) {	
+	public Grammar(Character axiom, Character empty) {	
 		this.axiom = axiom;
 		this.terminals = new Alphabet(AlphabetType.TERMINAL);
 		this.nonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
 		this.nonTerminals.add(this.axiom);
 		this.productions = new Productions();			
-		this.empty = empty;
+		this.epsilon = empty;
 	}
 	
 	public Grammar(Grammar grammar) {
@@ -89,7 +89,7 @@ public class Grammar {
 		this.nonTerminals = new Alphabet(grammar.getNonTerminals());
 		this.terminals = new Alphabet(grammar.getTerminals());
 		this.productions = new Productions(grammar.getProductions());
-		this.empty = grammar.getEmpty();
+		this.epsilon = grammar.getEpsilon();
 	}
 	
 	public Alphabet getTerminals() {
@@ -117,8 +117,12 @@ public class Grammar {
 		this.axiom = axiom;
 	}
 	
-	public String getEmpty() {
-		return this.empty;
+	public Character getEpsilon() {
+		return this.epsilon;
+	}
+	
+	public void setEpsilon(Character epsilon) {
+		this.epsilon = epsilon;
 	}
 	
 	public boolean addProduction(Production production) {
@@ -134,6 +138,16 @@ public class Grammar {
 	}
 	
 	public boolean addProduction(Character left, String right) {
+		Production production = new Production(left, right);
+		return this.addProduction(production);
+	}
+	
+	public boolean addProduction(String left, Character right) {
+		Production production = new Production(left, right);
+		return this.addProduction(production);
+	}
+	
+	public boolean addProduction(Character left, Character right) {
 		Production production = new Production(left, right);
 		return this.addProduction(production);
 	}
@@ -227,7 +241,7 @@ public class Grammar {
 	
 	public boolean isSExtended() {
 		Productions epsilonProductions = this.getEpsilonProductions();
-		Production productionSExtension = new Production(this.getAxiom(), this.getEmpty());
+		Production productionSExtension = new Production(this.getAxiom(), this.getEpsilon());
 		
 		return (epsilonProductions.contains(productionSExtension)
 				&& epsilonProductions.size() == 1);
@@ -406,7 +420,5 @@ public class Grammar {
 				this.getAxiom(), 
 				this.getProductions());
 	}
-
-	
 	
 }

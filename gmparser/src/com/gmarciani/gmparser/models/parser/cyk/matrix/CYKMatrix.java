@@ -31,8 +31,8 @@ import java.util.Objects;
 import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.TreeBasedTable;
 
 public class CYKMatrix {
 	
@@ -74,8 +74,8 @@ public class CYKMatrix {
 	}
 	
 	private void initializeMatrix(String word) {
-		int size = word.length();
-		this.matrix = HashBasedTable.create(size, size);
+		int size = (word.length() == 0) ? 1 : word.length();
+		this.matrix = TreeBasedTable.create();
 		
 		for (int r = 1; r <= size; r ++) {
 			for (int c = 1; c <= size; c ++) {

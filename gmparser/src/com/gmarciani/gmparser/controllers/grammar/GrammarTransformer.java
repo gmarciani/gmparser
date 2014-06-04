@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
@@ -75,11 +75,11 @@ public class GrammarTransformer {
 	 * @param transformation target grammar transformation. 
 	 * @return transformed grammar.
 	 */
-	@SuppressWarnings("static-access")
 	public Grammar transform(String strGrammar, GrammarTransformation transformation) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(strGrammar)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		this.transform(grammar, transformation);
@@ -190,7 +190,7 @@ public class GrammarTransformer {
 					for (int nullableOccurrence : nullableOccurrences) {
 						String lhs = production.getLeft().getValue();
 						StringBuilder builder = new StringBuilder(production.getRight().getValue());
-						builder.insert(nullableOccurrence, Grammar.EMPTY);
+						builder.insert(nullableOccurrence, Grammar.EPSILON);
 						String rhs = builder.toString();
 						Production productionWithoutNullable = new Production(lhs, rhs);
 						grammar.addProduction(productionWithoutNullable);
@@ -198,7 +198,7 @@ public class GrammarTransformer {
 				}
 				
 				String lhs = production.getLeft().getValue();
-				String rhs = production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EMPTY);
+				String rhs = production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EPSILON.toString());
 				Production productionWithoutNullables = new Production(lhs, rhs);
 				grammar.addProduction(productionWithoutNullables);
 			}
@@ -208,7 +208,7 @@ public class GrammarTransformer {
 			grammar.removeProduction(epsilonProduction);
 		
 		if (nullables.contains(grammar.getAxiom()))
-			grammar.addProduction(grammar.getAxiom(), Grammar.EMPTY);
+			grammar.addProduction(grammar.getAxiom(), Grammar.EPSILON);
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class GrammarTransformer {
 		}
 		
 		if (emptyGeneration)
-			grammar.addProduction(grammar.getAxiom(), grammar.getEmpty());		
+			grammar.addProduction(grammar.getAxiom(), grammar.getEpsilon());		
 	}
 
 	public Grammar generateAugmentedGrammar(Grammar grammar) {

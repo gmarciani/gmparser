@@ -32,13 +32,12 @@ import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class TestProduction {
 
-	@Test
-	public void testProductionEmpty() {		
-		Production prodOne = new Production("S", Grammar.EMPTY);
-		Production prodTwo = new Production("S", Grammar.EMPTY + Grammar.EMPTY + Grammar.EMPTY);
-		Production prodThree = new Production("S", Grammar.EMPTY + "A");
-		Production prodFour = new Production("S", "A" + Grammar.EMPTY);
-		Production prodFive = new Production("S", Grammar.EMPTY + "A" + Grammar.EMPTY);
+	@Test public void epsilon() {		
+		Production prodOne = new Production("S", Grammar.EPSILON.toString());
+		Production prodTwo = new Production("S", Grammar.EPSILON.toString() + Grammar.EPSILON.toString() + Grammar.EPSILON.toString());
+		Production prodThree = new Production("S", Grammar.EPSILON.toString() + "A");
+		Production prodFour = new Production("S", "A" + Grammar.EPSILON.toString());
+		Production prodFive = new Production("S", Grammar.EPSILON.toString() + "A" + Grammar.EPSILON.toString());
 		/*
 		System.out.println("PRODUCTION ONE: " + prodOne);
 		System.out.println("PRODUCTION TWO: " + prodTwo);

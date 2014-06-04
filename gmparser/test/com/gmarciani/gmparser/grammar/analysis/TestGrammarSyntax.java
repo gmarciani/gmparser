@@ -33,10 +33,9 @@ import com.gmarciani.gmparser.models.grammar.Grammar;
 
 public class TestGrammarSyntax {
 	
-	private static final String GRAMMAR = "SB->BC|bc|" + Grammar.EMPTY + ";BC->b|a.";
+	private static final String GRAMMAR = "SB->BC|bc|" + Grammar.EPSILON + ";BC->b|a.";
 
-	@Test
-	public void test() {
+	@Test public void match() {
 		
 		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
 		

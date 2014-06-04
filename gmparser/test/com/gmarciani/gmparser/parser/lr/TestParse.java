@@ -27,8 +27,8 @@ package com.gmarciani.gmparser.parser.lr;
 import org.junit.Test;
 
 public class TestParse {
-	@Test
-	public void testParse() {
+	
+	@Test public void parse() {
 		
 	}
 

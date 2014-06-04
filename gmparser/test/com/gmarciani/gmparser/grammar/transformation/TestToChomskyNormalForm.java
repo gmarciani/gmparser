@@ -29,18 +29,17 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestToChomskyNormalForm {
 	
 	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testToChomskyNormalForm() {
-		Grammar grammar = GrammarBuilder.hasProductions(GRAMMAR_NOT_CHOMSKY)
+	@Test public void generateChomskyNormalForm() {
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_NOT_CHOMSKY)
 				.withAxiom('E')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		assertFalse("Grammar should not be recognized as Chomsky",

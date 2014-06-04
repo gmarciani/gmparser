@@ -47,15 +47,15 @@ public class Production implements Comparable<Production> {
 	
 	public static final String MEMBER_SEPARATOR = "->";
 	
-	public Production(Member left, Member right) {
-		this.setLeft(left);
-		this.setRight(right);
-	}
-	
 	public Production(Production production) {
 		this.setLeft(production.getLeft());
 		this.setRight(production.getRight());
-	}	
+	}
+	
+	public Production(Member left, Member right) {
+		this.setLeft(left);
+		this.setRight(right);
+	}		
 	
 	public Production(String left, String right) {
 		this.setLeft(new Member(left));
@@ -296,7 +296,8 @@ public class Production implements Comparable<Production> {
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(this.getLeft(), this.getRight());
+		return Objects.hash(this.getLeft(), 
+							this.getRight());
 	}
 	
 }

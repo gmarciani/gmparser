@@ -29,23 +29,21 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestUselessRemoval {
 	
 	private static final String GRAMMAR_WITH_USELESS_SYMBOLS = "S->XY|XZ|a;X->a;Y->YZ.";
 	private static final String GRAMMAR_WITHOUT_USELESS_SYMBOLS = "S->a.";	
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testRemoveUselessSymbols() {
-		Grammar grammar = GrammarBuilder
+	@Test public void removeUselessSymbols() {
+		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITH_USELESS_SYMBOLS)
 				.create();
 		
 		GrammarTransformer.getInstance().removeUselessSymbols(grammar);
 		
-		Grammar shouldBe = GrammarBuilder
+		Grammar shouldBe = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITHOUT_USELESS_SYMBOLS)
 				.create();		
 		

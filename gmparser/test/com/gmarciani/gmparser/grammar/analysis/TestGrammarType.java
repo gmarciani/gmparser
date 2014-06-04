@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestGrammarType {
 	
@@ -38,33 +38,35 @@ public class TestGrammarType {
 	private static final String GRAMMAR_REGULAR_LEFT_LINEAR = "S->Aa|Ab|c;A->Aa|c.";
 	private static final String GRAMMAR_REGULAR_RIGHT_LINEAR = "S->aA|bA|c;A->aA|c.";
 	
-		
-	@SuppressWarnings("static-access")
-	@Test
-	public void testGrammarType() {
-		Grammar grammarUnrestricted = GrammarBuilder.hasProductions(GRAMMAR_UNRESTRICTED)
+	@Test public void check() {
+		Grammar grammarUnrestricted = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_UNRESTRICTED)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarContextSensitive = GrammarBuilder.hasProductions(GRAMMAR_CONTEXT_SENSITIVE)
+		Grammar grammarContextSensitive = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_CONTEXT_SENSITIVE)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarContextFree = GrammarBuilder.hasProductions(GRAMMAR_CONTEXT_FREE)
+		Grammar grammarContextFree = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_CONTEXT_FREE)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarRegularLeftLinear = GrammarBuilder.hasProductions(GRAMMAR_REGULAR_LEFT_LINEAR)
+		Grammar grammarRegularLeftLinear = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_REGULAR_LEFT_LINEAR)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarRegularRightLinear = GrammarBuilder.hasProductions(GRAMMAR_REGULAR_RIGHT_LINEAR)
+		Grammar grammarRegularRightLinear = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_REGULAR_RIGHT_LINEAR)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		assertTrue("Uncorrect grammar type recognition (should be Unrestricted)", 

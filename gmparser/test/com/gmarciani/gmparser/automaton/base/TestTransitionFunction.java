@@ -8,17 +8,15 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestTransitionFunction {
 
-	@Test
-	public void test() {
+	@Test public void create() {
 		Alphabet alphabet = new Alphabet();
-		alphabet.addAll("abcd");
-		
+		alphabet.addAll("abcd");		
 		States states = new States();
 		states.addAll(1,2,3,4,5);
 		
 		TransitionFunction function = new TransitionFunction(states, alphabet);
 		
-		//System.out.println(function);		
+		System.out.println(function);		
 	}
 
 }

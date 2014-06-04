@@ -47,7 +47,7 @@ public class GrammarAnalysis {
 	private String title;
 	
 	private Character axiom;
-	private String empty;
+	private Character epsilon;
 	private Alphabet nonTerminalAlphabet;
 	private Alphabet terminalAlphabet;
 	private Productions productions;
@@ -72,7 +72,7 @@ public class GrammarAnalysis {
 		this.nonTerminalAlphabet = new Alphabet(copy.getNonTerminals());
 		this.terminalAlphabet = new Alphabet(copy.getTerminals());		
 		this.axiom = copy.getAxiom();
-		this.empty = copy.getEmpty();
+		this.epsilon = copy.getEpsilon();
 		this.grammarType = copy.getType();
 		this.grammarExtension = copy.getExtension();
 		this.normalForms = copy.getNormalForm();
@@ -90,7 +90,7 @@ public class GrammarAnalysis {
 		this.parameters.put("Non Terminals", this.getNonTerminalAlphabet().toString());
 		this.parameters.put("Terminals", this.getTerminalAlphabet().toString());
 		this.parameters.put("Axiom", this.getAxiom().toString());
-		this.parameters.put("Epsilon", this.getEmpty());
+		this.parameters.put("Epsilon", this.getEpsilon().toString());
 		this.parameters.put("Grammar Type", this.getGrammarType().getName());
 		this.parameters.put("Extension", this.getExtension().getName());
 		this.parameters.put("Normal Forms", this.getNormalForms().toString());
@@ -116,8 +116,8 @@ public class GrammarAnalysis {
 		return this.axiom;
 	}
 
-	public String getEmpty() {
-		return this.empty;
+	public Character getEpsilon() {
+		return this.epsilon;
 	}
 
 	public Alphabet getNonTerminalAlphabet() {

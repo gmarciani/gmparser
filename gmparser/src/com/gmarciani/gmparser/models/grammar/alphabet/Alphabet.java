@@ -34,10 +34,6 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 	
 	private AlphabetType type = null;
 	
-	public Alphabet() {
-		super();
-	}
-	
 	public Alphabet(Alphabet alphabet) {
 		super(alphabet);
 	}
@@ -47,6 +43,10 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		for (Alphabet alphabet : alphabets)
 			this.addAll(alphabet);
 	}
+	
+	public Alphabet() {
+		super();
+	}	
 	
 	public Alphabet(AlphabetType type) {
 		super();

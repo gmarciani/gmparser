@@ -25,22 +25,30 @@ package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.regex.Pattern;
 
-public class ProductionsBuilder {
+public class ProductionFactory {
 
-	private static ProductionsBuilder instance = new ProductionsBuilder();
+	private static ProductionFactory instance;
 	
-	private static Productions productions;
+	private Productions productions;
 	
-	private ProductionsBuilder() {
-		productions = new Productions();
+	private ProductionFactory() {
+		this.productions = new Productions();
 	}
 	
-	private static void reset() {
-		productions.clear();
+	public static ProductionFactory getInstance() {
+		if (instance == null) {
+			instance = new ProductionFactory();
+		}
+		
+		return instance;
+	}
+	
+	private void reset() {
+		this.productions.clear();
 	}
 	
 	//[(S,Aa),(A,a)]
-	public static ProductionsBuilder hasProductions(Productions productions) {
+	public ProductionFactory hasProductions(Productions productions) {
 		for (Production production : productions) {
 			hasProduction(production);
 		}
@@ -49,36 +57,36 @@ public class ProductionsBuilder {
 	}
 	
 	//(S,Aa)
-	public static ProductionsBuilder hasProduction(Production production) {
-		productions.add(production);
+	public ProductionFactory hasProduction(Production production) {
+		this.productions.add(production);
 		
 		return instance;
 	}
 	
 	//(S,Aa)
-		public static ProductionsBuilder hasProduction(Member left, Member right) {
-			Production production = new Production(left, right);
-			productions.add(production);
+	public ProductionFactory hasProduction(Member left, Member right) {
+		Production production = new Production(left, right);
+		this.productions.add(production);
 
-			return instance;
-		}	
+		return instance;
+	}	
 	
 	//(S,Aa)
-	public static ProductionsBuilder hasProduction(String left, String right) {
+	public ProductionFactory hasProduction(String left, String right) {
 		Production production = new Production(left, right);
-		productions.add(production);
+		this.productions.add(production);
 
 		return instance;
 	}	
 	
 	//S->Aa|a;A->a. (default separators)
-	public static ProductionsBuilder hasProductions(String productions) {
+	public ProductionFactory hasProductions(String productions) {
 		hasProductions(productions, Productions.MEMBER_SEPARATOR, Productions.INFIX_SEPARATOR, Productions.PRODUCTION_SEPARATOR, Productions.PRODUCTION_ENDER);
 		return instance;
 	}
 	
 	//S->Aa|a;A->a.
-	public static ProductionsBuilder hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionsEnder) {
+	public ProductionFactory hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionsEnder) {
 		String prodsArray[] = productions.split(Pattern.quote(productionsEnder));
 		String prods = prodsArray[0];
 		hasProductionsAsString(prods, memberSeparator, infixSeparator, productionSeparator);
@@ -87,7 +95,7 @@ public class ProductionsBuilder {
 	}
 	
 	//S->Aa|a;A->a
-	private static ProductionsBuilder hasProductionsAsString(String productions, String memberSeparator, String infixSeparator, String productionSeparator) {
+	private ProductionFactory hasProductionsAsString(String productions, String memberSeparator, String infixSeparator, String productionSeparator) {
 		String productionsAsArray[] = productions.split(Pattern.quote(productionSeparator));
 			
 		for (String productionsSameNonTerminal : productionsAsArray) {
@@ -98,7 +106,7 @@ public class ProductionsBuilder {
 	}
 	
 	//S->Aa|a
-	private static ProductionsBuilder hasProductionsAsString(String productions, String memberSeparator, String infixSeparator) {
+	private ProductionFactory hasProductionsAsString(String productions, String memberSeparator, String infixSeparator) {
 		String productionsAsArray[] = productions.split(Pattern.quote(memberSeparator));		
 		String left = productionsAsArray[0];
 		String rights[] = productionsAsArray[1].split(Pattern.quote(infixSeparator));
@@ -111,7 +119,7 @@ public class ProductionsBuilder {
 	}
 	
 	//S->Aa
-	private static ProductionsBuilder hasProductionAsString(String productions, String memberSeparator) {
+	private ProductionFactory hasProductionAsString(String productions, String memberSeparator) {
 		String productionAsArray[] = productions.split(Pattern.quote(memberSeparator));
 		String left = productionAsArray[0];
 		String right = productionAsArray[1];
@@ -120,10 +128,10 @@ public class ProductionsBuilder {
 		return instance;
 	}	
 	
-	public static Productions create() {
+	public Productions create() {
 		Productions target = new Productions();
 		
-		for (Production production : productions)
+		for (Production production : this.productions)
 			target.add(production);
 		
 		reset();

@@ -30,11 +30,15 @@ public class State implements Comparable<State> {
 	private Integer id;
 
 	public State(Integer id) {
-		this.id = id;
+		this.setId(id);
 	}
 
 	public Integer getId() {
 		return this.id;
+	}
+	
+	private void setId(Integer id) {
+		this.id = id;
 	}
 	
 	@Override public String toString() {

@@ -23,28 +23,24 @@
 
 package com.gmarciani.gmparser.grammar.transformation;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestAugmentedGrammar {
 	
 	private static final String GRAMMAR = "S->CC;C->cC|d.";
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void test() {
-		Grammar grammar = GrammarBuilder
+	@Test public void create() {
+		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR)
 				.create();
 		
 		Grammar augmentedGrammar = GrammarTransformer.getInstance().generateAugmentedGrammar(grammar);
 		
-		System.out.println(augmentedGrammar);
+		//System.out.println(augmentedGrammar);
 	}
 
 }

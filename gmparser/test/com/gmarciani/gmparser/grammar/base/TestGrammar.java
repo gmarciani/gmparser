@@ -28,20 +28,18 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 public class TestGrammar {
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testGrammarBuilding() {		
+	@Test public void create() {		
 		
 		Production prodOne = new Production("S","Aa");
 		Production prodTwo = new Production("S","a");
 		Production prodThree = new Production("A","a");
-		Production prodFour = new Production("A", Grammar.EMPTY);
+		Production prodFour = new Production("A", Grammar.EPSILON);
 		
 		Productions productions = new Productions();
 		productions.add(prodOne);
@@ -49,40 +47,35 @@ public class TestGrammar {
 		productions.add(prodThree);
 		productions.add(prodFour);		
 		
-		Grammar grammarOne = GrammarBuilder
+		Grammar grammarOne = GrammarFactory.getInstance()
 				.hasProductions(productions)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarTwo = GrammarBuilder
+		Grammar grammarTwo = GrammarFactory.getInstance()
 				.hasProduction(prodOne)
 				.hasProduction(prodTwo)
 				.hasProduction(prodThree)
 				.hasProduction(prodFour)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarThree = GrammarBuilder
+		Grammar grammarThree = GrammarFactory.getInstance()
 				.hasProduction(prodOne.getLeft(), prodOne.getRight())
 				.hasProduction(prodTwo.getLeft(), prodTwo.getRight())
 				.hasProduction(prodThree.getLeft(), prodThree.getRight())
 				.hasProduction(prodFour.getLeft(), prodFour.getRight())
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarFour = GrammarBuilder
-				.hasProductions("S->Aa|a;A->a|" + Grammar.EMPTY + ".")
+		Grammar grammarFour = GrammarFactory.getInstance()
+				.hasProductions("S->Aa|a;A->a|" + Grammar.EPSILON + ".")
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
-		/*
-		System.out.println("GRAMMAR ONE: " + grammarOne);
-		System.out.println("GRAMMAR TWO: " + grammarTwo);
-		System.out.println("GRAMMAR THREE: " + grammarThree);
-		System.out.println("GRAMMAR FOUR: " + grammarFour);*/
 		
 		assertTrue("Uncorrect grammar building",
 				grammarOne.equals(grammarTwo)

@@ -36,8 +36,7 @@ public class TestParse {
 	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
 	private static final String WORD = "aababb";
 
-	@Test
-	public void testParse() {
+	@Test public void parse() {
 		
 		boolean parsed = WordParser.getInstance().parse(GRAMMAR, WORD, ParserType.CYK);
 		

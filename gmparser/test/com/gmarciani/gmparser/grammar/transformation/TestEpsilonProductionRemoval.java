@@ -29,23 +29,21 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestEpsilonProductionRemoval {
 	
-	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A->" + Grammar.EMPTY + ".";
-	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->A|" + Grammar.EMPTY + ".";
+	private static final String GRAMMAR_WITH_EPSILON_PRODUCTIONS = "S->A;A->" + Grammar.EPSILON + ".";
+	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->A|" + Grammar.EPSILON + ".";
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testRemoveEpsilonProductions() {
-		Grammar grammar = GrammarBuilder
+	@Test public void removeEpsilonProductions() {
+		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITH_EPSILON_PRODUCTIONS)
 				.create();
 		
 		GrammarTransformer.getInstance().removeEpsilonProductions(grammar);
 		
-		Grammar shouldBe = GrammarBuilder
+		Grammar shouldBe = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS)
 				.create();	
 		

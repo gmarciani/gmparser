@@ -27,8 +27,8 @@ import java.util.Objects;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.TreeBasedTable;
 
 public class TransitionFunction {
 	
@@ -43,13 +43,15 @@ public class TransitionFunction {
 	}
 	
 	private void initializeMatrix(States states, Alphabet alphabet) {
-		this.matrix = HashBasedTable.create(states.size(), alphabet.size());
+		this.matrix = TreeBasedTable.create();
 		
 		for (State state : states) {
-			for (Character symbol : alphabet) {
+			Character epsilon = Character.toChars(Integer.parseInt("03B5", 16))[0];
+			this.matrix.put(state, epsilon, new States());
+			for (Character symbol : alphabet)
 				this.matrix.put(state, symbol, new States());
-			}
 		}
+			
 	}
 	
 	@Override public String toString() {

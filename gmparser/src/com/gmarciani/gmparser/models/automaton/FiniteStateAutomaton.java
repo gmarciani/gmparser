@@ -43,8 +43,13 @@ public class FiniteStateAutomaton {
 		this.setTransitionFunction(transitionFunction);
 	}
 	
-	public FiniteStateAutomaton() {
-		
+	public FiniteStateAutomaton(State initialState) {
+		this.setStates(new States());
+		this.getStates().add(initialState);
+		this.setAlphabet(new Alphabet());
+		this.setInitialState(initialState);
+		this.setFinalStates(new States());
+		this.setTransitionFunction(new TransitionFunction(this.getStates(), this.getAlphabet()));
 	}
 
 	public States getStates() {

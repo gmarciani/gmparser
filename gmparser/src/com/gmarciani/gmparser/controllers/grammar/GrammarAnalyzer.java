@@ -24,7 +24,7 @@
 package com.gmarciani.gmparser.controllers.grammar;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
 /**
@@ -62,11 +62,11 @@ public class GrammarAnalyzer {
 	 * @param strGrammar string representation of the grammar to generate.
 	 * @return grammar.
 	 */
-	@SuppressWarnings("static-access")
 	public Grammar generateGrammar(String strGrammar) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(strGrammar)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		return grammar;

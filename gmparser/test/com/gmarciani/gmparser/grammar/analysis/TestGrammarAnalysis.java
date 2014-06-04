@@ -31,10 +31,9 @@ import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
 public class TestGrammarAnalysis {
 	
-	private static final String GRAMMAR = "S->AS|A|" + Grammar.EMPTY + ";A->B|a;B->A|B|S|b;C->A|B|C|D;D->C.";
+	private static final String GRAMMAR = "S->AS|A|" + Grammar.EPSILON + ";A->B|a;B->A|B|S|b;C->A|B|C|D;D->C.";
 	
-	@Test
-	public void test() {
+	@Test public void create() {
 		
 		GrammarAnalysis analysis = GrammarAnalyzer.getInstance().analyze(GRAMMAR);
 		

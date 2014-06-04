@@ -29,23 +29,21 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestUngenerativeRemoval {
 	
 	private static final String GRAMMAR_WITH_UNGENERATIVE_SYMBOLS = "S->XY|a;X->a.";
 	private static final String GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS = "S->a;X->a.";
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testRemoveUngenerativeSymbols() {
-		Grammar grammar = GrammarBuilder
+	@Test public void removeUngenerativeSymbols() {
+		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
 				.create();
 		
 		GrammarTransformer.getInstance().removeUngenerativeSymbols(grammar);
 		
-		Grammar shouldBe = GrammarBuilder
+		Grammar shouldBe = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
 				.create();		
 		

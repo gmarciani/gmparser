@@ -25,7 +25,7 @@ package com.gmarciani.gmparser.controllers.grammar;
 
 import com.gmarciani.gmparser.controllers.app.Output;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
@@ -67,11 +67,11 @@ public class WordParser {
 	 * @param parser parser class: can be Cock-Younger-Kasami, or LR(1).
 	 * @return true, if the {@code word} can be parsed by the {@code parser} according to the {@code grammar}; false, otherwise.
 	 */
-	@SuppressWarnings("static-access")
 	public boolean parse(String strGrammar, String word, ParserType parser) {
-		Grammar grammar = GrammarBuilder.hasProductions(strGrammar)
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(strGrammar)
 				.withAxiom(Grammar.AXIOM)
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		return this.parse(grammar, word, parser);

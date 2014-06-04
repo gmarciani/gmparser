@@ -26,123 +26,125 @@ package com.gmarciani.gmparser.models.grammar;
 import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
-import com.gmarciani.gmparser.models.grammar.production.ProductionsBuilder;
+import com.gmarciani.gmparser.models.grammar.production.ProductionFactory;
 
 
-public class GrammarBuilder {
+public class GrammarFactory {
 	
-	private static GrammarBuilder instance = new GrammarBuilder();
+	private static GrammarFactory instance;
 	
-	private static Productions grammarProductions;
-	private static Character axiom;
-	private static String empty;
+	private Productions grammarProductions;
+	private Character axiom;
+	private Character epsilon;
 	
-	private GrammarBuilder() {
-		grammarProductions = new Productions();
-		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY;
+	private GrammarFactory() {
+		this.grammarProductions = new Productions();
+		this.axiom = Grammar.AXIOM;
+		this.epsilon = Grammar.EPSILON;
 	}
 	
-	private static void reset() {
-		grammarProductions.clear();
-		axiom = Grammar.AXIOM;
-		empty = Grammar.EMPTY;
+	public static GrammarFactory getInstance() {
+		if (instance == null) {
+			instance = new GrammarFactory();
+		}
+		
+		return instance;
+	}
+	
+	private void reset() {
+		this.grammarProductions.clear();
+		this.axiom = Grammar.AXIOM;
+		this.epsilon = Grammar.EPSILON;
 	}
 	
 	//[(S,Aa),(A,a)]
-	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(Productions productions) {
-		Productions created = ProductionsBuilder
+	public GrammarFactory hasProductions(Productions productions) {
+		Productions created = ProductionFactory.getInstance()
 				.hasProductions(productions)
 				.create();
 		
 		for (Production prod : created)
-			grammarProductions.add(prod);
+			this.grammarProductions.add(prod);
 		
 		return instance;
 	}
 	
 	//(S,Aa)
-	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(Production production) {
-		Productions created = ProductionsBuilder
+	public GrammarFactory hasProduction(Production production) {
+		Productions created = ProductionFactory.getInstance()
 				.hasProduction(production)
 				.create();
 		
 		for (Production prod : created)
-			grammarProductions.add(prod);
+			this.grammarProductions.add(prod);
 		
 		return instance;
 	}
 	
 	//(S,Aa)
-		@SuppressWarnings("static-access")
-		public static GrammarBuilder hasProduction(Member left, Member right) {
-			Productions created = ProductionsBuilder
-					.hasProduction(left, right)
-					.create();
+	public GrammarFactory hasProduction(Member left, Member right) {
+		Productions created = ProductionFactory.getInstance()
+				.hasProduction(left, right)
+				.create();
 			
-			for (Production prod : created)
-				grammarProductions.add(prod);
+		for (Production prod : created)
+			this.grammarProductions.add(prod);
 			
-			return instance;
-		}	
+		return instance;
+	}	
 	
 	//(S,Aa)
-	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProduction(String left, String right) {
-		Productions created = ProductionsBuilder
+	public GrammarFactory hasProduction(String left, String right) {
+		Productions created = ProductionFactory.getInstance()
 				.hasProduction(left, right)
 				.create();
 		
 		for (Production prod : created)
-			grammarProductions.add(prod);
+			this.grammarProductions.add(prod);
 		
 		return instance;
 	}	
 	
 	//S->Aa|a;A->a. (default separators)
-	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(String productions) {
-		Productions created = ProductionsBuilder
+	public GrammarFactory hasProductions(String productions) {
+		Productions created = ProductionFactory.getInstance()
 				.hasProductions(productions)
 				.create();
 		
 		for (Production prod : created)
-			grammarProductions.add(prod);
+			this.grammarProductions.add(prod);
 		
 		return instance;
 	}
 	
 	//S->Aa|a;A->a.
-	@SuppressWarnings("static-access")
-	public static GrammarBuilder hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionEnder) {
-		Productions created = ProductionsBuilder
+	public GrammarFactory hasProductions(String productions, String memberSeparator, String infixSeparator, String productionSeparator, String productionEnder) {
+		Productions created = ProductionFactory.getInstance()
 				.hasProductions(productions, memberSeparator, infixSeparator, productionSeparator, productionEnder)
 				.create();
 		
 		for (Production prod : created)
-			grammarProductions.add(prod);
+			this.grammarProductions.add(prod);
 		
 		return instance;
 	}	
 	
-	public static GrammarBuilder withAxiom(Character symbol) {
-		axiom = symbol;
+	public GrammarFactory withAxiom(Character axiom) {
+		this.axiom = axiom;
 		
 		return instance;
 	}
 	
-	public static GrammarBuilder withEmpty(String emptyString) {
-		empty = emptyString;
+	public GrammarFactory withEpsilon(Character epsilon) {
+		this.epsilon = epsilon;
 		
 		return instance;
 	}
 	
-	public static Grammar create() {
-		Grammar grammar = new Grammar(axiom, empty);
+	public Grammar create() {
+		Grammar grammar = new Grammar(this.axiom, this.epsilon);
 		
-		for (Production production : grammarProductions) {
+		for (Production production : this.grammarProductions) {
 			grammar.addProduction(production);
 		}
 		

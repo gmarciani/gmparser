@@ -29,7 +29,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	TestTransitionFunction.class
+	TestTransitionFunction.class,
+	TestFiniteStateAutomaton.class
 })
 public class AllTestsAutomatonBase {
 

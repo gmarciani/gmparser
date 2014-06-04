@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestGrammarNormalForm {
 	
@@ -39,17 +39,17 @@ public class TestGrammarNormalForm {
 	private static final String GRAMMAR_NOT_GREIBACH = "S->SA|A|a;A->aA|Aab.";
 	
 		
-	@SuppressWarnings("static-access")
-	@Test
-	public void testChomskyNormalForm() {
-		Grammar grammarChomsky = GrammarBuilder.hasProductions(GRAMMAR_CHOMSKY)
+	@Test public void isChomskyNormalForm() {
+		Grammar grammarChomsky = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_CHOMSKY)
 				.withAxiom('E')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarNotChomsky = GrammarBuilder.hasProductions(GRAMMAR_NOT_CHOMSKY)
+		Grammar grammarNotChomsky = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_NOT_CHOMSKY)
 				.withAxiom('E')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		/*
 		System.out.println("CHOMSKY: " + grammarChomsky);
@@ -62,17 +62,17 @@ public class TestGrammarNormalForm {
 				(grammarNotChomsky.isChomskyNormalForm()));
 	}
 
-	@SuppressWarnings("static-access")
-	@Test
-	public void testGreibachNormalForm() {
-		Grammar grammarGreibach = GrammarBuilder.hasProductions(GRAMMAR_GREIBACH)
+	@Test public void isGreibachNormalForm() {
+		Grammar grammarGreibach = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_GREIBACH)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
-		Grammar grammarNotGreibach = GrammarBuilder.hasProductions(GRAMMAR_NOT_GREIBACH)
+		Grammar grammarNotGreibach = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR_NOT_GREIBACH)
 				.withAxiom('S')
-				.withEmpty(Grammar.EMPTY)
+				.withEpsilon(Grammar.EPSILON)
 				.create();
 		/*
 		System.out.println("GREIBACH: " + grammarGreibach);

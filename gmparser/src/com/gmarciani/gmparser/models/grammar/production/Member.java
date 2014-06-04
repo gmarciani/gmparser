@@ -181,14 +181,14 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public boolean isEpsilon() {
-		return this.getValue().matches("^" + Grammar.EMPTY + "+$");
+		return this.getValue().matches("^" + Grammar.EPSILON + "+$");
 	}
 	
 	private void rebuild() {
 		if (this.isEpsilon()) {
-			this.value = Grammar.EMPTY;
+			this.value = Grammar.EPSILON.toString();
 		} else {
-			this.value = this.getValue().replace(Grammar.EMPTY, "");
+			this.value = this.getValue().replace(Grammar.EPSILON.toString(), "");
 		}			
 	}
 	
