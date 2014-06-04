@@ -46,21 +46,16 @@ public class Production implements Comparable<Production> {
 	private Member right;
 	
 	public static final String MEMBER_SEPARATOR = "->";
-
-	public Production() {
-		this.setLeft(new Member());
-		this.setRight(new Member());
-	}
-	
-	public Production(Production production) {
-		this.setLeft(production.getLeft());
-		this.setRight(production.getRight());
-	}
 	
 	public Production(Member left, Member right) {
 		this.setLeft(left);
 		this.setRight(right);
 	}
+	
+	public Production(Production production) {
+		this.setLeft(production.getLeft());
+		this.setRight(production.getRight());
+	}	
 	
 	public Production(String left, String right) {
 		this.setLeft(new Member(left));
@@ -68,6 +63,16 @@ public class Production implements Comparable<Production> {
 	}
 	
 	public Production(Character left, String right) {
+		this.setLeft(new Member(left));
+		this.setRight(new Member(right));
+	}
+	
+	public Production(String left, Character right) {
+		this.setLeft(new Member(left));
+		this.setRight(new Member(right));
+	}
+	
+	public Production(Character left, Character right) {
 		this.setLeft(new Member(left));
 		this.setRight(new Member(right));
 	}
@@ -79,14 +84,6 @@ public class Production implements Comparable<Production> {
 	public void setLeft(Member left) {
 		this.left = left;
 	}
-	
-	public void setLeft(String left) {
-		this.getLeft().setValue(left);
-	}
-	
-	public void setLeft(Character left) {
-		this.getLeft().setValue(left);
-	}
 
 	public Member getRight() {
 		return this.right;
@@ -94,14 +91,6 @@ public class Production implements Comparable<Production> {
 
 	public void setRight(Member right) {
 		this.right = right;
-	}
-	
-	public void setRight(String right) {
-		this.getRight().setValue(right);
-	}
-	
-	public void setRight(Character right) {
-		this.getRight().setValue(right);
 	}
 	
 	public int getLeftSize() {

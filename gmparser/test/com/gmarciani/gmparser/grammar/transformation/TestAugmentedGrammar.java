@@ -23,19 +23,28 @@
 
 package com.gmarciani.gmparser.grammar.transformation;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	TestEpsilonProductionRemoval.class,
-	TestToChomskyNormalForm.class, 
-	TestUngenerativeRemoval.class,
-	TestUnitProductionsRemoval.class, 
-	TestUnreacheableRemoval.class,
-	TestUselessRemoval.class,
-	TestAugmentedGrammar.class})
-public class AllTestsGrammarTransformation {
+import org.junit.Test;
+
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
+
+public class TestAugmentedGrammar {
+	
+	private static final String GRAMMAR = "S->CC;C->cC|d.";
+
+	@SuppressWarnings("static-access")
+	@Test
+	public void test() {
+		Grammar grammar = GrammarBuilder
+				.hasProductions(GRAMMAR)
+				.create();
+		
+		Grammar augmentedGrammar = GrammarTransformer.getInstance().generateAugmentedGrammar(grammar);
+		
+		System.out.println(augmentedGrammar);
+	}
 
 }

@@ -113,6 +113,10 @@ public class Grammar {
 		return this.axiom;
 	}	
 	
+	public void setAxiom(Character axiom) {
+		this.axiom = axiom;
+	}
+	
 	public String getEmpty() {
 		return this.empty;
 	}
@@ -132,6 +136,14 @@ public class Grammar {
 	public boolean addProduction(Character left, String right) {
 		Production production = new Production(left, right);
 		return this.addProduction(production);
+	}
+	
+	public boolean addNonTerminal(Character nonTerminal) {
+		return this.getNonTerminals().add(nonTerminal);
+	}
+	
+	public boolean addTerminal(Character terminal) {
+		return this.getTerminals().add(terminal);
 	}
 	
 	public boolean removeProduction(Production production) {
@@ -340,6 +352,21 @@ public class Grammar {
 		
 		return target;
 		
+	}
+	
+	public void renameNonTerminal(Character oldNonTerminal, Character newNonTerminal) {
+		for (Production production : this.getProductions()) {
+			if (production.isLeftContaining(oldNonTerminal))
+				production.getLeft().replace(oldNonTerminal, newNonTerminal);
+			
+			if (production.isRightContaining(oldNonTerminal))
+				production.getRight().replace(oldNonTerminal, newNonTerminal);
+		}
+		
+		if (this.getAxiom().equals(oldNonTerminal))
+			this.setAxiom(newNonTerminal);
+		
+		this.rebuildAlphabet();
 	}
 	
 	private void rebuildAlphabet() {

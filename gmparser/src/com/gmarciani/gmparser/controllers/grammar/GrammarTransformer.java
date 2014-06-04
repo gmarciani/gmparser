@@ -262,13 +262,9 @@ public class GrammarTransformer {
 				if (production.getRight().getSize() > 2) {
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					Production reducedProductionOne = new Production();
-					reducedProductionOne.setLeft(production.getLeft());
-					reducedProductionOne.setRight(production.getRight().getValue().substring(0, 1) + newNonTerminal);
+					Production reducedProductionOne = new Production(production.getLeft().getValue(), production.getRight().getValue().substring(0, 1) + newNonTerminal);
 					
-					Production reducedProductionTwo = new Production();
-					reducedProductionTwo.setLeft(newNonTerminal);
-					reducedProductionTwo.setRight(production.getRight().getValue().substring(1));
+					Production reducedProductionTwo = new Production(newNonTerminal, production.getRight().getValue().substring(1));
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(reducedProductionOne);
@@ -289,13 +285,9 @@ public class GrammarTransformer {
 					Character newNonTerminal = grammar.getNewNonTerminal();
 					Character terminal = production.getRight().getTerminalAlphabet().first();
 					
-					Production promotionProductionOne = new Production();
-					promotionProductionOne.setLeft(production.getLeft());
-					promotionProductionOne.setRight(production.getRight().getValue().replace(terminal, newNonTerminal));
+					Production promotionProductionOne = new Production(production.getLeft().getValue(), production.getRight().getValue().replace(terminal, newNonTerminal));
 					
-					Production promotionProductionTwo = new Production();
-					promotionProductionTwo.setLeft(newNonTerminal);
-					promotionProductionTwo.setRight(terminal);
+					Production promotionProductionTwo = new Production(newNonTerminal, terminal);
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(promotionProductionOne);
@@ -309,8 +301,17 @@ public class GrammarTransformer {
 	}
 
 	public Grammar generateAugmentedGrammar(Grammar grammar) {
-		// TODO Auto-generated method stub
-		return null;
+		Grammar augmentedGrammar = new Grammar(grammar);
+		Character newNonTerminalForOldAxiom = augmentedGrammar.getNewNonTerminal();
+		Character newAxiom = 'S';
+		
+		augmentedGrammar.renameNonTerminal(augmentedGrammar.getAxiom(), newNonTerminalForOldAxiom);
+		Production augmentedProduction = new Production(newAxiom, newNonTerminalForOldAxiom);
+		augmentedGrammar.addProduction(augmentedProduction);
+		
+		augmentedGrammar.addTerminal('$');
+		
+		return augmentedGrammar;
 	}
 	
 }
