@@ -307,5 +307,10 @@ public class GrammarTransformer {
 		if (emptyGeneration)
 			grammar.addProduction(grammar.getAxiom(), grammar.getEmpty());		
 	}
+
+	public Grammar generateAugmentedGrammar(Grammar grammar) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

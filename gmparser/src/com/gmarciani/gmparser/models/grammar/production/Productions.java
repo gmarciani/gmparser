@@ -105,11 +105,77 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		return target;
 	}
 	
+	public Productions getProductionsContaining(Alphabet alphabet) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isContaining(alphabet))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsLeftContaining(Alphabet alphabet) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isLeftContaining(alphabet))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsRightContaining(Alphabet alphabet) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isRightContaining(alphabet))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsContaining(Character symbol) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isContaining(symbol))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsLeftContaining(Character symbol) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isLeftContaining(symbol))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
+	public Productions getProductionsRightContaining(Character symbol) {
+		Productions target = new Productions();
+		
+		for (Production production : this) {
+			if (production.isRightContaining(symbol))
+				target.add(production);
+		}
+		
+		return target;
+	}
+	
 	public Productions getProductionsForNonTerminal(Character nonTerminal) {
 		Productions target = new Productions();
 		
 		for (Production production : this) {
-			if (production.getLeft().contains(nonTerminal));
+			if (production.isLeftContaining(nonTerminal));
 				target.add(production);
 		}
 		
@@ -365,7 +431,7 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		Set<String> target = new ConcurrentSkipListSet<String>();
 		
 		for (Production production : this) {
-			if (production.getLeft().contains(nonTerminal))
+			if (production.isLeftContaining(nonTerminal))
 				target.add(production.getRight().getValue());
 		}
 		

@@ -157,10 +157,9 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		
 		Alphabet other = (Alphabet) obj;
 		
-		boolean byType = (this.getType() == other.getType());
-		boolean bySymbols = (this.containsAll(other) && other.containsAll(this));
-		
-		return byType && bySymbols;
+		return (this.getType() == other.getType()
+				&& this.containsAll(other) 
+				&& other.containsAll(this));
 	}
 	
 	@Override public int hashCode() {

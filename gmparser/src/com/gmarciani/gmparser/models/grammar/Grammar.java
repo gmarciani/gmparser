@@ -281,6 +281,38 @@ public class Grammar {
 		return this.getProductions().getProductionsWithin(alphabet);
 	}
 	
+	public Productions getProductionsLeftWithin(Alphabet alphabet) {
+		return this.getProductions().getProductionsLeftWithin(alphabet);
+	}
+	
+	public Productions getProductionsRightWithin(Alphabet alphabet) {
+		return this.getProductions().getProductionsRightWithin(alphabet);
+	}
+	
+	public Productions getProductionsContaining(Alphabet alphabet) {
+		return this.getProductions().getProductionsContaining(alphabet);
+	}
+	
+	public Productions getProductionsLeftContaining(Alphabet alphabet) {
+		return this.getProductions().getProductionsLeftContaining(alphabet);
+	}
+	
+	public Productions getProductionsRightContaining(Alphabet alphabet) {
+		return this.getProductions().getProductionsRightContaining(alphabet);
+	}
+	
+	public Productions getProductionsContaining(Character symbol) {
+		return this.getProductions().getProductionsContaining(symbol);
+	}
+	
+	public Productions getProductionsLeftContaining(Character symbol) {
+		return this.getProductions().getProductionsLeftContaining(symbol);
+	}
+	
+	public Productions getProductionsRightContaining(Character symbol) {
+		return this.getProductions().getProductionsRightContaining(symbol);
+	}
+	
 	public Productions getProductionsForNonTerminal(Character nonTerminal) {
 		return this.getProductions().getProductionsForNonTerminal(nonTerminal);
 	}
@@ -322,11 +354,11 @@ public class Grammar {
 	}
 
 	@Override public String toString() {
-		String s = "Grammar(" + this.getTerminals() + "," + 
-								this.getNonTerminals() + "," + 
-								this.getAxiom() + "," + 
-								this.getProductions() + ")";
-		return s;
+		return "Grammar(" + 
+					this.getTerminals() + "," + 
+					this.getNonTerminals() + "," + 
+					this.getAxiom() + "," + 
+					this.getProductions() + ")";
 	}	
 	
 	@Override public boolean equals(Object obj) {
@@ -347,5 +379,7 @@ public class Grammar {
 				this.getAxiom(), 
 				this.getProductions());
 	}
+
+	
 	
 }

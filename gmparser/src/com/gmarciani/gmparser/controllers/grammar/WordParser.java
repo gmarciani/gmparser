@@ -26,10 +26,9 @@ package com.gmarciani.gmparser.controllers.grammar;
 import com.gmarciani.gmparser.controllers.app.Output;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarBuilder;
-import com.gmarciani.gmparser.models.parser.CYKParser;
-import com.gmarciani.gmparser.models.parser.LROneParser;
-import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.ParserType;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
+import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 
 /**
  * The word parsing controller.
@@ -117,7 +116,7 @@ public class WordParser {
 	 * @return true, if the {@code word} can be parsed by the LR(1) parser, according to the {@code grammar}; false, otherwise.
 	 */
 	public boolean parseLROne(Grammar grammar, String word) {
-		Parser parser = new LROneParser();
+		LROneParser parser = new LROneParser();
 		return parser.parse(grammar, word);
 	}
 

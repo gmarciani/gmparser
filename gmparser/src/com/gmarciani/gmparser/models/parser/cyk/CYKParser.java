@@ -21,22 +21,23 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.parser;
+package com.gmarciani.gmparser.models.parser.cyk;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
-import com.gmarciani.gmparser.models.parser.matrix.CYKMatrix;
+import com.gmarciani.gmparser.models.parser.Parser;
+import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 
-public class CYKParser {
+public class CYKParser implements Parser {
 
 	public CYKParser() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public synchronized boolean parse(Grammar grammar, String word) {
+	@Override public synchronized boolean parse(Grammar grammar, String word) {
 		CYKMatrix matrix = this.getMatrix(grammar.getProductions(), word);
 		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
 	}
@@ -48,7 +49,7 @@ public class CYKParser {
 			Character producedTerminal = word.charAt(j - 1);
 			for (Production production : productions) {
 				if (production.getRight().getSize() == 1
-						&& production.getRight().contains(producedTerminal))
+						&& production.isRightContaining(producedTerminal))
 					matrix.put(1, j, production.getLeft().getNonTerminalAlphabet());
 			}			
 		}

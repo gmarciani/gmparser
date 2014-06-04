@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.parser.matrix;
+package com.gmarciani.gmparser.models.parser.cyk.matrix;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

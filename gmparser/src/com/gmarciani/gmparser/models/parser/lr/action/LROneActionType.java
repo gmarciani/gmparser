@@ -21,16 +21,33 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.exception;
+package com.gmarciani.gmparser.models.parser.lr.action;
 
-public class GrammarException extends Exception {
+public enum LROneActionType {
+	
+	SHIFT("Shift", "sh"),
+	REDUCE("Reduce", "red"),
+	GOTO("Goto", "go"),
+	ACCEPT("Accept", "acc");
+	
+	private String name;
+	private String shortName;
+	
+	private LROneActionType(String name, String shortName) {
+		this.name = name;
+		this.shortName = shortName;
+	}
 
-	private static final long serialVersionUID = -4535881385347939669L;
-
-	public GrammarException() {}
-
-	public GrammarException(String message) {
-		super(message);
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getShortName() {
+		return this.shortName;
+	}
+	
+	@Override public String toString() {
+		return this.getShortName();
 	}
 
 }

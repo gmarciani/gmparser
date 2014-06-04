@@ -23,6 +23,8 @@
 
 package com.gmarciani.gmparser.models.automaton;
 
+import java.util.Objects;
+
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class FiniteStateAutomaton {
@@ -32,5 +34,87 @@ public class FiniteStateAutomaton {
 	private State initialState;
 	private States finalStates;
 	private TransitionFunction transitionFunction;
+	
+	public FiniteStateAutomaton(States states, Alphabet alphabet, State initialState, States finalStates, TransitionFunction transitionFunction) {
+		this.setStates(states);
+		this.setAlphabet(alphabet);
+		this.setInitialState(initialState);
+		this.setFinalStates(finalStates);
+		this.setTransitionFunction(transitionFunction);
+	}
+	
+	public FiniteStateAutomaton() {
+		
+	}
+
+	public States getStates() {
+		return this.states;
+	}
+
+	public void setStates(States states) {
+		this.states = states;
+	}
+
+	public Alphabet getAlphabet() {
+		return this.alphabet;
+	}
+
+	public void setAlphabet(Alphabet alphabet) {
+		this.alphabet = alphabet;
+	}
+
+	public State getInitialState() {
+		return this.initialState;
+	}
+
+	public void setInitialState(State initialState) {
+		this.initialState = initialState;
+	}
+
+	public States getFinalStates() {
+		return this.finalStates;
+	}
+
+	public void setFinalStates(States finalStates) {
+		this.finalStates = finalStates;
+	}
+
+	public TransitionFunction getTransitionFunction() {
+		return this.transitionFunction;
+	}
+
+	public void setTransitionFunction(TransitionFunction transitionFunction) {
+		this.transitionFunction = transitionFunction;
+	}
+	
+	@Override public String toString() {
+		return "FiniteStateAutomaton(" + 
+				this.getStates() + ", " + 
+				this.getAlphabet() + "," + 
+				this.getInitialState() + ", " + 
+				this.getFinalStates() + ", " + 
+				this.getTransitionFunction() + ")";
+	}
+	
+	@Override public boolean equals(Object obj) {
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		FiniteStateAutomaton other = (FiniteStateAutomaton) obj;
+		
+		return (this.getStates().equals(other.getStates())
+				&& this.getAlphabet().equals(other.getAlphabet())
+				&& this.getInitialState().equals(other.getInitialState())
+				&& this.getFinalStates().equals(other.getFinalStates())
+				&& this.getTransitionFunction().equals(other.getTransitionFunction()));
+	}
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.getStates(), 
+				this.getAlphabet(), 
+				this.getInitialState(), 
+				this.getFinalStates(), 
+				this.getTransitionFunction());
+	}
 
 }

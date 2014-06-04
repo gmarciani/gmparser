@@ -156,17 +156,30 @@ public class Member implements Comparable<Member> {
 	public boolean matches(String regex) {
 		return (this.getValue().matches(regex));
 	}
-	
+	/*
 	public boolean contains(CharSequence symbols) {
 		return (this.getValue().contains(symbols));
 	}
 	
 	public boolean contains(Character symbol) {
 		return (this.getValue().indexOf(symbol) != -1);
-	}
+	}*/
 	
 	public boolean isWithin(Alphabet alphabet) {
 		return (alphabet.containsAll(this.getAlphabet()));
+	}
+	
+	public boolean isContaining(Alphabet alphabet) {
+		for (Character symbol : alphabet) {
+			if (this.isContaining(symbol))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isContaining(Character symbol) {
+		return (this.getValue().indexOf(symbol) != -1);
 	}
 	
 	public boolean isEpsilon() {

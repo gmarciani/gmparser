@@ -140,17 +140,43 @@ public class Production implements Comparable<Production> {
 	}
 	
 	public boolean isWithin(Alphabet alphabet) {
-		return (this.getLeft().isWithin(alphabet)
-				&& this.getRight().isWithin(alphabet));
+		return (this.isLeftWithin(alphabet)
+				&& this.isRightWithin(alphabet));
 	}
 	
 	public boolean isLeftWithin(Alphabet alphabet) {
-		return (this.getLeft().isWithin(alphabet));
+		return this.getLeft().isWithin(alphabet);
 	}
 	
 	public boolean isRightWithin(Alphabet alphabet) {
-		return (this.getRight().isWithin(alphabet));
+		return this.getRight().isWithin(alphabet);
 	}	
+	
+	public boolean isContaining(Alphabet alphabet) {
+		return (this.isLeftContaining(alphabet)
+				&& this.isRightContaining(alphabet));
+	}
+	
+	public boolean isLeftContaining(Alphabet alphabet) {
+		return this.getLeft().isContaining(alphabet);
+	}
+	
+	public boolean isRightContaining(Alphabet alphabet) {
+		return this.getRight().isContaining(alphabet);
+	}
+	
+	public boolean isContaining(Character symbol) {
+		return (this.isLeftContaining(symbol)
+				&& this.isRightContaining(symbol));
+	}
+	
+	public boolean isLeftContaining(Character symbol) {
+		return this.getLeft().isContaining(symbol);
+	}
+	
+	public boolean isRightContaining(Character symbol) {
+		return this.getRight().isContaining(symbol);
+	}
 	
 	public boolean isLeftEpsilon() {
 		return (this.getLeft().isEpsilon());
