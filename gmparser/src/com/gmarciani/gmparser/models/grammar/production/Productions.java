@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import com.gmarciani.gmparser.models.commons.AdvancedSet;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -44,7 +45,7 @@ import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
  * @author Giacomo Marciani
  * @version 1.0
  */
-public class Productions extends ConcurrentSkipListSet<Production> {
+public class Productions extends AdvancedSet<Production> {
 
 	private static final long serialVersionUID = 9062194540654802369L;
 	
@@ -57,9 +58,16 @@ public class Productions extends ConcurrentSkipListSet<Production> {
 		super();
 	}
 	
-	public Productions(Productions productions) {
-		super();
-		this.addAll(productions);
+	public Productions(Production ... productions) {
+		super(productions);
+	}
+	
+	public Productions(Production[] ... productions) {
+		super(productions);
+	}
+	
+	public Productions(Productions ... productions) {
+		super(productions);
 	}
 		
 	public boolean add(Member left, Member right) {

@@ -96,7 +96,7 @@ public class CYKMatrix {
 		return this.getMatrix().get(row, column).addAll(nonTerminals);
 	}
 	
-	@Override public String toString() {
+	public String toFormattedString() {
 		List<Integer> lengths = new LinkedList<Integer>();
 		lengths.addAll(this.getMatrix().rowKeySet());
 		List<Character> symbols = new LinkedList<Character>();
@@ -129,6 +129,10 @@ public class CYKMatrix {
 		String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
         
         return table;
+	}
+	
+	@Override public String toString() {
+		return "CYKMatrix(" + this.getMatrix() + ")";
 	}
 	
 	@Override public boolean equals(Object obj) {

@@ -21,45 +21,78 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.models.commons;
 
 import java.util.Objects;
 
-public class State implements Comparable<State> {
+public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends Comparable<Z>> implements Comparable<Triple<X, Y, Z>> {
 	
-	private Integer id;
+	private X x;
+	private Y y;
+	private Z z;
 
-	public State(Integer id) {
-		this.setId(id);
-	}
-
-	public Integer getId() {
-		return this.id;
+	public Triple(X x, Y y, Z z) {
+		this.setX(x);
+		this.setY(y);
+		this.setZ(z);
 	}
 	
-	private void setId(Integer id) {
-		this.id = id;
+	public X getX() {
+		return this.x;
+	}
+	
+	public void setX(X x) {
+		this.x = x;
+	}
+	
+	public Y getY() {
+		return this.y;
+	}
+	
+	public void setY(Y y) {
+		this.y = y;
+	}
+	
+	public Z getZ() {
+		return this.z;
+	}
+	
+	public void setZ(Z z) {
+		this.z = z;
 	}
 	
 	@Override public String toString() {
-		return "Q" + this.getId();
+		return "(" + this.getX() + "," + this.getY() + "," + this.getZ() + ")";
+	}
+
+	@Override public int compareTo(Triple<X, Y, Z> other) {
+		int byX = this.getX().compareTo(other.getX());
+		int byY = this.getY().compareTo(other.getY());
+		int byZ = this.getZ().compareTo(other.getZ());
+		
+		if (byX == 0 && byY == 0)
+			return byZ;
+		
+		if (byX == 0)
+			return byY;
+		
+		return byX;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		State other = (State) obj;
+		Triple<X, Y, Z> other = (Triple<X, Y, Z>) obj;
 		
-		return this.getId() == other.getId();
-	}
-	
-	@Override public int compareTo(State other) {
-		return this.getId().compareTo(other.getId());
+		return (this.getX().equals(other.getX())
+				&& this.getY().equals(other.getY())
+				&& this.getZ().equals(other.getZ()));
 	}
 	
 	@Override public int hashCode() {
-		return Objects.hash(this.getId());
+		return Objects.hash(this.getX(), this.getY(), this.getZ());
 	}
 
 }

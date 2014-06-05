@@ -1,4 +1,4 @@
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.models.automaton.pushdown;
 
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
 

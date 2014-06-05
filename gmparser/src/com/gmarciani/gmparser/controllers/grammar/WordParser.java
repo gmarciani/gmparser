@@ -104,7 +104,7 @@ public class WordParser {
 	 */
 	public boolean parseCYK(Grammar grammar, String word) {
 		CYKParser parser = new CYKParser();
-		Output.getInstance().onLogon("Here is your recognition matrix: \n" + parser.getMatrix(grammar.getProductions(), word).toString());
+		Output.getInstance().onLogon("Here is your recognition matrix: \n" + parser.getMatrix(grammar.getProductions(), word).toFormattedString());
 		return parser.parse(grammar, word);
 	}	
 	

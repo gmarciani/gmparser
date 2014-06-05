@@ -21,32 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.commons;
 
-import java.util.concurrent.ConcurrentSkipListSet;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-public class States extends ConcurrentSkipListSet<State> {
-
-	private static final long serialVersionUID = -971990098522233593L;
-
-	public States() {
-		super();
-	}
-	
-	public boolean addAll(States states) {
-		boolean added = false;
-		for (State state : states)
-			added = this.add(state) ? true : added;
-		
-		return added;
-	}
-	
-	public boolean addAll(Integer ... statesId) {
-		boolean added = false;
-		for (int stateId : statesId)
-			added = this.add(new State(stateId)) ? true : added;
-		
-		return added;
-	}
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	TestAdvancedSet.class, 
+	TestFunction.class })
+public class AllTestsCommons {
 
 }

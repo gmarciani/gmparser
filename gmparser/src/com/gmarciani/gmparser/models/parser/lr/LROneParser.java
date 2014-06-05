@@ -24,8 +24,9 @@
 package com.gmarciani.gmparser.models.parser.lr;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
-import com.gmarciani.gmparser.models.automaton.FiniteStateAutomaton;
-import com.gmarciani.gmparser.models.automaton.PushDownAutomaton;
+import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.pushdown.PushDownAutomaton;
+import com.gmarciani.gmparser.models.automaton.transition.TransitionGraph;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
@@ -42,27 +43,13 @@ public class LROneParser implements Parser {
 	@Override public boolean parse(Grammar grammar, String word) {
 		Grammar augmentedGrammar = this.generateAugmentedGrammar(grammar);
 		BigProductions bigProductions = this.generateBigProductions(augmentedGrammar);
-		FiniteStateAutomaton automaton = this.generateFiniteStateAutomaton(bigProductions);
+		TransitionGraph graph = this.generateTransitionGraph(bigProductions);
+		FiniteAutomaton automaton = this.generateFiniteStateAutomaton(graph);
 		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
 		PushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
 		LROneAction finalAction = pda.parse(word);
 		return finalAction.isActionType(LROneActionType.ACCEPT);
-	}
-
-	private PushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private LROneMatrix generateRecognitionMatrix(FiniteStateAutomaton automaton) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private FiniteStateAutomaton generateFiniteStateAutomaton(BigProductions bigProductions) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 
 	private BigProductions generateBigProductions(Grammar grammar) {
 		// TODO Auto-generated method stub
@@ -75,6 +62,26 @@ public class LROneParser implements Parser {
 			return GrammarTransformer.getInstance().generateAugmentedGrammar(grammar);
 		
 		return grammar;
+	}
+	
+	private TransitionGraph generateTransitionGraph(BigProductions bigProductions) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private FiniteAutomaton generateFiniteStateAutomaton(TransitionGraph transitionGraph) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private LROneMatrix generateRecognitionMatrix(FiniteAutomaton automaton) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private PushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

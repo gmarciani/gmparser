@@ -21,23 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.automaton.transition.transformation;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.commons.AllTestsCommons;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsParser.class,
-	AllTestsAutomaton.class,
-	AllTestsCommons.class})
-public class AllTests {
+public class TestPowersetConstruction {
+
+	@Test public void powersetConstruction() {
+		fail("Not yet implemented"); // TODO
+	}
 
 }

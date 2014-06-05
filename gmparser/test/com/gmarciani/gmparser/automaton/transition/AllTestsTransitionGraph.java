@@ -21,17 +21,22 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.base;
+package com.gmarciani.gmparser.automaton.transition;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.gmarciani.gmparser.automaton.transition.analysis.AllTestsTransitionGraphAnalysis;
+import com.gmarciani.gmparser.automaton.transition.base.AllTestsTransitionGraphBase;
+import com.gmarciani.gmparser.automaton.transition.transformation.AllTestsTransitionGraphTransformation;
+
 @RunWith(Suite.class)
-@SuiteClasses({
-	TestTransitionFunction.class,
-	TestFiniteStateAutomaton.class
+@SuiteClasses({	
+	AllTestsTransitionGraphBase.class,
+	AllTestsTransitionGraphAnalysis.class,
+	AllTestsTransitionGraphTransformation.class
 })
-public class AllTestsAutomatonBase {
+public class AllTestsTransitionGraph {
 
 }

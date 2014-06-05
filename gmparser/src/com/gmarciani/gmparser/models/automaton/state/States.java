@@ -21,23 +21,41 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.models.automaton.state;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.gmarciani.gmparser.models.commons.AdvancedSet;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.commons.AllTestsCommons;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+public class States extends AdvancedSet<State> {
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsParser.class,
-	AllTestsAutomaton.class,
-	AllTestsCommons.class})
-public class AllTests {
+	private static final long serialVersionUID = -971990098522233593L;
+
+	public States() {
+		super();
+	}
+	
+	public States(State ... states) {
+		super(states);
+	}
+	
+	public States(State[] ... states) {
+		super(states);
+	}
+	
+	public States(States ... states) {
+		super(states);
+	}
+	
+	public States(Integer ... ids) {
+		super();
+		for (Integer id : ids)
+			this.add(new State(new StateId(id)));
+	}
+	
+	public State getState(StateId id) {
+		for (State state : this)
+			if (state.getId().equals(id))
+				return state;
+		return null;
+	}
 
 }

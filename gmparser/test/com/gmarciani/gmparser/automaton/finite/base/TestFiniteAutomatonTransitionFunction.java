@@ -21,23 +21,36 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+package com.gmarciani.gmparser.automaton.finite.base;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.commons.AllTestsCommons;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsParser.class,
-	AllTestsAutomaton.class,
-	AllTestsCommons.class})
-public class AllTests {
+import com.gmarciani.gmparser.models.automaton.finite.TransitionFunction;
+import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
+
+public class TestFiniteAutomatonTransitionFunction {
+
+	@Test public void create() {
+		Alphabet alphabet = new Alphabet('a', 'b', 'c', 'd');
+		States states = new States(1, 2, 3, 4, 5);
+		
+		TransitionFunction function = new TransitionFunction(states, alphabet);
+		
+		//System.out.println(function);		
+		//System.out.println(function.toFormattedString());
+		
+	}
+	
+	@Test public void createEmptyAlphabet() {
+		Alphabet alphabet = new Alphabet();	
+		States states = new States(1, 2, 3, 4, 5);
+		
+		TransitionFunction function = new TransitionFunction(states, alphabet);
+		
+		//System.out.println(function);	
+		//System.out.println(function.toFormattedString());
+	}
 
 }

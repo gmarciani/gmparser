@@ -21,79 +21,97 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.models.automaton.transition;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
+import com.gmarciani.gmparser.models.automaton.Automaton;
+import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
+import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class FiniteStateAutomaton {
+public class TransitionGraph implements Automaton {
 	
 	private States states;
 	private Alphabet alphabet;
-	private State initialState;
-	private States finalStates;
+	private StateId initialState;
+	private Set<StateId> finalStates;
 	private TransitionFunction transitionFunction;
 	
-	public FiniteStateAutomaton(States states, Alphabet alphabet, State initialState, States finalStates, TransitionFunction transitionFunction) {
-		this.setStates(states);
-		this.setAlphabet(alphabet);
-		this.setInitialState(initialState);
-		this.setFinalStates(finalStates);
-		this.setTransitionFunction(transitionFunction);
-	}
-	
-	public FiniteStateAutomaton(State initialState) {
-		this.setStates(new States());
-		this.getStates().add(initialState);
-		this.setAlphabet(new Alphabet());
-		this.setInitialState(initialState);
-		this.setFinalStates(new States());
-		this.setTransitionFunction(new TransitionFunction(this.getStates(), this.getAlphabet()));
+	public TransitionGraph(State initialState) {
+		this.states = new States(initialState);
+		this.alphabet = new Alphabet(Grammar.EPSILON);
+		this.initialState = initialState.getId();
+		this.finalStates = new TreeSet<StateId>();
+		this.transitionFunction = new TransitionFunction();
 	}
 
 	public States getStates() {
 		return this.states;
 	}
 
-	public void setStates(States states) {
-		this.states = states;
-	}
-
 	public Alphabet getAlphabet() {
 		return this.alphabet;
 	}
-
-	public void setAlphabet(Alphabet alphabet) {
-		this.alphabet = alphabet;
-	}
-
-	public State getInitialState() {
+	
+	public StateId getInitialStateId() {
 		return this.initialState;
 	}
 
-	public void setInitialState(State initialState) {
-		this.initialState = initialState;
+	public State getInitialState() {
+		return this.getStates().getState(this.getInitialStateId());
 	}
 
 	public States getFinalStates() {
 		return this.finalStates;
 	}
-
-	public void setFinalStates(States finalStates) {
-		this.finalStates = finalStates;
+	
+	public boolean addToFinalStates(State state) {
+		return this.getFinalStates().add(state);
 	}
 
 	public TransitionFunction getTransitionFunction() {
 		return this.transitionFunction;
 	}
-
-	public void setTransitionFunction(TransitionFunction transitionFunction) {
-		this.transitionFunction = transitionFunction;
+	
+	public void addTransition(State sourceState, State destinationState, Character symbol) {
+		this.getTransitionFunction().addTransition(sourceState, destinationState, symbol);
+	}
+	
+	public States getImage(States states, Character symbol) {
+		States image = new States();
+		
+		for (State state : states) {
+			image.addAll(this.getImage(state, symbol));
+		}
+		return image;
+	}
+	
+	public States getImage(State state, Character symbol) {
+		States image = new States();
+		State currentState = state;
+		
+		
+		
+		return image;
+	}
+	
+	@Override public boolean isAccepted(String word) {
+		FiniteAutomaton automaton = this.powersetConstruction();
+		return automaton.isAccepted(word);
+	}
+	
+	public FiniteAutomaton powersetConstruction() {
+		return null;
 	}
 	
 	@Override public String toString() {
-		return "FiniteStateAutomaton(" + 
+		return "TransitionGraph(" + 
 				this.getStates() + ", " + 
 				this.getAlphabet() + "," + 
 				this.getInitialState() + ", " + 
@@ -105,7 +123,7 @@ public class FiniteStateAutomaton {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		FiniteStateAutomaton other = (FiniteStateAutomaton) obj;
+		FiniteAutomaton other = (FiniteAutomaton) obj;
 		
 		return (this.getStates().equals(other.getStates())
 				&& this.getAlphabet().equals(other.getAlphabet())
@@ -120,6 +138,6 @@ public class FiniteStateAutomaton {
 				this.getInitialState(), 
 				this.getFinalStates(), 
 				this.getTransitionFunction());
-	}
+	}	
 
 }

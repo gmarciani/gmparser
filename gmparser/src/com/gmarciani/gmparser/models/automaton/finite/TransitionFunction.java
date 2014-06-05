@@ -21,13 +21,18 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.models.automaton.finite;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TreeBasedTable;
 
 public class TransitionFunction {
@@ -46,15 +51,23 @@ public class TransitionFunction {
 		this.matrix = TreeBasedTable.create();
 		
 		for (State state : states) {
-			Character epsilon = Character.toChars(Integer.parseInt("03B5", 16))[0];
-			this.matrix.put(state, epsilon, new States());
+			States reflessiveStates = new States();
+			reflessiveStates.add(state);
+			this.matrix.put(state, Grammar.EPSILON, reflessiveStates);
 			for (Character symbol : alphabet)
 				this.matrix.put(state, symbol, new States());
 		}
 			
 	}
 	
-	@Override public String toString() {
+	public boolean isSingleCodomain() {
+		for (States states : this.getMatrix().values())
+			if (states.size() > 1)
+				return false;		
+		return true;
+	}
+	
+	public String toFormattedString() {
 		States states = new States();
 		states.addAll(this.getMatrix().rowKeySet());
 		Alphabet alphabet = new Alphabet();
@@ -97,6 +110,25 @@ public class TransitionFunction {
 		String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
         
         return table;
+	}
+	
+	@Override public String toString() {
+		String string = "[";
+		
+		Iterator<Cell<State, Character, States>> iter = this.getMatrix().cellSet().iterator();
+		while(iter.hasNext()) {
+			Cell<State, Character, States> cell = iter.next();
+			State sourceState = cell.getRowKey();
+			Character symbol = cell.getColumnKey();
+			States destinationStates = cell.getValue();
+			string += "(" + sourceState + "," + symbol + "," + destinationStates + ")";
+			if (iter.hasNext())
+				string += ", ";
+		}
+		
+		string += "]";
+		
+		return string;
 	}
 	
 	@Override public boolean equals(Object obj) {

@@ -21,23 +21,17 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser;
+package com.gmarciani.gmparser.automaton.finite.base;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
-import com.gmarciani.gmparser.commons.AllTestsCommons;
-import com.gmarciani.gmparser.grammar.AllTestsGrammar;
-import com.gmarciani.gmparser.parser.AllTestsParser;
-
 @RunWith(Suite.class)
-@SuiteClasses({
-	AllTestsGrammar.class,
-	AllTestsParser.class,
-	AllTestsAutomaton.class,
-	AllTestsCommons.class})
-public class AllTests {
+@SuiteClasses({	
+	TestFiniteAutomaton.class,
+	TestFiniteAutomatonTransitionFunction.class
+})
+public class AllTestsFiniteAutomatonBase {
 
 }

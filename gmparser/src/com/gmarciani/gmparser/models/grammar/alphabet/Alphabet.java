@@ -24,9 +24,10 @@
 package com.gmarciani.gmparser.models.grammar.alphabet;
 
 import java.util.Objects;
-import java.util.concurrent.ConcurrentSkipListSet;
 
-public class Alphabet extends ConcurrentSkipListSet<Character> {
+import com.gmarciani.gmparser.models.commons.AdvancedSet;
+
+public class Alphabet extends AdvancedSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
@@ -34,34 +35,31 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 	
 	private AlphabetType type = null;
 	
-	public Alphabet(Alphabet alphabet) {
-		super(alphabet);
-	}
-	
-	public Alphabet(Alphabet ... alphabets) {
-		super();
-		for (Alphabet alphabet : alphabets)
-			this.addAll(alphabet);
-	}
-	
 	public Alphabet() {
 		super();
-	}	
-	
-	public Alphabet(AlphabetType type) {
-		super();
-		this.type = type;
 	}
 	
-	public Alphabet(Character symbol) {
-		super();
-		this.add(symbol);
-	}	
+	public Alphabet(Character ... symbols) {
+		super(symbols);
+	}
+	
+	public Alphabet(Character[] ... symbols) {
+		super(symbols);
+	}
 	
 	public Alphabet(String symbols) {
 		super();
 		this.addAll(symbols);
 	}	
+	
+	public Alphabet(Alphabet ... alphabets) {
+		super(alphabets);
+	}		
+	
+	public Alphabet(AlphabetType type) {
+		super();
+		this.type = type;
+	}		
 	
 	public AlphabetType getType() {
 		return this.type;
@@ -93,6 +91,9 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 		
 		return added;
 	}
+	
+	
+	// REMOVAL
 	
 	public boolean removeAll(Alphabet alphabet) {
 		boolean removed = false;
@@ -163,7 +164,7 @@ public class Alphabet extends ConcurrentSkipListSet<Character> {
 	}
 	
 	@Override public int hashCode() {
-		return Objects.hash(this.type, this.toArray(new Character[this.size()]));
+		return Objects.hash(this.type, this.subSet(this.first(), true, this.last(), true));
 	}
 	
 }
