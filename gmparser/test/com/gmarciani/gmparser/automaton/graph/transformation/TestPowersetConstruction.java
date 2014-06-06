@@ -21,14 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.transition.analysis;
+package com.gmarciani.gmparser.automaton.graph.transformation;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-@RunWith(Suite.class)
-@SuiteClasses({})
-public class AllTestsTransitionGraphAnalysis {
+import org.junit.Test;
+
+public class TestPowersetConstruction {
+
+	@Test public void powersetConstruction() {
+		fail("Not yet implemented"); // TODO
+	}
 
 }

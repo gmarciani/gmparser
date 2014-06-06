@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.transition.base;
+package com.gmarciani.gmparser.automaton.graph.base;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

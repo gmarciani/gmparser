@@ -25,7 +25,7 @@ package com.gmarciani.gmparser.models.grammar.alphabet;
 
 import java.util.Objects;
 
-import com.gmarciani.gmparser.models.commons.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 
 public class Alphabet extends AdvancedSet<Character> {
 

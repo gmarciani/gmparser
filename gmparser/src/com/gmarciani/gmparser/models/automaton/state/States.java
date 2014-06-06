@@ -23,9 +23,9 @@
 
 package com.gmarciani.gmparser.models.automaton.state;
 
-import com.gmarciani.gmparser.models.commons.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 
-public class States extends AdvancedSet<State> {
+public class States extends AdvancedSet<State> implements Comparable<States> {
 
 	private static final long serialVersionUID = -971990098522233593L;
 
@@ -51,11 +51,39 @@ public class States extends AdvancedSet<State> {
 			this.add(new State(new StateId(id)));
 	}
 	
+	public boolean add(StateId id) {
+		return this.add(new State(id));
+	}
+	
+	public boolean add(Integer id) {
+		return this.add(new StateId(id));
+	}
+	
+	public boolean remove(StateId id) {
+		State state = this.getState(id);
+		if (state != null)
+			return this.remove(state);
+		return false;
+	}
+	
+	public boolean remove(Integer id) {
+		return this.remove(new StateId(id));
+	}
+	
 	public State getState(StateId id) {
 		for (State state : this)
 			if (state.getId().equals(id))
 				return state;
 		return null;
+	}
+	
+	public State getState(Integer id) {
+		return this.getState(new StateId(id));
+	}
+
+	@Override public int compareTo(States other) {
+		int bySize = Integer.valueOf(this.size()).compareTo(other.size());
+		return bySize;
 	}
 
 }

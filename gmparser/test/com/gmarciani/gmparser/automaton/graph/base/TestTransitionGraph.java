@@ -21,14 +21,14 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.transition.base;
+package com.gmarciani.gmparser.automaton.graph.base;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.transition.TransitionGraph;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 
 public class TestTransitionGraph {

@@ -28,8 +28,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.gmarciani.gmparser.automaton.finite.AllTestsFiniteAutomaton;
+import com.gmarciani.gmparser.automaton.graph.AllTestsTransitionGraph;
 import com.gmarciani.gmparser.automaton.pushdown.AllTestsPushDownAutomaton;
-import com.gmarciani.gmparser.automaton.transition.AllTestsTransitionGraph;
 
 @RunWith(Suite.class)
 @SuiteClasses({

@@ -277,7 +277,7 @@ public final class App {
 		
 		boolean accepted = this.parser.parse(strGrammar, word, parser);
 		
-		this.getOutput().onResult("Here we are! Your word has " + (accepted ? "" : "NOT") + " been parsed!");
+		this.getOutput().onResult("Here we are! Your word has " + (accepted ? "" : "NOT ") + "been parsed!");
 	}	
 	
 	/**

@@ -30,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	TestAdvancedSet.class, 
-	TestFunction.class })
+	TestNonDeterministicFunction.class,
+	TestDeterministicFunction.class})
 public class AllTestsCommons {
 
 }

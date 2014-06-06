@@ -25,8 +25,8 @@ package com.gmarciani.gmparser.models.parser.lr;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.pushdown.PushDownAutomaton;
-import com.gmarciani.gmparser.models.automaton.transition.TransitionGraph;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;

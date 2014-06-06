@@ -36,8 +36,7 @@ import com.gmarciani.gmparser.parser.AllTestsParser;
 @SuiteClasses({
 	AllTestsGrammar.class,
 	AllTestsParser.class,
-	AllTestsAutomaton.class,
-	AllTestsCommons.class})
+	AllTestsAutomaton.class})
 public class AllTests {
 
 }

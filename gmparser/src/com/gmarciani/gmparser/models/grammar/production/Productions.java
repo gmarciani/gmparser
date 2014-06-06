@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import com.gmarciani.gmparser.models.commons.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;

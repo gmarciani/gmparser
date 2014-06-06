@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.commons.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 
 public class TestAdvancedSet {
 

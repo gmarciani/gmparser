@@ -21,11 +21,12 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.commons;
+package com.gmarciani.gmparser.models.commons.nple;
 
 import java.util.Objects;
 
-public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends Comparable<Z>> implements Comparable<Triple<X, Y, Z>> {
+public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends Comparable<Z>> 
+	implements Comparable<Triple<X, Y, Z>> {
 	
 	private X x;
 	private Y y;

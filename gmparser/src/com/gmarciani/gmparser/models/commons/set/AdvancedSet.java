@@ -1,4 +1,4 @@
-package com.gmarciani.gmparser.models.commons;
+package com.gmarciani.gmparser.models.commons.set;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -7,9 +7,6 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class AdvancedSet<T> extends ConcurrentSkipListSet<T> {
 
 	private static final long serialVersionUID = 5790342796025820425L;
-	
-	
-	// CONSTRUCTION
 	
 	public AdvancedSet() {
 		super();
@@ -37,9 +34,6 @@ public class AdvancedSet<T> extends ConcurrentSkipListSet<T> {
 			this.addAll(set);
 	}
 	
-	
-	// INSERTION
-	
 	public boolean addAll(@SuppressWarnings("unchecked") T ... members) {
 		boolean added = false;
 		for (T member : members)
@@ -60,6 +54,6 @@ public class AdvancedSet<T> extends ConcurrentSkipListSet<T> {
 		string += "}";
 		
 		return string;
-	}
+	}	
 
 }

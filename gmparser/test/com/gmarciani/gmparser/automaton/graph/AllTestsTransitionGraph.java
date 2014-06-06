@@ -21,15 +21,15 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.transition;
+package com.gmarciani.gmparser.automaton.graph;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.gmarciani.gmparser.automaton.transition.analysis.AllTestsTransitionGraphAnalysis;
-import com.gmarciani.gmparser.automaton.transition.base.AllTestsTransitionGraphBase;
-import com.gmarciani.gmparser.automaton.transition.transformation.AllTestsTransitionGraphTransformation;
+import com.gmarciani.gmparser.automaton.graph.analysis.AllTestsTransitionGraphAnalysis;
+import com.gmarciani.gmparser.automaton.graph.base.AllTestsTransitionGraphBase;
+import com.gmarciani.gmparser.automaton.graph.transformation.AllTestsTransitionGraphTransformation;
 
 @RunWith(Suite.class)
 @SuiteClasses({	

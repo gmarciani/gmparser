@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.transition.transformation;
+package com.gmarciani.gmparser.automaton.graph.transformation;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
