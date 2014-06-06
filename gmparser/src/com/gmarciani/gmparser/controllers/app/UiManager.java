@@ -173,4 +173,14 @@ public final class UiManager {
 		AnsiConsole.systemUninstall();
 	}
 
+	public static String makeItalic(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static String makeUnderlined(String formattedState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

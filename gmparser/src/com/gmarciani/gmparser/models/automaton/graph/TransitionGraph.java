@@ -28,64 +28,29 @@ import java.util.Set;
 
 import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
-import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
-import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TransitionGraph implements Automaton {
 	
-	public class TransitionFunction extends NonDeterministicFunction<State, Character, State> {
-		
-		public TransitionFunction(States states, Alphabet alphabet) {
-			super(states, alphabet);
-		}
-		
-		public void addTransition(State sState, State dState, Character symbol) {
-			this.add(sState, symbol, dState);			
-		}
-		
-		public Set<State> getTransitions(State sState, Character symbol) {
-			Set<State> transitions = new AdvancedSet<State>();
-			for (Triple<State, Character, State> triple : this.getAllForXY(sState, symbol))	
-				transitions.add(triple.getZ());
-			return transitions;
-		}
-		
-		public void removeTransition(State sState, State dState, Character symbol) {
-			this.remove(sState, symbol, dState);
-		}
-		
-		public boolean removeAllTransitionsForStateSymbol(State sState, Character symbol) {
-			return this.removeAllForXY(sState, symbol);
-		}
-		
-		public boolean removeAllTransitionsForState(State sState) {
-			return this.removeAllForX(sState);
-		}
-		
-		public boolean removeAllTransitionsForSymbol(Character symbol) {
-			return this.removeAllForY(symbol);
-		}
-		
-	}
-	
 	private States states;
 	private Alphabet alphabet;
 	private StateId initialStateId;
 	private Set<StateId> finalStatesId;
-	private TransitionFunction transitionFunction;
+	private NonDeterministicTransitionFunction transitionFunction;
 	
 	public TransitionGraph(State initialState) {
+		initialState.setIsInitial(true);
 		this.states = new States(initialState);
 		this.alphabet = new Alphabet(Grammar.EPSILON);
 		this.initialStateId = initialState.getId();
 		this.finalStatesId = new AdvancedSet<StateId>();
-		this.transitionFunction = new TransitionFunction(this.getStates(), this.getAlphabet());
+		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet());
 	}
 
 	public States getStates() {
@@ -100,20 +65,18 @@ public class TransitionGraph implements Automaton {
 		return this.initialStateId;
 	}
 	
-	private void setInitialStateId(StateId id) {
+	public State getInitialState() {
+		return this.getStates().getState(this.getInitialStateId());
+	}
+	
+	private void setInitialState(StateId id) {
+		this.getStates().getState(this.getInitialStateId()).setIsInitial(false);
+		this.getStates().getState(id).setIsInitial(true);
 		this.initialStateId = id;
 	}
 	
 	public Set<StateId> getFinalStatesId() {
 		return this.finalStatesId;
-	}
-	
-	public TransitionFunction getTransitionFunction() {
-		return this.transitionFunction;
-	}
-	
-	public State getInitialState() {
-		return this.getStates().getState(this.getInitialStateId());
 	}
 	
 	public States getFinalStates() {
@@ -122,6 +85,10 @@ public class TransitionGraph implements Automaton {
 			if (this.isFinalState(state.getId()))
 				finals.add(state);
 		return finals;
+	}
+	
+	public NonDeterministicTransitionFunction getTransitionFunction() {
+		return this.transitionFunction;
 	}
 	
 	public boolean isInitialState(StateId id) {
@@ -138,7 +105,7 @@ public class TransitionGraph implements Automaton {
 	
 	public void removeState(State state) {
 		if (this.isInitialState(state.getId()))
-			this.setInitialStateId(null);
+			this.setInitialState(null);
 		if (this.isFinalState(state.getId()))
 			this.removeFromFinalStates(state.getId());
 		this.getTransitionFunction().removeAllTransitionsForState(state);
@@ -155,11 +122,12 @@ public class TransitionGraph implements Automaton {
 	}
 	
 	public boolean addToFinalStates(StateId id) {
-		this.getStates().add(id);
+		this.getStates().getState(id).setIsFinal(true);
 		return this.getFinalStatesId().add(id);
 	}
 	
 	public void removeFromFinalStates(StateId id) {
+		this.getStates().getState(id).setIsFinal(false);
 		this.getFinalStatesId().remove(id);
 	}
 	
@@ -180,12 +148,16 @@ public class TransitionGraph implements Automaton {
 		return null;
 	}
 	
+	public String toFormattedString() {
+		return this.getTransitionFunction().toFormattedString();
+	}
+	
 	@Override public String toString() {
 		return "TransitionGraph(" + 
-				this.getStates() + ", " + 
+				this.getStates() + "," + 
 				this.getAlphabet() + "," + 
-				this.getInitialState() + ", " + 
-				this.getFinalStates() + ", " + 
+				this.getInitialState() + "," + 
+				this.getFinalStates() + "," + 
 				this.getTransitionFunction() + ")";
 	}
 	
@@ -197,16 +169,16 @@ public class TransitionGraph implements Automaton {
 		
 		return (this.getStates().equals(other.getStates())
 				&& this.getAlphabet().equals(other.getAlphabet())
-				&& this.getInitialState().equals(other.getInitialState())
-				&& this.getFinalStates().equals(other.getFinalStates())
+				&& this.getInitialStateId().equals(other.getInitialState())
+				&& this.getFinalStatesId().equals(other.getFinalStates())
 				&& this.getTransitionFunction().equals(other.getTransitionFunction()));
 	}
 	
 	@Override public int hashCode() {
 		return Objects.hash(this.getStates(), 
 				this.getAlphabet(), 
-				this.getInitialState(), 
-				this.getFinalStates(), 
+				this.getInitialStateId(), 
+				this.getFinalStatesId(), 
 				this.getTransitionFunction());
 	}	
 

@@ -143,7 +143,7 @@ public class NonDeterministicFunction<X extends Comparable<X>, Y extends Compara
 				&& this.getDomainY().isEmpty()) {
 			String header[] = {"#", "null"};
 			String data[][] = {{"null", "null",}};
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else if (this.getDomainX().isEmpty()) {
 			String header[] = new String[this.getDomainY().size() + 1];
 			header[0] = "#";
@@ -155,7 +155,7 @@ public class NonDeterministicFunction<X extends Comparable<X>, Y extends Compara
 			String data[][] = new String[1][this.getDomainY().size() + 1];
 			for (c = 0 ; c < data[0].length; c ++) 
 				data[0][c] = "null";
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else if (this.getDomainY().isEmpty()) {
 			String header[] = {"#", "null"};
 			String data[][] = new String[this.getDomainX().size()][2];
@@ -165,7 +165,7 @@ public class NonDeterministicFunction<X extends Comparable<X>, Y extends Compara
 				data[r][1] = "null";
 				r ++;
 			}
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else {
 			String header[] = new String[this.getDomainY().size() + 1];
 			header[0] = "#";
@@ -201,7 +201,7 @@ public class NonDeterministicFunction<X extends Comparable<X>, Y extends Compara
 					data[xIndex][yIndex] = String.valueOf(z);
 				}
 			}
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		}			
         
         return table;

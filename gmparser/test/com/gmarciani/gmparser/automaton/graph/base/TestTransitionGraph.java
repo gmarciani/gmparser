@@ -23,8 +23,6 @@
 
 package com.gmarciani.gmparser.automaton.graph.base;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
@@ -45,30 +43,10 @@ public class TestTransitionGraph {
 		graph.addTransition(stateOne, stateThree, '1');
 		graph.addTransition(stateThree, stateOne, '0');
 		graph.addTransition(stateThree, stateOne, Grammar.EPSILON);
-		graph.addToFinalStates(stateTwo);
+		graph.addToFinalStates(stateTwo.getId());
 		
 		System.out.println(graph);
-	}
-	
-	@Test public void accept() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		TransitionGraph graph = new TransitionGraph(stateOne);
-		graph.addTransition(stateOne, stateTwo, '0');
-		graph.addTransition(stateOne, stateTwo, '1');
-		graph.addTransition(stateOne, stateThree, '1');
-		graph.addTransition(stateThree, stateOne, '0');
-		graph.addTransition(stateThree, stateOne, Grammar.EPSILON);
-		graph.addToFinalStates(stateTwo);
-		
-		
-		assertTrue("Uncorrect transition graph acceptance (should be accepted)", 
-				graph.isAccepted("0")
-				&& graph.isAccepted("1")
-				&& graph.isAccepted("100")
-				&& graph.isAccepted("101"));
+		System.out.println(graph.toFormattedString());
 	}
 
 }

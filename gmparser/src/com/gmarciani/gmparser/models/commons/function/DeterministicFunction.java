@@ -66,7 +66,7 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 				&& this.getDomainY().isEmpty()) {
 			String header[] = {"#", "null"};
 			String data[][] = {{"null", "null",}};
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else if (this.getDomainX().isEmpty()) {
 			String header[] = new String[this.getDomainY().size() + 1];
 			header[0] = "#";
@@ -78,7 +78,7 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 			String data[][] = new String[1][this.getDomainY().size() + 1];
 			for (c = 0 ; c < data[0].length; c ++) 
 				data[0][c] = "null";
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else if (this.getDomainY().isEmpty()) {
 			String header[] = {"#", "null"};
 			String data[][] = new String[this.getDomainX().size()][2];
@@ -88,7 +88,7 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 				data[r][1] = "null";
 				r ++;
 			}
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		} else {
 			String header[] = new String[this.getDomainY().size() + 1];
 			header[0] = "#";
@@ -121,7 +121,7 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 					data[xIndex][yIndex] = String.valueOf(z);
 				}
 			}
-			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
+			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 		}			
         
         return table;

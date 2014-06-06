@@ -28,13 +28,17 @@ import java.util.Objects;
 public class State implements Comparable<State> {
 	
 	private StateId id;
+	private boolean isInitial;
+	private boolean isFinal;
 
 	public State(StateId id) {
 		this.setId(id);
+		this.setIsInitial(false);
+		this.setIsFinal(false);
 	}
 	
 	public State(Integer id) {
-		this.setId(new StateId(id));
+		this(new StateId(id));
 	}
 	
 	public StateId getId() {
@@ -45,8 +49,30 @@ public class State implements Comparable<State> {
 		this.id = id;
 	}
 	
+	public boolean isInitial() {
+		return this.isInitial;
+	}
+	
+	public void setIsInitial(boolean isInitial) {
+		this.isInitial = isInitial;
+	}
+	
+	public boolean isFinal() {
+		return this.isFinal;
+	}
+	
+	public void setIsFinal(boolean isFinal) {
+		this.isFinal = isFinal;
+	}
+	
 	@Override public String toString() {
-		return "Q" + this.getId();
+		String string = "Q";
+		if (this.isInitial())
+			string = "^" + string; /*Character.toChars(Integer.parseInt("0303", 16))[0];*/
+		if (this.isFinal())
+			string += "*"; /*Character.toChars(Integer.parseInt("02DF", 16))[0];*/
+		string += this.getId();
+		return string;
 	}
 	
 	@Override public boolean equals(Object obj) {
