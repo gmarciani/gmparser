@@ -91,9 +91,12 @@ public class NonDeterministicFunction<X extends Comparable<X>, Y extends Compara
 	}
 	
 	public boolean removeAllForXY(X x, Y y) {
-		boolean removedX = this.removeAllForX(x);
-		boolean removedY = this.removeAllForY(y);
-		return removedX || removedY;
+		boolean removed = false;
+		for (Triple<X, Y, Z> triple : this.getSet())
+			if (triple.getX().equals(x)
+					&& triple.getY().equals(y))
+				removed = this.remove(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;
+		return removed;
 	}
 	
 	public boolean removeAllForX(X x) {

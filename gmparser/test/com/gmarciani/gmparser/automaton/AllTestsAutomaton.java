@@ -27,15 +27,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.gmarciani.gmparser.automaton.finite.AllTestsFiniteAutomaton;
-import com.gmarciani.gmparser.automaton.graph.AllTestsTransitionGraph;
-import com.gmarciani.gmparser.automaton.pushdown.AllTestsPushDownAutomaton;
+import com.gmarciani.gmparser.automaton.analysis.AllTestsAutomatonAnalysis;
+import com.gmarciani.gmparser.automaton.base.AllTestsAutomatonBase;
+import com.gmarciani.gmparser.automaton.transformation.AllTestsAutomatonTransformation;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	AllTestsFiniteAutomaton.class,
-	AllTestsPushDownAutomaton.class,
-	AllTestsTransitionGraph.class
+	AllTestsAutomatonBase.class,
+	AllTestsAutomatonAnalysis.class,
+	AllTestsAutomatonTransformation.class
 })
 public class AllTestsAutomaton {
 

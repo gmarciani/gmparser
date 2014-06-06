@@ -21,16 +21,32 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.graph.base;
+package com.gmarciani.gmparser.automaton.base;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	TestTransitionGraph.class
-})
-public class AllTestsTransitionGraphBase {
+import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+
+public class TestTransitionGraph {
+
+	@Test public void create() {		
+		
+		State stateOne = new State(1);
+		State stateTwo = new State(2);
+		State stateThree = new State(3);
+		
+		TransitionGraph graph = new TransitionGraph(stateOne);
+		graph.addTransition(stateOne, stateTwo, '0');
+		graph.addTransition(stateOne, stateTwo, '1');
+		graph.addTransition(stateOne, stateThree, '1');
+		graph.addTransition(stateThree, stateOne, '0');
+		graph.addTransition(stateThree, stateOne, Grammar.EPSILON);
+		graph.addToFinalStates(stateTwo.getId());
+		
+		System.out.println(graph);
+		System.out.println(graph.toFormattedString());
+	}
 
 }

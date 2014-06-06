@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.graph.transformation;
+package com.gmarciani.gmparser.automaton.base;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -29,8 +29,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	TestPowersetConstruction.class
+	TestDeterministicFiniteAutomaton.class,
+	TestTransitionGraph.class,
+	TestPushDownAutomaton.class
 })
-public class AllTestsTransitionGraphTransformation {
+public class AllTestsAutomatonBase {
 
 }

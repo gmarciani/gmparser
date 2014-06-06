@@ -21,32 +21,46 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.graph.base;
+package com.gmarciani.gmparser.models.automaton.function;
 
-import org.junit.Test;
-
-import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.commons.function.DeterministicFunction;
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class TestTransitionGraph {
+public class DeterministicTransitionFunction extends DeterministicFunction<State, Character, State> {
 
-	@Test public void create() {		
-		
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		TransitionGraph graph = new TransitionGraph(stateOne);
-		graph.addTransition(stateOne, stateTwo, '0');
-		graph.addTransition(stateOne, stateTwo, '1');
-		graph.addTransition(stateOne, stateThree, '1');
-		graph.addTransition(stateThree, stateOne, '0');
-		graph.addTransition(stateThree, stateOne, Grammar.EPSILON);
-		graph.addToFinalStates(stateTwo.getId());
-		
-		System.out.println(graph);
-		System.out.println(graph.toFormattedString());
+	public DeterministicTransitionFunction(States states, Alphabet alphabet) {
+		super(states, alphabet);
+		for (State state : states)
+			this.addTrivialEpsilonMove(state);
+	}
+	
+	public void addTransition(State sState, State dState, Character symbol) {
+		super.add(sState, symbol, dState);
+		this.addTrivialEpsilonMove(sState);
+		this.addTrivialEpsilonMove(dState);
+	}
+
+	public void removeTransition(State sState, State dState, Character symbol) {
+		super.remove(sState, symbol, dState);
+	}
+
+	public void removeAllTransitionsForState(State state) {
+		super.removeAllForX(state);
+	}
+
+	public void removeAllTransitionsForSymbol(Character symbol) {
+		super.removeAllForY(symbol);
+	}	
+	
+	public void removeAllTransitionsForStateSymbol(State state, Character symbol) {
+		super.removeAllForXY(state, symbol);
+	}
+	
+	public void addTrivialEpsilonMove(State state) {
+		super.add(state, Grammar.EPSILON, state);
 	}
 
 }

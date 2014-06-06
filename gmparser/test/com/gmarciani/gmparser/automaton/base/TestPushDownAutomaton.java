@@ -21,22 +21,16 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.graph;
+package com.gmarciani.gmparser.automaton.base;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import static org.junit.Assert.*;
 
-import com.gmarciani.gmparser.automaton.graph.analysis.AllTestsTransitionGraphAnalysis;
-import com.gmarciani.gmparser.automaton.graph.base.AllTestsTransitionGraphBase;
-import com.gmarciani.gmparser.automaton.graph.transformation.AllTestsTransitionGraphTransformation;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@SuiteClasses({	
-	AllTestsTransitionGraphBase.class,
-	AllTestsTransitionGraphAnalysis.class,
-	AllTestsTransitionGraphTransformation.class
-})
-public class AllTestsTransitionGraph {
+public class TestPushDownAutomaton {
+
+	@Test public void test() {
+		
+	}
 
 }

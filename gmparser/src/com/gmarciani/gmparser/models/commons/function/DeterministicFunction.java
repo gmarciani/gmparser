@@ -42,9 +42,9 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 	
 	@Override public boolean add(X x, Y y, Z z) {
 		super.removeAllForXY(x, y);
-		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
 		this.getDomainX().add(x);
 		this.getDomainY().add(y);
+		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
 		return this.getSet().add(triple);
 	}
 	

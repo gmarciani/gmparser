@@ -21,36 +21,34 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton.graph;
+package com.gmarciani.gmparser.models.automaton.finite;
 
 import java.util.Objects;
 import java.util.Set;
 
 import com.gmarciani.gmparser.models.automaton.Automaton;
-import com.gmarciani.gmparser.models.automaton.finite.DeterministicFiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
+import com.gmarciani.gmparser.models.automaton.function.DeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
-import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class TransitionGraph implements Automaton {
+public class DeterministicFiniteAutomaton implements Automaton {
 	
 	private States states;
 	private Alphabet alphabet;
 	private StateId initialStateId;
 	private Set<StateId> finalStatesId;
-	private NonDeterministicTransitionFunction transitionFunction;
+	private DeterministicTransitionFunction transitionFunction;
 	
-	public TransitionGraph(State initialState) {
+	public DeterministicFiniteAutomaton(State initialState) {
 		initialState.setIsInitial(true);
 		this.states = new States(initialState);
-		this.alphabet = new Alphabet(Grammar.EPSILON);
+		this.alphabet = new Alphabet();
 		this.initialStateId = initialState.getId();
 		this.finalStatesId = new AdvancedSet<StateId>();
-		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet());
+		this.transitionFunction = new DeterministicTransitionFunction(this.getStates(), this.getAlphabet());
 	}
 
 	public States getStates() {
@@ -81,7 +79,7 @@ public class TransitionGraph implements Automaton {
 		return finals;
 	}
 	
-	public NonDeterministicTransitionFunction getTransitionFunction() {
+	public DeterministicTransitionFunction getTransitionFunction() {
 		return this.transitionFunction;
 	}
 	
@@ -94,7 +92,9 @@ public class TransitionGraph implements Automaton {
 	}
 	
 	public boolean addState(State state) {
-		return this.getStates().add(state);
+		boolean added = this.getStates().add(state);
+		this.getTransitionFunction().addTrivialEpsilonMove(state);
+		return added;
 	}
 	
 	public void removeState(State state) {
@@ -134,13 +134,14 @@ public class TransitionGraph implements Automaton {
 	}
 	
 	@Override public boolean isAccepted(String word) {
-		DeterministicFiniteAutomaton automaton = this.powersetConstruction();
-		return automaton.isAccepted(word);
-	}
-	
-	public DeterministicFiniteAutomaton powersetConstruction() {
-		
-		return null;
+		State currentState = this.getInitialState();
+		for (Character symbol : word.toCharArray()) {
+			currentState = this.getTransitionFunction().get(currentState, symbol);
+			if (currentState == null)
+				return false;
+		}
+			
+		return currentState.isFinal();
 	}
 	
 	public String toFormattedString() {
@@ -148,7 +149,7 @@ public class TransitionGraph implements Automaton {
 	}
 	
 	@Override public String toString() {
-		return "TransitionGraph(" + 
+		return "DeterministicFiniteAutomaton(" + 
 				this.getStates() + "," + 
 				this.getAlphabet() + "," + 
 				this.getInitialState() + "," + 
@@ -160,7 +161,7 @@ public class TransitionGraph implements Automaton {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		TransitionGraph other = (TransitionGraph) obj;
+		DeterministicFiniteAutomaton other = (DeterministicFiniteAutomaton) obj;
 		
 		return (this.getStates().equals(other.getStates())
 				&& this.getAlphabet().equals(other.getAlphabet())

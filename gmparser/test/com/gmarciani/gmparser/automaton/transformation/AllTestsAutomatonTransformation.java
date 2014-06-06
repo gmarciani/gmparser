@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.automaton.pushdown.analysis;
+package com.gmarciani.gmparser.automaton.transformation;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -29,6 +29,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({})
-public class AllTestsPushDownAutomatonAnalysis {
+public class AllTestsAutomatonTransformation {
 
 }
