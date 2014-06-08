@@ -23,9 +23,9 @@
 
 package com.gmarciani.gmparser.models.automaton.state;
 
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class States extends AdvancedSet<State> implements Comparable<States> {
+public class States extends GSet<State> implements Comparable<States> {
 
 	private static final long serialVersionUID = -971990098522233593L;
 

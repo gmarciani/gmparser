@@ -23,19 +23,17 @@
 
 package com.gmarciani.gmparser.commons;
 
-import java.util.Set;
-
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestNonDeterministicFunction {
 	
 	@Test public void createCompleteAndRemoveAllXY() {
 		System.out.println("#createCompleteAndRemoveAllXY");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		for (Character x : domainX) {
@@ -48,13 +46,13 @@ public class TestNonDeterministicFunction {
 		function.removeAllForXY('b', 'e');
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createCompleteAndRemoveAllX() {
 		System.out.println("#createCompleteAndRemoveAllX");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		for (Character x : domainX) {
@@ -67,13 +65,13 @@ public class TestNonDeterministicFunction {
 		function.removeAllForX('b');
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createCompleteAndRemoveAllY() {
 		System.out.println("#createCompleteAndRemoveAllY");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		for (Character x : domainX) {
@@ -86,13 +84,13 @@ public class TestNonDeterministicFunction {
 		function.removeAllForY('e');
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createComplete() {
 		System.out.println("#createComplete");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		for (Character x : domainX) {
@@ -103,63 +101,80 @@ public class TestNonDeterministicFunction {
 		}
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
+	}
+	
+	@Test public void createCompleteByTriples() {
+		System.out.println("#createCompleteByTriples");
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		
+		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>();
+		for (Character x : domainX) {
+			for (Character y : domainY) {
+				function.add(x, y, "" + x + y);
+				function.add(x, y, "" + y + x);
+			}				
+		}
+		
+		System.out.println(function);
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createIncompleteCodomain() {
 		System.out.println("#createIncompleteCodomain");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		function.add('a', 'b', "ab");
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 
 	@Test public void createCompleteDomainEmptyCodomain() {
 		System.out.println("#createCompleteDomainEmptyCodomain");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createEmptyDomainX() {
 		System.out.println("#createEmptyDomainX");
-		Set<Character> domainX = new AdvancedSet<Character>();
-		Set<Character> domainY = new AdvancedSet<Character>('d', 'e', 'f');
+		GSet<Character> domainX = new GSet<Character>();
+		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createEmptyDomainY() {
 		System.out.println("#createEmptyDomainY");
-		Set<Character> domainX = new AdvancedSet<Character>('a', 'b', 'c');
-		Set<Character> domainY = new AdvancedSet<Character>();
+		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainY = new GSet<Character>();
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 	
 	@Test public void createEmptyDomainXY() {
 		System.out.println("#createEmptyDomainXY");
-		Set<Character> domainX = new AdvancedSet<Character>();
-		Set<Character> domainY = new AdvancedSet<Character>();
+		GSet<Character> domainX = new GSet<Character>();
+		GSet<Character> domainY = new GSet<Character>();
 		
 		NonDeterministicFunction<Character, Character, String> function = new NonDeterministicFunction<Character, Character, String>(domainX, domainY);
 		
 		System.out.println(function);
-		System.out.println(function.toFormattedString());
+		System.out.println(function.toFormattedFunction());
 	}
 
 }

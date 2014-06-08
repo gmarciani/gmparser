@@ -28,38 +28,26 @@ import java.util.Objects;
 public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends Comparable<Z>> 
 	implements Comparable<Triple<X, Y, Z>> {
 	
-	private X x;
-	private Y y;
-	private Z z;
+	private final X x;
+	private final Y y;
+	private final Z z;
 
 	public Triple(X x, Y y, Z z) {
-		this.setX(x);
-		this.setY(y);
-		this.setZ(z);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	public X getX() {
 		return this.x;
 	}
 	
-	public void setX(X x) {
-		this.x = x;
-	}
-	
 	public Y getY() {
 		return this.y;
 	}
 	
-	public void setY(Y y) {
-		this.y = y;
-	}
-	
 	public Z getZ() {
 		return this.z;
-	}
-	
-	public void setZ(Z z) {
-		this.z = z;
 	}
 	
 	@Override public String toString() {

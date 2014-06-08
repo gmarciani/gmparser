@@ -27,12 +27,12 @@ import java.util.Objects;
 
 public class State implements Comparable<State> {
 	
-	private StateId id;
+	private final StateId id;
 	private boolean isInitial;
 	private boolean isFinal;
 
 	public State(StateId id) {
-		this.setId(id);
+		this.id = id;
 		this.setIsInitial(false);
 		this.setIsFinal(false);
 	}
@@ -43,27 +43,28 @@ public class State implements Comparable<State> {
 	
 	public StateId getId() {
 		return this.id;
-	}
-	
-	public void setId(StateId id) {
-		this.id = id;
-	}
-	
-	public boolean isInitial() {
-		return this.isInitial;
-	}
+	}	
 	
 	public void setIsInitial(boolean isInitial) {
 		this.isInitial = isInitial;
+	}
+	
+	public void setIsFinal(boolean isFinal) {
+		this.isFinal = isFinal;
+	}
+	
+	public void setNormal() {
+		this.setIsInitial(false);
+		this.setIsFinal(false);
 	}
 	
 	public boolean isFinal() {
 		return this.isFinal;
 	}
 	
-	public void setIsFinal(boolean isFinal) {
-		this.isFinal = isFinal;
-	}
+	public boolean isInitial() {
+		return this.isInitial;
+	}	
 	
 	@Override public String toString() {
 		String string = "Q";

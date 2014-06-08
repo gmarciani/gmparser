@@ -21,17 +21,25 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.commons;
+package com.gmarciani.gmparser.models.automaton.function;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.States;
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	TestGSet.class, 
-	TestNonDeterministicFunction.class,
-	TestDeterministicFunction.class})
-public class AllTestsCommons {
-
+public interface TransitionFunction {
+	
+	public boolean addTransition(State sState, State dState, Character symbol);
+	
+	public boolean removeTransition(State sState, State dState, Character symbol);
+	public boolean removeAllTransitionsForState(State state);
+	public boolean removeAllTransitionsForSymbol(Character symbol);
+	public boolean removeAllTransitionsForStateSymbol(State state, Character symbol);
+	
+	public State getTransition(State state, Character symbol);
+	public States getTransitions(State state, Character symbol);
+	
+	public boolean containsTransition(State sState, State dState, Character symbol);
+	
+	public String toFormattedTransitionFunction();
+	
 }

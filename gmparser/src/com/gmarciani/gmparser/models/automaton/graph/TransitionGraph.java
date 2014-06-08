@@ -23,128 +23,69 @@
 
 package com.gmarciani.gmparser.models.automaton.graph;
 
-import java.util.Objects;
-import java.util.Set;
-
+import com.gmarciani.gmparser.models.automaton.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.Automaton;
-import com.gmarciani.gmparser.models.automaton.finite.DeterministicFiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class TransitionGraph implements Automaton {
-	
-	private States states;
-	private Alphabet alphabet;
-	private StateId initialStateId;
-	private Set<StateId> finalStatesId;
-	private NonDeterministicTransitionFunction transitionFunction;
+public class TransitionGraph extends AbstractAutomaton 
+							 implements Automaton {
 	
 	public TransitionGraph(State initialState) {
-		initialState.setIsInitial(true);
-		this.states = new States(initialState);
-		this.alphabet = new Alphabet(Grammar.EPSILON);
-		this.initialStateId = initialState.getId();
-		this.finalStatesId = new AdvancedSet<StateId>();
+		this.states = new States();		
+		this.alphabet = new Alphabet();
 		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet());
-	}
-
-	public States getStates() {
-		return this.states;
-	}
-
-	public Alphabet getAlphabet() {
-		return this.alphabet;
-	}
-	
-	public StateId getInitialStateId() {
-		return this.initialStateId;
-	}
-	
-	public State getInitialState() {
-		return this.getStates().getState(this.getInitialStateId());
-	}
-	
-	public Set<StateId> getFinalStatesId() {
-		return this.finalStatesId;
-	}
-	
-	public States getFinalStates() {
-		States finals = new States();
-		for (State state : this.getStates())
-			if (this.isFinalState(state.getId()))
-				finals.add(state);
-		return finals;
-	}
-	
-	public NonDeterministicTransitionFunction getTransitionFunction() {
-		return this.transitionFunction;
-	}
-	
-	public boolean isInitialState(StateId id) {
-		return this.getInitialStateId().equals(id);
-	}
-	
-	public boolean isFinalState(StateId id) {
-		return this.getFinalStatesId().contains(id);
-	}
-	
-	public boolean addState(State state) {
-		return this.getStates().add(state);
-	}
-	
-	public void removeState(State state) {
-		if (this.isInitialState(state.getId()))
-			return;
-		if (this.isFinalState(state.getId()))
-			this.removeFromFinalStates(state.getId());
-		this.getTransitionFunction().removeAllTransitionsForState(state);
-		this.getStates().remove(state);
-	}
-	
-	public boolean addSymbol(Character symbol) {
-		return this.getAlphabet().add(symbol);
-	}
-	
-	public void removeSymbol(Character symbol) {
-		this.getTransitionFunction().removeAllTransitionsForSymbol(symbol);
-		this.getAlphabet().remove(symbol);
-	}
-	
-	public boolean addToFinalStates(StateId id) {
-		this.getStates().getState(id).setIsFinal(true);
-		return this.getFinalStatesId().add(id);
-	}
-	
-	public void removeFromFinalStates(StateId id) {
-		this.getStates().getState(id).setIsFinal(false);
-		this.getFinalStatesId().remove(id);
-	}
-	
-	public void addTransition(State sourceState, State destinationState, Character symbol) {
-		this.getTransitionFunction().addTransition(sourceState, destinationState, symbol);
-	}
-	
-	public void removeTransition(State sState, State dState, Character symbol) {
-		this.getTransitionFunction().removeTransition(sState, dState, symbol);
-	}
+		this.addAsInitialState(initialState);
+	}	
 	
 	@Override public boolean isAccepted(String word) {
-		DeterministicFiniteAutomaton automaton = this.powersetConstruction();
-		return automaton.isAccepted(word);
+		States currentStates = new States(this.getInitialState());
+		for (Character symbol : word.toCharArray())
+			currentStates = this.getImage(currentStates, symbol);	
+		for (State state : this.getEpsilonImage(currentStates))
+			if (this.isFinalState(state))
+				return true;		
+		return false;
 	}
 	
-	public DeterministicFiniteAutomaton powersetConstruction() {
-		
-		return null;
+	public States getImage(States states, Character symbol) {
+		States images = new States();
+		for (State state : states)
+			images.addAll(this.getImage(state, symbol));	
+		return images;
+	}	
+	
+	public States getImage(State state, Character symbol) {
+		if (symbol.equals(Grammar.EPSILON))
+			return this.getEpsilonImage(state);		
+		States images = new States();
+		for (State epsilonImageState : this.getEpsilonImage(state))
+			images.addAll(this.getTransitions(epsilonImageState, symbol));
+		images.addAll(this.getEpsilonImage(images));
+		return images;
 	}
 	
-	public String toFormattedString() {
-		return this.getTransitionFunction().toFormattedString();
+	public States getEpsilonImage(States states) {
+		States images = new States();
+		for (State state : states)
+			images.addAll(this.getEpsilonImage(state));
+		return images;
+	}
+	
+	public States getEpsilonImage(State state) {
+		return this.getEpsilonImage(new States(), state);
+	}
+	
+	protected States getEpsilonImage(States images, State state) {
+		images.add(state);
+		States epsilonMoves = this.getTransitions(state, Grammar.EPSILON);
+		for (State epsilonMove : epsilonMoves)
+			if (!images.contains(epsilonMove))
+				images.addAll(this.getEpsilonImage(images, epsilonMove));
+		return images;
 	}
 	
 	@Override public String toString() {
@@ -154,27 +95,6 @@ public class TransitionGraph implements Automaton {
 				this.getInitialState() + "," + 
 				this.getFinalStates() + "," + 
 				this.getTransitionFunction() + ")";
-	}
-	
-	@Override public boolean equals(Object obj) {
-		if (this.getClass() != obj.getClass())
-			return false;
-		
-		TransitionGraph other = (TransitionGraph) obj;
-		
-		return (this.getStates().equals(other.getStates())
-				&& this.getAlphabet().equals(other.getAlphabet())
-				&& this.getInitialStateId().equals(other.getInitialState())
-				&& this.getFinalStatesId().equals(other.getFinalStates())
-				&& this.getTransitionFunction().equals(other.getTransitionFunction()));
-	}
-	
-	@Override public int hashCode() {
-		return Objects.hash(this.getStates(), 
-				this.getAlphabet(), 
-				this.getInitialStateId(), 
-				this.getFinalStatesId(), 
-				this.getTransitionFunction());
 	}	
 
 }

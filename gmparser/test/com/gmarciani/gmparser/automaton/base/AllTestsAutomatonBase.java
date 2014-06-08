@@ -29,7 +29,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	TestDeterministicFiniteAutomaton.class,
+	TestDeterministicTransitionFunction.class,
+	TestNonDeterministicTransitionFunction.class,
+	TestFiniteAutomaton.class,
 	TestTransitionGraph.class,
 	TestPushDownAutomaton.class
 })

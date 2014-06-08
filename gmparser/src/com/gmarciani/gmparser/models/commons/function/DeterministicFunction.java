@@ -23,16 +23,16 @@
 
 package com.gmarciani.gmparser.models.commons.function;
 
-import java.util.Set;
-
 import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.commons.nple.Triple;
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable<Y>, Z extends Comparable<Z>> 
-	extends NonDeterministicFunction<X, Y, Z> {
+public class DeterministicFunction<X extends Comparable<X>, 
+								   Y extends Comparable<Y>, 
+								   Z extends Comparable<Z>> 
+								   extends AbstractFunction<X, Y, Z> {
 	
-	public DeterministicFunction(Set<X> domainX, Set<Y> domainY) {
+	public DeterministicFunction(GSet<X> domainX, GSet<Y> domainY) {
 		super(domainX, domainY);
 	}
 
@@ -41,26 +41,22 @@ public class DeterministicFunction<X extends Comparable<X>, Y extends Comparable
 	}
 	
 	@Override public boolean add(X x, Y y, Z z) {
-		super.removeAllForXY(x, y);
+		this.removeAllForXY(x, y);
 		this.getDomainX().add(x);
 		this.getDomainY().add(y);
 		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
-		return this.getSet().add(triple);
-	}
-	
-	public boolean remove(X x, Y y) {
-		return super.removeAllForXY(x, y);
+		return this.getFunction().add(triple);
 	}
 	
 	public Z get(X x, Y y) {
-		AdvancedSet<Triple<X, Y, Z>> values = super.getAllForXY(x, y);
+		GSet<Triple<X, Y, Z>> values = super.getAllForXY(x, y);
 		if (values.isEmpty())
 			return null;
 		
 		return values.first().getZ();
 	}
 	
-	@Override public String toFormattedString() {
+	@Override public String toFormattedFunction() {
 		String table = null;
 		if (this.getDomainX().isEmpty()
 				&& this.getDomainY().isEmpty()) {

@@ -4,23 +4,23 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-public class AdvancedSet<T> extends ConcurrentSkipListSet<T> {
+public class GSet<T> extends ConcurrentSkipListSet<T> {
 
 	private static final long serialVersionUID = 5790342796025820425L;
 	
-	public AdvancedSet() {
+	public GSet() {
 		super();
 	}
 	
 	@SafeVarargs
-	public AdvancedSet(T ... members) {
+	public GSet(T ... members) {
 		super();
 		for (T member : members)
 			this.add(member);
 	}
 	
 	@SafeVarargs
-	public AdvancedSet(T[] ... membersArray) {
+	public GSet(T[] ... membersArray) {
 		super();
 		for (T[] members : membersArray)
 			for (T member : members)
@@ -28,7 +28,7 @@ public class AdvancedSet<T> extends ConcurrentSkipListSet<T> {
 	}
 
 	@SafeVarargs
-	public AdvancedSet(Collection<T> ... sets) {
+	public GSet(Collection<T> ... sets) {
 		super();
 		for (Collection<T> set : sets)
 			this.addAll(set);

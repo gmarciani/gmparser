@@ -26,41 +26,57 @@ package com.gmarciani.gmparser.models.automaton.function;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.commons.function.DeterministicFunction;
-import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class DeterministicTransitionFunction extends DeterministicFunction<State, Character, State> {
+public class DeterministicTransitionFunction extends DeterministicFunction<State, Character, State> 
+											 implements TransitionFunction {
 
 	public DeterministicTransitionFunction(States states, Alphabet alphabet) {
 		super(states, alphabet);
-		for (State state : states)
-			this.addTrivialEpsilonMove(state);
 	}
 	
-	public void addTransition(State sState, State dState, Character symbol) {
-		super.add(sState, symbol, dState);
-		this.addTrivialEpsilonMove(sState);
-		this.addTrivialEpsilonMove(dState);
+	public DeterministicTransitionFunction() {
+		super();
 	}
 
-	public void removeTransition(State sState, State dState, Character symbol) {
-		super.remove(sState, symbol, dState);
+	@Override public boolean addTransition(State sState, State dState, Character symbol) {
+		return super.add(sState, symbol, dState);
 	}
 
-	public void removeAllTransitionsForState(State state) {
-		super.removeAllForX(state);
+	@Override public boolean removeTransition(State sState, State dState, Character symbol) {
+		return super.remove(sState, symbol, dState);
 	}
 
-	public void removeAllTransitionsForSymbol(Character symbol) {
-		super.removeAllForY(symbol);
-	}	
+	@Override public boolean removeAllTransitionsForState(State state) {
+		return super.removeAllForX(state);
+	}
+
+	@Override public boolean removeAllTransitionsForSymbol(Character symbol) {
+		return super.removeAllForY(symbol);
+	}
+
+	@Override public boolean removeAllTransitionsForStateSymbol(State state, Character symbol) {
+		return super.removeAllForXY(state, symbol);
+	}
 	
-	public void removeAllTransitionsForStateSymbol(State state, Character symbol) {
-		super.removeAllForXY(state, symbol);
+	@Override public State getTransition(State state, Character symbol) {
+		return super.get(state, symbol);
 	}
 	
-	public void addTrivialEpsilonMove(State state) {
-		super.add(state, Grammar.EPSILON, state);
+	@Override public States getTransitions(State state, Character symbol) {
+		States transitions = new States();
+		for (Triple<State, Character, State> triple : super.getAllForXY(state, symbol))
+			transitions.add(triple.getZ());
+		return transitions;
+	}
+
+	@Override public boolean containsTransition(State sState, State dState, Character symbol) {
+		return super.containsXYZ(sState, symbol, dState);
+	}
+
+	@Override public String toFormattedTransitionFunction() {
+		return super.toFormattedFunction();
 	}
 
 }

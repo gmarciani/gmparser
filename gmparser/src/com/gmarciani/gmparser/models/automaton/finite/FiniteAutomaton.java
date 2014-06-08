@@ -21,41 +21,43 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton;
+package com.gmarciani.gmparser.models.automaton.finite;
 
+import com.gmarciani.gmparser.models.automaton.AbstractAutomaton;
+import com.gmarciani.gmparser.models.automaton.Automaton;
+import com.gmarciani.gmparser.models.automaton.function.DeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public interface Automaton {
+public class FiniteAutomaton extends AbstractAutomaton 
+							 implements Automaton {
 	
-	public States getStates();
-	public Alphabet getAlphabet();
-	public State getInitialState();
-	public States getFinalStates();
+	public FiniteAutomaton(State initialState) {
+		this.states = new States();
+		this.alphabet = new Alphabet();
+		this.transitionFunction = new DeterministicTransitionFunction(this.getStates(), this.getAlphabet());
+		this.addAsInitialState(initialState);
+	}
 	
-	public boolean addState(State state);
-	public boolean addAsInitialState(State state);
-	public boolean addAsFinalState(State state);
-	public boolean addAsInitialFinalState(State state);
-	public boolean removeState(State state);
-	public boolean containsState(State state);
-	public boolean removeFromFinalStates(State state);	
-	public boolean isInitialState(State state);
-	public boolean isFinalState(State state);
+	@Override public boolean isAccepted(String word) {
+		State currentState = this.getInitialState();
+		for (Character symbol : word.toCharArray()) {
+			currentState = this.getTransitionFunction().getTransition(currentState, symbol);
+			if (currentState == null)
+				return false;
+		}
+			
+		return currentState.isFinal();
+	}
 	
-	public boolean addSymbol(Character symbol);	
-	public boolean removeSymbol(Character symbol);
-	public boolean containsSymbol(Character symbol);
-	
-	public boolean addTransition(State sState, State dState, Character symbol);
-	public boolean removeTransition(State sState, State dState, Character symbol);	
-	public States getTransitions(State sState, Character symbol);
-	public State getTransition(State sState, Character symbol);
-	public boolean containsTransition(State sState, State dState, Character symbol);
-	
-	public boolean isAccepted(String word);
-	
-	public String toFormattedAutomaton();
+	@Override public String toString() {
+		return "FiniteAutomaton(" + 
+				this.getStates() + "," + 
+				this.getAlphabet() + "," + 
+				this.getInitialState() + "," + 
+				this.getFinalStates() + "," + 
+				this.getTransitionFunction() + ")";
+	}
 
 }

@@ -6,33 +6,33 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class TestAdvancedSet {
+public class TestGSet {
 
 	@Test public void create() {
 		Character symbols[] = {'a', 'b', 'c'};
 		Character pSymbolsOne[] = {'a'};
 		Character pSymbolsTwo[] = {'b', 'c'};
 		
-		Set<Character> setOne = new AdvancedSet<Character>();
+		Set<Character> setOne = new GSet<Character>();
 		setOne.add('a');
 		setOne.add('b');
 		setOne.add('c');		
 		
-		Set<Character> setTwo = new AdvancedSet<Character>('a');
+		Set<Character> setTwo = new GSet<Character>('a');
 		setTwo.add('b');
 		setTwo.add('c');
 		
-		Set<Character> setThree = new AdvancedSet<Character>('a', 'b', 'c');
+		Set<Character> setThree = new GSet<Character>('a', 'b', 'c');
 		
-		Set<Character> setFour = new AdvancedSet<Character>(symbols);		
+		Set<Character> setFour = new GSet<Character>(symbols);		
 		
-		Set<Character> setFive = new AdvancedSet<Character>(pSymbolsOne, pSymbolsTwo);
+		Set<Character> setFive = new GSet<Character>(pSymbolsOne, pSymbolsTwo);
 		
-		Set<Character> setSix = new AdvancedSet<Character>(setOne, setTwo, setThree);
+		Set<Character> setSix = new GSet<Character>(setOne, setTwo, setThree);
 		
-		Set<Character> setSeven = new AdvancedSet<Character>(setOne);
+		Set<Character> setSeven = new GSet<Character>(setOne);
 		
 		assertTrue("Uncorrect AdvancedSet creation" , 
 				setOne.equals(setTwo)

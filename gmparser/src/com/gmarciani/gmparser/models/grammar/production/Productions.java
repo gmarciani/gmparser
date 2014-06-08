@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -45,7 +45,7 @@ import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
  * @author Giacomo Marciani
  * @version 1.0
  */
-public class Productions extends AdvancedSet<Production> {
+public class Productions extends GSet<Production> {
 
 	private static final long serialVersionUID = 9062194540654802369L;
 	

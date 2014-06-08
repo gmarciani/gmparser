@@ -21,17 +21,39 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.commons;
+package com.gmarciani.gmparser.models.commons.function;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
-@RunWith(Suite.class)
-@SuiteClasses({ 
-	TestGSet.class, 
-	TestNonDeterministicFunction.class,
-	TestDeterministicFunction.class})
-public class AllTestsCommons {
-
+public interface Function<X extends Comparable<X>, 
+						  Y extends Comparable<Y>, 
+						  Z extends Comparable<Z>> {
+	
+	public GSet<X> getDomainX();
+	public GSet<Y> getDomainY();
+	public GSet<Z> getCodomain();
+	public int getDomainXCardinality();
+	public int getDomainYCardinality();
+	public int getCodomainCardinality();
+	
+	public boolean add(X x, Y y, Z z);
+	
+	public boolean remove(X x, Y y, Z z);
+	public boolean removeAllForXY(X x, Y y);	
+	public boolean removeAllForX(X x);	
+	public boolean removeAllForY(Y y);
+	
+	public GSet<Triple<X, Y, Z>> getAllForXY(X x, Y y);	
+	public GSet<Triple<X, Y, Z>> getAllForX(X x);	
+	public GSet<Triple<X, Y, Z>> getAllForY(Y y);
+	
+	public boolean containsXYZ(X x, Y y, Z z);
+	public boolean containsXY(X x, Y y);
+	public boolean containsX(X x);
+	public boolean containsY(Y y);
+	public boolean containsZ(Z z);	
+	
+	public String toFormattedFunction();
+	
 }

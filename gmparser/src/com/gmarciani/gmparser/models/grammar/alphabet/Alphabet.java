@@ -25,9 +25,9 @@ package com.gmarciani.gmparser.models.grammar.alphabet;
 
 import java.util.Objects;
 
-import com.gmarciani.gmparser.models.commons.set.AdvancedSet;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class Alphabet extends AdvancedSet<Character> {
+public class Alphabet extends GSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
