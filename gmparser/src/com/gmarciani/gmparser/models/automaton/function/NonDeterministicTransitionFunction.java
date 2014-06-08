@@ -61,7 +61,7 @@ public class NonDeterministicTransitionFunction extends NonDeterministicFunction
 	}
 	
 	@Override public State getTransition(State state, Character symbol) {
-		return this.getTransitions(state, symbol).first();
+		return this.getTransitions(state, symbol).getFirst();
 	}
 	
 	@Override public States getTransitions(State state, Character symbol) {

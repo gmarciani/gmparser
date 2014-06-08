@@ -1,5 +1,6 @@
 package com.gmarciani.gmparser.models.automaton.state;
 
+import java.util.Set;
 import java.util.TreeSet;
 
 public class StateId extends TreeSet<Integer> implements Comparable<StateId> {
@@ -10,6 +11,18 @@ public class StateId extends TreeSet<Integer> implements Comparable<StateId> {
 		super();
 		this.add(id);
 	}
+	
+	public StateId(Integer ... ids) {
+		super();
+		for (Integer id : ids)
+			this.add(id);
+	}
+	
+	public StateId(Set<StateId> ids) {
+		super();
+		for (StateId id : ids)
+			this.addAll(id);
+	}
 
 	@Override public int compareTo(StateId other) {
 		int byLength = Integer.valueOf(this.size()).compareTo(Integer.valueOf(other.size()));
@@ -19,6 +32,16 @@ public class StateId extends TreeSet<Integer> implements Comparable<StateId> {
 					if (thisId.compareTo(otherId) != 0)
 						return thisId.compareTo(otherId);
 		return byLength;
+	}
+	
+	@Override public boolean equals(Object obj) {
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		StateId other = (StateId) obj;
+		
+		return (this.containsAll(other)
+				&& other.containsAll(this));
 	}
 
 }

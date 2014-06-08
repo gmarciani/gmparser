@@ -283,7 +283,7 @@ public class GrammarTransformer {
 					
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					Character terminal = production.getRight().getTerminalAlphabet().first();
+					Character terminal = production.getRight().getTerminalAlphabet().getFirst();
 					
 					Production promotionProductionOne = new Production(production.getLeft().getValue(), production.getRight().getValue().replace(terminal, newNonTerminal));
 					

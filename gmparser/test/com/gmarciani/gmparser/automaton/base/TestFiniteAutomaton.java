@@ -21,25 +21,27 @@
  *	SOFTWARE.
 */
 
-
 package com.gmarciani.gmparser.automaton.base;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestFiniteAutomaton {
-
-	@Test public void create() {
+	
+	private FiniteAutomaton createFiniteAutomaton() {
 		State stateOne = new State(1);
 		State stateTwo = new State(2);
 		State stateThree = new State(3);
 		
-		Automaton automaton = new FiniteAutomaton(stateOne);
+		FiniteAutomaton automaton = new FiniteAutomaton(stateOne);
 		automaton.addState(stateTwo);
 		automaton.addAsFinalState(stateThree);
 		
@@ -47,23 +49,34 @@ public class TestFiniteAutomaton {
 		automaton.addTransition(stateTwo, stateOne, 'b');
 		automaton.addTransition(stateTwo, stateThree, 'c');
 		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree));
+		return automaton;
+	}
+
+	@Test @Before public void create() {
+		FiniteAutomaton automaton = this.createFiniteAutomaton();
 		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
+		State stateOne = automaton.getStates().getState(1);
+		State stateTwo = automaton.getStates().getState(2);
+		State stateThree = automaton.getStates().getState(3);
 		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateThree));
+		States expectedStates = new States(stateOne, stateTwo, stateThree);
+		State expectedInitialState = stateOne;
+		States expectedFinalStates = new States(stateThree);
+		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c');
 		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c'));
+		assertEquals("Uncorrect finite-automaton creation (states)", 
+				expectedStates, automaton.getStates());
 		
-		assertTrue("Uncorrect creation (missing transitions)", 
+		assertEquals("Uncorrect finite-automaton creation (initial state)",
+				expectedInitialState, automaton.getInitialState());
+		
+		assertEquals("Uncorrect finite-automaton creation (final states)",
+				expectedFinalStates, automaton.getFinalStates());
+		
+		assertEquals("Uncorrect finite-automaton creation (alphabet)", 
+				expectedAlphabet, automaton.getAlphabet());
+		
+		assertTrue("Uncorrect finite-automaton creation (missing transitions)", 
 				automaton.containsTransition(stateOne, stateTwo, 'a')
 				&& automaton.containsTransition(stateTwo, stateOne, 'b')
 				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
@@ -81,61 +94,31 @@ public class TestFiniteAutomaton {
 		
 		automaton.addAsFinalState(stateThree);
 		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree));
+		States expectedStates = new States(stateOne, stateTwo, stateThree);
+		State expectedInitialState = stateOne;
+		States expectedFinalStates = new States(stateThree);
+		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c');
 		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
+		assertEquals("Uncorrect finite-automaton creation (states)", 
+				expectedStates, automaton.getStates());
 		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateThree));
+		assertEquals("Uncorrect finite-automaton creation (initial state)",
+				expectedInitialState, automaton.getInitialState());
 		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c'));
+		assertEquals("Uncorrect finite-automaton creation (final states)",
+				expectedFinalStates, automaton.getFinalStates());
 		
-		assertTrue("Uncorrect creation (missing transitions)", 
+		assertEquals("Uncorrect finite-automaton creation (alphabet)", 
+				expectedAlphabet, automaton.getAlphabet());
+		
+		assertTrue("Uncorrect finite-automaton creation (missing transitions)", 
 				automaton.containsTransition(stateOne, stateTwo, 'a')
 				&& automaton.containsTransition(stateTwo, stateOne, 'b')
 				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
 	}
 	
 	@Test public void accept() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		Automaton automaton = new FiniteAutomaton(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addAsFinalState(stateThree);
-		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');		
-		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree));
-		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
-		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateThree));
-		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c'));
-		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
+		FiniteAutomaton automaton = this.createFiniteAutomaton();
 		
 		String wordToAccept[] = {"ac", "abac", "ababac", "abababac", "ababababac"};
 		String wordToNotAccept[] = {"", "c", "a", "ab", "abc"};
@@ -150,38 +133,7 @@ public class TestFiniteAutomaton {
 	}
 	
 	@Test public void represent() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		Automaton automaton = new FiniteAutomaton(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addAsFinalState(stateThree);
-		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree));
-		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
-		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateThree));
-		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c'));
-		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
+		FiniteAutomaton automaton = this.createFiniteAutomaton();
 		
 		System.out.println(automaton);
 		System.out.println(automaton.toFormattedAutomaton());

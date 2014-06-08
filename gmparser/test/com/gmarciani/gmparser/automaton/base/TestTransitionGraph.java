@@ -23,233 +23,152 @@
 
 package com.gmarciani.gmparser.automaton.base;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestTransitionGraph {
+	
+	private TransitionGraph createTransitionGraph() {
+		State stateOne = new State(1);
+		State stateTwo = new State(2);
+		State stateThree = new State(3);
+		State stateFour = new State(4);
+		
+		TransitionGraph graph = new TransitionGraph(stateOne);		
+		graph.addState(stateTwo);
+		graph.addState(stateThree);
+		graph.addAsFinalState(stateFour);
+		
+		graph.addTransition(stateOne, stateTwo, 'a');
+		graph.addTransition(stateOne, stateTwo, Grammar.EPSILON);
+		graph.addTransition(stateTwo, stateOne, 'b');
+		graph.addTransition(stateTwo, stateThree, 'c');
+		graph.addTransition(stateTwo, stateFour, Grammar.EPSILON);
+		graph.addTransition(stateThree, stateFour, 'c');
+		graph.addTransition(stateFour, stateOne, 'd');
+		graph.addTransition(stateFour, stateTwo, Grammar.EPSILON);
+		
+		return graph;
+	}
 
-	@Test public void create() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
+	@Test @Before public void create() {
+		TransitionGraph graph = this.createTransitionGraph();
 		
-		TransitionGraph automaton = new TransitionGraph(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addState(stateThree);
-		automaton.addAsFinalState(stateFour);
+		State stateOne = graph.getStates().getState(1);
+		State stateTwo = graph.getStates().getState(2);
+		State stateThree = graph.getStates().getState(3);
+		State stateFour = graph.getStates().getState(4);
 		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		automaton.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		automaton.addTransition(stateThree, stateFour, 'c');
-		automaton.addTransition(stateFour, stateOne, 'd');
-		automaton.addTransition(stateFour, stateTwo, Grammar.EPSILON);
+		States expectedStates = new States(stateOne, stateTwo, stateThree, stateFour);
+		State expectedInitialState = stateOne;
+		States expectedFinalStates = new States(stateFour);
+		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON); //remove epsilon
 		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree)
-				&& automaton.containsState(stateFour));
+		assertEquals("Uncorrect transition-graph creation (states)", 
+				expectedStates, graph.getStates());
 		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
+		assertEquals("Uncorrect transition-graph creation (initial state)",
+				expectedInitialState, graph.getInitialState());
 		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateFour));
+		assertEquals("Uncorrect transition-graph creation (final states)",
+				expectedFinalStates, graph.getFinalStates());
 		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c')
-				&& automaton.containsSymbol('d'));
+		assertEquals("Uncorrect transition-graph creation (alphabet)", 
+				expectedAlphabet, graph.getAlphabet());
 		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c')
-				&& automaton.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& automaton.containsTransition(stateThree, stateFour, 'c')
-				&& automaton.containsTransition(stateFour, stateOne, 'd')
-				&& automaton.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
+		assertTrue("Uncorrect transition-graph creation (missing transitions)", 
+				graph.containsTransition(stateOne, stateTwo, 'a')
+				&& graph.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
+				&& graph.containsTransition(stateTwo, stateOne, 'b')
+				&& graph.containsTransition(stateTwo, stateThree, 'c')
+				&& graph.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
+				&& graph.containsTransition(stateThree, stateFour, 'c')
+				&& graph.containsTransition(stateFour, stateOne, 'd')
+				&& graph.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
 	}
 	
-	@Test public void createWithTransitions() {
+	@Test public void createByTransitions() {
 		State stateOne = new State(1);
 		State stateTwo = new State(2);
 		State stateThree = new State(3);
 		State stateFour = new State(4);
 		
-		TransitionGraph automaton = new TransitionGraph(stateOne);		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		automaton.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		automaton.addTransition(stateThree, stateFour, 'c');
-		automaton.addTransition(stateFour, stateOne, 'd');
-		automaton.addTransition(stateFour, stateTwo, Grammar.EPSILON);
+		TransitionGraph graph = new TransitionGraph(stateOne);	
 		
-		automaton.addAsFinalState(stateFour);
+		graph.addTransition(stateOne, stateTwo, 'a');
+		graph.addTransition(stateOne, stateTwo, Grammar.EPSILON);
+		graph.addTransition(stateTwo, stateOne, 'b');
+		graph.addTransition(stateTwo, stateThree, 'c');
+		graph.addTransition(stateTwo, stateFour, Grammar.EPSILON);
+		graph.addTransition(stateThree, stateFour, 'c');
+		graph.addTransition(stateFour, stateOne, 'd');
+		graph.addTransition(stateFour, stateTwo, Grammar.EPSILON);
 		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree)
-				&& automaton.containsState(stateFour));
+		graph.addAsFinalState(stateFour);		
 		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
+		States expectedStates = new States(stateOne, stateTwo, stateThree, stateFour);
+		State expectedInitialState = stateOne;
+		States expectedFinalStates = new States(stateFour);
+		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON); // remove epsilon
 		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateFour));
+		assertEquals("Uncorrect transition-graph creation (states)", 
+				expectedStates, graph.getStates());
 		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c')
-				&& automaton.containsSymbol('d'));
+		assertEquals("Uncorrect transition-graph creation (initial state)",
+				expectedInitialState, graph.getInitialState());
 		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c')
-				&& automaton.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& automaton.containsTransition(stateThree, stateFour, 'c')
-				&& automaton.containsTransition(stateFour, stateOne, 'd')
-				&& automaton.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
-	}
-	
-	@Test public void represent() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
+		assertEquals("Uncorrect transition-graph creation (final states)",
+				expectedFinalStates, graph.getFinalStates());
 		
-		TransitionGraph automaton = new TransitionGraph(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addState(stateThree);
-		automaton.addAsFinalState(stateFour);
+		assertEquals("Uncorrect transition-graph creation (alphabet)", 
+				expectedAlphabet, graph.getAlphabet());
 		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		automaton.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		automaton.addTransition(stateThree, stateFour, 'c');
-		automaton.addTransition(stateFour, stateOne, 'd');
-		automaton.addTransition(stateFour, stateTwo, Grammar.EPSILON);
-		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree)
-				&& automaton.containsState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
-		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c')
-				&& automaton.containsSymbol('d'));
-		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c')
-				&& automaton.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& automaton.containsTransition(stateThree, stateFour, 'c')
-				&& automaton.containsTransition(stateFour, stateOne, 'd')
-				&& automaton.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
-		
-		System.out.println(automaton);
-		System.out.println(automaton.toFormattedAutomaton());
-	}
+		assertTrue("Uncorrect transition-graph creation (missing transitions)", 
+				graph.containsTransition(stateOne, stateTwo, 'a')
+				&& graph.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
+				&& graph.containsTransition(stateTwo, stateOne, 'b')
+				&& graph.containsTransition(stateTwo, stateThree, 'c')
+				&& graph.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
+				&& graph.containsTransition(stateThree, stateFour, 'c')
+				&& graph.containsTransition(stateFour, stateOne, 'd')
+				&& graph.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
+	}	
 	
 	@Test public void computeImages() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
+		TransitionGraph graph = this.createTransitionGraph();
 		
-		TransitionGraph automaton = new TransitionGraph(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addState(stateThree);
-		automaton.addAsFinalState(stateFour);
+		State stateOne = graph.getStates().getState(1);
+		State stateTwo = graph.getStates().getState(2);
+		State stateThree = graph.getStates().getState(3);
+		State stateFour = graph.getStates().getState(4);
 		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		automaton.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		automaton.addTransition(stateThree, stateFour, 'c');
-		automaton.addTransition(stateFour, stateOne, 'd');
-		automaton.addTransition(stateFour, stateTwo, Grammar.EPSILON);
-		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree)
-				&& automaton.containsState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
-		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c')
-				&& automaton.containsSymbol('d'));
-		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c')
-				&& automaton.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& automaton.containsTransition(stateThree, stateFour, 'c')
-				&& automaton.containsTransition(stateFour, stateOne, 'd')
-				&& automaton.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
-		
-		States imageOneA = new States(2, 4);
-		States imageOneB = new States(1, 2, 4);
-		States imageOneC = new States(3);
-		States imageOneD = new States(1, 2, 4);
+		States imageOneA = new States(stateTwo, stateFour);
+		States imageOneB = new States(stateOne, stateTwo, stateFour);
+		States imageOneC = new States(stateThree);
+		States imageOneD = new States(stateOne, stateTwo, stateFour);
 		
 		States imageTwoA = new States();
-		States imageTwoB = new States(1, 2, 4);
-		States imageTwoC = new States(3);
-		States imageTwoD = new States(1, 2, 4);
+		States imageTwoB = new States(stateOne, stateTwo, stateFour);
+		States imageTwoC = new States(stateThree);
+		States imageTwoD = new States(stateOne, stateTwo, stateFour);
 		
 		States imageThreeA = new States();
 		States imageThreeB = new States();
-		States imageThreeC = new States(2, 4);
+		States imageThreeC = new States(stateTwo, stateFour);
 		States imageThreeD = new States();
 		
 		States imageFourA = new States();
-		States imageFourB = new States(1, 2, 4);
-		States imageFourC = new States(3);
-		States imageFourD = new States(1, 2, 4);
+		States imageFourB = new States(stateOne, stateTwo, stateFour);
+		States imageFourC = new States(stateThree);
+		States imageFourD = new States(stateOne, stateTwo, stateFour);
 		
 		States imageOneTwoA = new States(imageOneA, imageTwoA);
 		States imageOneTwoB = new States(imageOneB, imageTwoB);
@@ -279,111 +198,94 @@ public class TestTransitionGraph {
 		States imageThreeFourA = new States(imageThreeA, imageFourA);
 		States imageThreeFourB = new States(imageThreeB, imageFourB);
 		States imageThreeFourC = new States(imageThreeC, imageFourC);
-		States imageThreeFourD = new States(imageThreeD, imageFourD);
+		States imageThreeFourD = new States(imageThreeD, imageFourD);		
 		
-		assertTrue("Uncorrect state images computation", 
-				automaton.getImage(stateOne, 'a').equals(imageOneA)
-				&& automaton.getImage(stateOne, 'b').equals(imageOneB)
-				&& automaton.getImage(stateOne, 'c').equals(imageOneC)
-				&& automaton.getImage(stateOne, 'd').equals(imageOneD)
-				&& automaton.getImage(stateTwo, 'a').equals(imageTwoA)
-				&& automaton.getImage(stateTwo, 'b').equals(imageTwoB)
-				&& automaton.getImage(stateTwo, 'c').equals(imageTwoC)
-				&& automaton.getImage(stateTwo, 'd').equals(imageTwoD)
-				&& automaton.getImage(stateThree, 'a').equals(imageThreeA)
-				&& automaton.getImage(stateThree, 'b').equals(imageThreeB)
-				&& automaton.getImage(stateThree, 'c').equals(imageThreeC)
-				&& automaton.getImage(stateThree, 'd').equals(imageThreeD)
-				&& automaton.getImage(stateFour, 'a').equals(imageFourA)
-				&& automaton.getImage(stateFour, 'b').equals(imageFourB)
-				&& automaton.getImage(stateFour, 'c').equals(imageFourC)
-				&& automaton.getImage(stateFour, 'd').equals(imageFourD));
+		assertTrue("Uncorrect transition-graph state images computation", 
+				graph.getImage(stateOne, 'a').equals(imageOneA)
+				&& graph.getImage(stateOne, 'b').equals(imageOneB)
+				&& graph.getImage(stateOne, 'c').equals(imageOneC)
+				&& graph.getImage(stateOne, 'd').equals(imageOneD)
+				&& graph.getImage(stateTwo, 'a').equals(imageTwoA)
+				&& graph.getImage(stateTwo, 'b').equals(imageTwoB)
+				&& graph.getImage(stateTwo, 'c').equals(imageTwoC)
+				&& graph.getImage(stateTwo, 'd').equals(imageTwoD)
+				&& graph.getImage(stateThree, 'a').equals(imageThreeA)
+				&& graph.getImage(stateThree, 'b').equals(imageThreeB)
+				&& graph.getImage(stateThree, 'c').equals(imageThreeC)
+				&& graph.getImage(stateThree, 'd').equals(imageThreeD)
+				&& graph.getImage(stateFour, 'a').equals(imageFourA)
+				&& graph.getImage(stateFour, 'b').equals(imageFourB)
+				&& graph.getImage(stateFour, 'c').equals(imageFourC)
+				&& graph.getImage(stateFour, 'd').equals(imageFourD));
 		
-		assertTrue("Uncorrect states images computation",
-				automaton.getImage(new States(stateOne, stateTwo), 'a').equals(imageOneTwoA)
-				&& automaton.getImage(new States(stateOne, stateTwo), 'b').equals(imageOneTwoB)
-				&& automaton.getImage(new States(stateOne, stateTwo), 'c').equals(imageOneTwoC)
-				&& automaton.getImage(new States(stateOne, stateTwo), 'd').equals(imageOneTwoD)
-				&& automaton.getImage(new States(stateOne, stateThree), 'a').equals(imageOneThreeA)
-				&& automaton.getImage(new States(stateOne, stateThree), 'b').equals(imageOneThreeB)
-				&& automaton.getImage(new States(stateOne, stateThree), 'c').equals(imageOneThreeC)
-				&& automaton.getImage(new States(stateOne, stateThree), 'd').equals(imageOneThreeD)
-				&& automaton.getImage(new States(stateOne, stateFour), 'a').equals(imageOneFourA)
-				&& automaton.getImage(new States(stateOne, stateFour), 'b').equals(imageOneFourB)
-				&& automaton.getImage(new States(stateOne, stateFour), 'c').equals(imageOneFourC)
-				&& automaton.getImage(new States(stateOne, stateFour), 'd').equals(imageOneFourD)
-				&& automaton.getImage(new States(stateTwo, stateThree), 'a').equals(imageTwoThreeA)
-				&& automaton.getImage(new States(stateTwo, stateThree), 'b').equals(imageTwoThreeB)
-				&& automaton.getImage(new States(stateTwo, stateThree), 'c').equals(imageTwoThreeC)
-				&& automaton.getImage(new States(stateTwo, stateThree), 'd').equals(imageTwoThreeD)
-				&& automaton.getImage(new States(stateTwo, stateFour), 'a').equals(imageTwoFourA)
-				&& automaton.getImage(new States(stateTwo, stateFour), 'b').equals(imageTwoFourB)
-				&& automaton.getImage(new States(stateTwo, stateFour), 'c').equals(imageTwoFourC)
-				&& automaton.getImage(new States(stateTwo, stateFour), 'd').equals(imageTwoFourD)
-				&& automaton.getImage(new States(stateThree, stateFour), 'a').equals(imageThreeFourA)
-				&& automaton.getImage(new States(stateThree, stateFour), 'b').equals(imageThreeFourB)
-				&& automaton.getImage(new States(stateThree, stateFour), 'c').equals(imageThreeFourC)
-				&& automaton.getImage(new States(stateThree, stateFour), 'd').equals(imageThreeFourD));
+		assertTrue("Uncorrect transition-graph states images computation",
+				graph.getImage(new States(stateOne, stateTwo), 'a').equals(imageOneTwoA)
+				&& graph.getImage(new States(stateOne, stateTwo), 'b').equals(imageOneTwoB)
+				&& graph.getImage(new States(stateOne, stateTwo), 'c').equals(imageOneTwoC)
+				&& graph.getImage(new States(stateOne, stateTwo), 'd').equals(imageOneTwoD)
+				&& graph.getImage(new States(stateOne, stateThree), 'a').equals(imageOneThreeA)
+				&& graph.getImage(new States(stateOne, stateThree), 'b').equals(imageOneThreeB)
+				&& graph.getImage(new States(stateOne, stateThree), 'c').equals(imageOneThreeC)
+				&& graph.getImage(new States(stateOne, stateThree), 'd').equals(imageOneThreeD)
+				&& graph.getImage(new States(stateOne, stateFour), 'a').equals(imageOneFourA)
+				&& graph.getImage(new States(stateOne, stateFour), 'b').equals(imageOneFourB)
+				&& graph.getImage(new States(stateOne, stateFour), 'c').equals(imageOneFourC)
+				&& graph.getImage(new States(stateOne, stateFour), 'd').equals(imageOneFourD)
+				&& graph.getImage(new States(stateTwo, stateThree), 'a').equals(imageTwoThreeA)
+				&& graph.getImage(new States(stateTwo, stateThree), 'b').equals(imageTwoThreeB)
+				&& graph.getImage(new States(stateTwo, stateThree), 'c').equals(imageTwoThreeC)
+				&& graph.getImage(new States(stateTwo, stateThree), 'd').equals(imageTwoThreeD)
+				&& graph.getImage(new States(stateTwo, stateFour), 'a').equals(imageTwoFourA)
+				&& graph.getImage(new States(stateTwo, stateFour), 'b').equals(imageTwoFourB)
+				&& graph.getImage(new States(stateTwo, stateFour), 'c').equals(imageTwoFourC)
+				&& graph.getImage(new States(stateTwo, stateFour), 'd').equals(imageTwoFourD)
+				&& graph.getImage(new States(stateThree, stateFour), 'a').equals(imageThreeFourA)
+				&& graph.getImage(new States(stateThree, stateFour), 'b').equals(imageThreeFourB)
+				&& graph.getImage(new States(stateThree, stateFour), 'c').equals(imageThreeFourC)
+				&& graph.getImage(new States(stateThree, stateFour), 'd').equals(imageThreeFourD));
 	}
 	
 	@Test public void accept() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
-		
-		TransitionGraph automaton = new TransitionGraph(stateOne);
-		automaton.addState(stateTwo);
-		automaton.addState(stateThree);
-		automaton.addAsFinalState(stateFour);
-		
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
-		automaton.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		automaton.addTransition(stateThree, stateFour, 'c');
-		automaton.addTransition(stateFour, stateOne, 'd');
-		automaton.addTransition(stateFour, stateTwo, Grammar.EPSILON);
-		
-		assertTrue("Uncorrect creation (missing states)", 
-				automaton.containsState(stateOne)
-				&& automaton.containsState(stateTwo)
-				&& automaton.containsState(stateThree)
-				&& automaton.containsState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing initial state)",
-				automaton.isInitialState(stateOne));
-		
-		assertTrue("Uncorrect creation (missing final states)",
-				automaton.isFinalState(stateFour));
-		
-		assertTrue("Uncorrect creation (missing symbols)", 
-				automaton.containsSymbol('a')
-				&& automaton.containsSymbol('b')
-				&& automaton.containsSymbol('c')
-				&& automaton.containsSymbol('d'));
-		
-		assertTrue("Uncorrect creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c')
-				&& automaton.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& automaton.containsTransition(stateThree, stateFour, 'c')
-				&& automaton.containsTransition(stateFour, stateOne, 'd')
-				&& automaton.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
+		TransitionGraph graph = this.createTransitionGraph();
 		
 		String wordToAccept[] = {"", "b", "d", "bdbbdd", "a", "ab", "ad", "adba", "abdbbddba", "abadacc", "bdbbdda", "bdbbddababadadabada", "cc", "cccc", "ccccbadabddcc"};
 		String wordToNotAccept[] = {"abcd", "ababac", "adadac", "cababab", "aaabbcab"};
 		
 		for (String word : wordToAccept)
 			assertTrue("Uncorrect acceptance (should be accepted: " + word + ")", 
-					automaton.isAccepted(word));
+					graph.isAccepted(word));
 		
 		for (String word : wordToNotAccept)
 			assertFalse("Uncorrect acceptance (should not be accepted: " + word + ")", 
-					automaton.isAccepted(word));
+					graph.isAccepted(word));
+	}
+	
+	@Test public void acceptWithPowerset() {
+		TransitionGraph graph = this.createTransitionGraph();
+		
+		String wordToAccept[] = {"", "b", "d", "bdbbdd", "a", "ab", "ad", "adba", "abdbbddba", "abadacc", "bdbbdda", "bdbbddababadadabada", "cc", "cccc", "ccccbadabddcc"};
+		String wordToNotAccept[] = {"abcd", "ababac", "adadac", "cababab", "aaabbcab"};
+		
+		for (String word : wordToAccept) {
+			boolean acceptedByTransitionGraph = graph.isAccepted(word);
+			boolean acceptedByFiniteAutomaton = graph.powersetConstruction().isAccepted(word);
+			assertTrue("Uncorrect acceptance with Powerset Construction (should be accepted: " + word + "); transition-graph:" + acceptedByTransitionGraph + ", finite-automaton:" + acceptedByFiniteAutomaton, 
+					acceptedByTransitionGraph && acceptedByFiniteAutomaton);
+		}			
+		
+		for (String word : wordToNotAccept) {
+			boolean acceptedByTransitionGraph = graph.isAccepted(word);
+			boolean acceptedByFiniteAutomaton = graph.powersetConstruction().isAccepted(word);
+			assertFalse("Uncorrect acceptance with Powerset Construction (should not be accepted: " + word + "); transition-graph:" + acceptedByTransitionGraph + ", finite-automaton:" + acceptedByFiniteAutomaton, 
+					acceptedByTransitionGraph || acceptedByFiniteAutomaton);
+		}
+	}
+	
+	@Test public void represent() {
+		TransitionGraph graph = this.createTransitionGraph();
+		
+		System.out.println(graph);
+		System.out.println(graph.toFormattedAutomaton());
 	}
 
 }

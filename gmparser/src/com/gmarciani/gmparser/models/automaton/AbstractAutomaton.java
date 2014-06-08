@@ -5,7 +5,6 @@ import java.util.Objects;
 import com.gmarciani.gmparser.models.automaton.function.TransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
-import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public abstract class AbstractAutomaton implements Automaton {

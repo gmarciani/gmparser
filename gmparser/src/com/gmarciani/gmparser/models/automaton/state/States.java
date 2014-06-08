@@ -25,7 +25,7 @@ package com.gmarciani.gmparser.models.automaton.state;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class States extends GSet<State> implements Comparable<States> {
+public class States extends GSet<State> {
 
 	private static final long serialVersionUID = -971990098522233593L;
 
@@ -48,26 +48,26 @@ public class States extends GSet<State> implements Comparable<States> {
 	public States(Integer ... ids) {
 		super();
 		for (Integer id : ids)
-			this.add(new State(new StateId(id)));
+			super.add(new State(new StateId(id)));
 	}
 	
 	public boolean add(StateId id) {
-		return this.add(new State(id));
+		return super.add(new State(id));
 	}
 	
 	public boolean add(Integer id) {
-		return this.add(new StateId(id));
+		return super.add(new State(new StateId(id)));
 	}
 	
 	public boolean remove(StateId id) {
 		State state = this.getState(id);
 		if (state != null)
-			return this.remove(state);
+			return super.remove(state);
 		return false;
 	}
 	
 	public boolean remove(Integer id) {
-		return this.remove(new StateId(id));
+		return super.remove(new StateId(id));
 	}
 	
 	public State getState(StateId id) {
@@ -80,10 +80,12 @@ public class States extends GSet<State> implements Comparable<States> {
 	public State getState(Integer id) {
 		return this.getState(new StateId(id));
 	}
-
-	@Override public int compareTo(States other) {
-		int bySize = Integer.valueOf(this.size()).compareTo(other.size());
-		return bySize;
+	
+	public GSet<StateId> getIds() {
+		GSet<StateId> ids = new GSet<StateId>();
+		for (State state : this)
+			ids.add(state.getId());
+		return ids;
 	}
 
 }

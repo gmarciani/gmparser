@@ -24,6 +24,7 @@
 package com.gmarciani.gmparser.models.automaton.state;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class State implements Comparable<State> {
 	
@@ -39,6 +40,14 @@ public class State implements Comparable<State> {
 	
 	public State(Integer id) {
 		this(new StateId(id));
+	}
+	
+	public State(Integer ... ids) {
+		this(new StateId(ids));
+	}
+	
+	public State(Set<StateId> ids) {
+		this(new StateId(ids));
 	}
 	
 	public StateId getId() {
@@ -69,9 +78,9 @@ public class State implements Comparable<State> {
 	@Override public String toString() {
 		String string = "Q";
 		if (this.isInitial())
-			string = "^" + string; /*Character.toChars(Integer.parseInt("0303", 16))[0];*/
+			string = "^" + string;
 		if (this.isFinal())
-			string += "*"; /*Character.toChars(Integer.parseInt("02DF", 16))[0];*/
+			string += "*";
 		string += this.getId();
 		return string;
 	}
@@ -82,7 +91,7 @@ public class State implements Comparable<State> {
 		
 		State other = (State) obj;
 		
-		return this.getId() == other.getId();
+		return this.getId().equals(other.getId());
 	}
 	
 	@Override public int compareTo(State other) {

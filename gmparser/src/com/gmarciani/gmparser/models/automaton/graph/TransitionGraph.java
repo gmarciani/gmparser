@@ -25,6 +25,7 @@ package com.gmarciani.gmparser.models.automaton.graph;
 
 import com.gmarciani.gmparser.models.automaton.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.Automaton;
+import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
@@ -40,6 +41,39 @@ public class TransitionGraph extends AbstractAutomaton
 		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet());
 		this.addAsInitialState(initialState);
 	}	
+	
+	public FiniteAutomaton powersetConstruction() {
+		States initialStates = this.getEpsilonImage(this.getInitialState());
+		State initialState = new State(initialStates.getIds());
+		FiniteAutomaton automaton = new FiniteAutomaton(initialState);
+		if (this.getFinalStates().containsSome(initialStates))
+				automaton.addAsFinalState(initialState);
+		States newStates = new States(automaton.getInitialState());
+		States addedStates = new States();
+		while(!newStates.isEmpty()) {
+			State state = newStates.getFirst();
+			for (Character symbol : this.getAlphabet()) {
+				if (symbol.equals(Grammar.EPSILON)) // to be removed
+					continue;
+				States sStates = new States();
+				for (Integer id : state.getId())
+					sStates.add(this.getStates().getState(id));
+				States dStates = this.getImage(sStates, symbol);
+				if (!dStates.isEmpty()) {
+					State dState = new State(dStates.getIds());
+					automaton.addTransition(state, dState, symbol);
+					if (this.getFinalStates().containsSome(dStates))
+						automaton.addAsFinalState(dState);
+					if (!addedStates.contains(dState))
+						newStates.add(dState);
+				}				
+			}
+			addedStates.add(state);
+			newStates.remove(state);
+		}
+		
+		return automaton;
+	}
 	
 	@Override public boolean isAccepted(String word) {
 		States currentStates = new States(this.getInitialState());
