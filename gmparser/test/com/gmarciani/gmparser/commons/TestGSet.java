@@ -1,11 +1,38 @@
+/*	The MIT License (MIT)
+ *
+ *	Copyright (c) 2014 Giacomo Marciani
+ *	
+ *	Permission is hereby granted, free of charge, to any person obtaining a copy
+ *	of this software and associated documentation files (the "Software"), to deal
+ *	in the Software without restriction, including without limitation the rights
+ *	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *	copies of the Software, and to permit persons to whom the Software is
+ *	furnished to do so, subject to the following conditions:
+ *	
+ *	The above copyright notice and this permission notice shall be included in all
+ *	copies or substantial portions of the Software.
+ *	
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *	SOFTWARE.
+*/
+
 package com.gmarciani.gmparser.commons;
 
 import static org.junit.Assert.*;
 
-import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestGSet {
@@ -15,32 +42,86 @@ public class TestGSet {
 		Character pSymbolsOne[] = {'a'};
 		Character pSymbolsTwo[] = {'b', 'c'};
 		
-		Set<Character> setOne = new GSet<Character>();
+		GSet<Character> setOne = new GSet<Character>();
 		setOne.add('a');
 		setOne.add('b');
 		setOne.add('c');		
 		
-		Set<Character> setTwo = new GSet<Character>('a');
+		GSet<Character> setTwo = new GSet<Character>('a');
 		setTwo.add('b');
 		setTwo.add('c');
 		
-		Set<Character> setThree = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> setThree = new GSet<Character>('a', 'b', 'c');
 		
-		Set<Character> setFour = new GSet<Character>(symbols);		
+		GSet<Character> setFour = new GSet<Character>(symbols);		
 		
-		Set<Character> setFive = new GSet<Character>(pSymbolsOne, pSymbolsTwo);
+		GSet<Character> setFive = new GSet<Character>(pSymbolsOne, pSymbolsTwo);
 		
-		Set<Character> setSix = new GSet<Character>(setOne, setTwo, setThree);
+		GSet<Character> setSix = new GSet<Character>(setOne, setTwo, setThree);
 		
-		Set<Character> setSeven = new GSet<Character>(setOne);
+		GSet<Character> setSeven = new GSet<Character>(setOne);
 		
-		assertTrue("Uncorrect AdvancedSet creation" , 
-				setOne.equals(setTwo)
-				&& setTwo.equals(setThree)
-				&& setThree.equals(setFour)
-				&& setFour.equals(setFive)
-				&& setFive.equals(setSix)
-				&& setSix.equals(setSeven));
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setOne + " and " + setTwo, setOne, setTwo);
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setTwo + " and " + setThree, setTwo, setThree);
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setThree + " and " + setFour, setThree, setFour);
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setFour + " and " + setFive, setFour, setFive);
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setFive + " and " + setSix, setFive, setSix);
+		assertEquals("Uncorrect GSet creation. Should be equals: " + setSix + " and " + setSeven, setSix, setSeven);
+	}
+	
+	@Test public void add() {
+		GSet<Character> set = new GSet<Character>();
+		
+		List<Character> list = new ArrayList<Character>();
+		list.add('a');
+		list.add('b');
+		list.add('c');		
+		
+		for (Character c : list)
+			assertTrue("Uncorrect GSet insertion. Should be added: " + c + " in " + set, set.add(c));
+		
+		for (Character c : list)
+			assertFalse("Uncorrect GSet insertion. Should not be added: " + c + " in " + set, set.add(c));		
+	}
+	
+	@Test public void addCustom() {
+		State stateOne = new State(1);
+		State stateTwo = new State(2);
+		State stateThree = new State(3);
+		State stateOneTwo = new State(1, 2);
+		
+		GSet<State> set = new GSet<State>();
+		
+		List<State> list = new ArrayList<State>();
+		list.add(stateOne);
+		list.add(stateTwo);
+		list.add(stateThree);
+		list.add(stateOneTwo);
+		
+		for (State state : list)
+			assertTrue("Uncorrect GSet insertion. Should be added: " + state + " in " + set, set.add(state));
+		
+		for (State state : list)
+			assertFalse("Uncorrect GSet insertion. Should not be added: " + state + " in " + set, set.add(state));		
+	}
+	
+	@Test public void iterate() {
+		GSet<Integer> set = new GSet<Integer>(1, 2, 3);
+		
+		for (int n : set)
+			if (n < 100)
+				set.add(n *2);
+		
+		Queue<Integer> queue = new ArrayDeque<Integer>();
+		queue.addAll(set);
+		while(!queue.isEmpty()) {
+			int n = queue.poll();
+			if (n < 100) {
+				queue.add(n*2);
+				set.add(n);
+			}
+		}
+		
 	}
 
 }

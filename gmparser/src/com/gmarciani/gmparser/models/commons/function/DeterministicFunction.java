@@ -53,7 +53,7 @@ public class DeterministicFunction<X extends Comparable<X>,
 		if (values.isEmpty())
 			return null;
 		
-		return values.first().getZ();
+		return values.getFirst().getZ();
 	}
 	
 	@Override public String toFormattedFunction() {

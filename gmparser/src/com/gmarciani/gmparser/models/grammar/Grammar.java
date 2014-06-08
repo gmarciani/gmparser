@@ -362,7 +362,7 @@ public class Grammar {
 	public Character getNewNonTerminal() {
 		Alphabet totalNonTerminals = Alphabet.getTotalNonTerminals();
 		totalNonTerminals.removeAll(this.getNonTerminals());
-		Character target = totalNonTerminals.first();
+		Character target = totalNonTerminals.getFirst();
 		
 		return target;
 		

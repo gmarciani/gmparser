@@ -164,7 +164,7 @@ public class Alphabet extends GSet<Character> {
 	}
 	
 	@Override public int hashCode() {
-		return Objects.hash(this.type, this.subSet(this.first(), true, this.last(), true));
+		return Objects.hash(this.type, this.toArray(new Character[this.size()]));
 	}
 	
 }
