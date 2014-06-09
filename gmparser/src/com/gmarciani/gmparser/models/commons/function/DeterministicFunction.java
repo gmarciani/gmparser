@@ -32,8 +32,8 @@ public class DeterministicFunction<X extends Comparable<X>,
 								   Z extends Comparable<Z>> 
 								   extends AbstractFunction<X, Y, Z> {
 	
-	public DeterministicFunction(GSet<X> domainX, GSet<Y> domainY) {
-		super(domainX, domainY);
+	public DeterministicFunction(GSet<X> domainX, GSet<Y> domainY, GSet<Z> codomain) {
+		super(domainX, domainY, codomain);
 	}
 
 	public DeterministicFunction() {
@@ -41,6 +41,8 @@ public class DeterministicFunction<X extends Comparable<X>,
 	}
 	
 	@Override public boolean add(X x, Y y, Z z) {
+		if (!super.isDefined(x, y, z))
+			return false;
 		this.removeAllForXY(x, y);
 		this.getDomainX().add(x);
 		this.getDomainY().add(y);

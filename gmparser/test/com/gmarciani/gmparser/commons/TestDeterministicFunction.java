@@ -22,28 +22,31 @@
 */
 
 package com.gmarciani.gmparser.commons;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.commons.function.DeterministicFunction;
 import com.gmarciani.gmparser.models.commons.function.Function;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class TestDeterministicFunction {
-
-	@Test public void createCompleteAndRemoveAllXY() {
-		System.out.println("#createCompleteAndRemoveAllXY");
+public class TestDeterministicFunction {	
+	
+	@Test public void createCompleteFunction() {
+		System.out.println("#createCompleteFunction");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		Function<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
-		for (Character x : domainX) {
-			for (Character y : domainY) {
-				function.add(x, y, "" + x + y);
-				function.add(x, y, "" + y + x);
-			}				
-		}			
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				domainZ.add(StringUtils.repeat(c, n));
 		
-		function.removeAllForXY('b', 'e');
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
+		
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				function.add(c, n, StringUtils.repeat(c, n));
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
@@ -52,15 +55,18 @@ public class TestDeterministicFunction {
 	@Test public void createCompleteAndRemoveAllX() {
 		System.out.println("#createCompleteAndRemoveAllX");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
-		for (Character x : domainX) {
-			for (Character y : domainY) {
-				function.add(x, y, "" + x + y);
-				function.add(x, y, "" + y + x);
-			}				
-		}
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				domainZ.add(StringUtils.repeat(c, n));
+		
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
+		
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				function.add(c, n, StringUtils.repeat(c, n));
 		
 		function.removeAllForX('b');
 		
@@ -71,75 +77,74 @@ public class TestDeterministicFunction {
 	@Test public void createCompleteAndRemoveAllY() {
 		System.out.println("#createCompleteAndRemoveAllY");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
-		for (Character x : domainX) {
-			for (Character y : domainY) {
-				function.add(x, y, "" + x + y);
-				function.add(x, y, "" + y + x);
-			}				
-		}
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				domainZ.add(StringUtils.repeat(c, n));
 		
-		function.removeAllForY('e');
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
 		
-		System.out.println(function);
-		System.out.println(function.toFormattedFunction());
-	}
-	
-	@Test public void createComplete() {
-		System.out.println("#createComplete");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				function.add(c, n, StringUtils.repeat(c, n));
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
-		for (Character x : domainX) {
-			for (Character y : domainY) {
-				function.add(x, y, "" + x + y);
-				function.add(x, y, "" + y + x);
-			}				
-		}
+		function.removeAllForY(2);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
 	}
 	
-	@Test public void createCompleteByTriples() {
-		System.out.println("#createCompleteByTriples");
+	@Test public void createCompleteAndRemoveAllXY() {
+		System.out.println("#createCompleteAndRemoveAllXY");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>();
-		for (Character x : domainX) {
-			for (Character y : domainY) {
-				function.add(x, y, "" + x + y);
-				function.add(x, y, "" + y + x);
-			}				
-		}
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				domainZ.add(StringUtils.repeat(c, n));
+		
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
+		
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				function.add(c, n, StringUtils.repeat(c, n));
+		
+		function.removeAllForXY('b', 2);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
 	}
 	
-	@Test public void createIncompleteCodomain() {
-		System.out.println("#createIncompleteCodomain");
+	@Test public void createIncompleteFunction() {
+		System.out.println("#createIncompleteFunction");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
-		function.add('a', 'b', "ab");
-		function.add('a', 'b', "ba");
+		for (Character c : domainX)
+			for (Integer n : domainY)
+				domainZ.add(StringUtils.repeat(c, n));
+		
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
+		
+		function.add('a', 1, "a");
+		function.add('b', 2, "bb");
+		function.add('c', 3, "ccc");
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
 	}
 
-	@Test public void createCompleteDomainEmptyCodomain() {
-		System.out.println("#createCompleteDomainEmptyCodomain");
+	@Test public void createEmptyFunction() {
+		System.out.println("#createEmptyFunction");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
@@ -148,9 +153,10 @@ public class TestDeterministicFunction {
 	@Test public void createEmptyDomainX() {
 		System.out.println("#createEmptyDomainX");
 		GSet<Character> domainX = new GSet<Character>();
-		GSet<Character> domainY = new GSet<Character>('d', 'e', 'f');
+		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
@@ -159,9 +165,10 @@ public class TestDeterministicFunction {
 	@Test public void createEmptyDomainY() {
 		System.out.println("#createEmptyDomainY");
 		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Character> domainY = new GSet<Character>();
+		GSet<Integer> domainY = new GSet<Integer>();
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());
@@ -170,9 +177,10 @@ public class TestDeterministicFunction {
 	@Test public void createEmptyDomainXY() {
 		System.out.println("#createEmptyDomainXY");
 		GSet<Character> domainX = new GSet<Character>();
-		GSet<Character> domainY = new GSet<Character>();
+		GSet<Integer> domainY = new GSet<Integer>();
+		GSet<String> domainZ = new GSet<String>();
 		
-		DeterministicFunction<Character, Character, String> function = new DeterministicFunction<Character, Character, String>(domainX, domainY);
+		Function<Character, Integer, String> function = new DeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedFunction());

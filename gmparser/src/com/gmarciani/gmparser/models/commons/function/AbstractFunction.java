@@ -39,16 +39,18 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 	protected GSet<Z> codomain;
 	protected GSet<Triple<X, Y, Z>> function;
 	
-	public AbstractFunction(GSet<X> domainX, GSet<Y>domainY) {
+	public AbstractFunction(GSet<X> domainX, GSet<Y>domainY, GSet<Z> codomain) {
 		this.function = new GSet<Triple<X, Y, Z>>();
 		this.domainX = domainX;
 		this.domainY = domainY;	
+		this.codomain = codomain;
 	}
 	
 	public AbstractFunction() {
 		this.function = new GSet<Triple<X, Y, Z>>();
 		this.domainX = new GSet<X>();
 		this.domainY = new GSet<Y>();
+		this.codomain = new GSet<Z>();
 	}
 
 	@Override public GSet<X> getDomainX() {
@@ -61,6 +63,30 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 
 	@Override public GSet<Z> getCodomain() {
 		return this.codomain;
+	}
+	
+	@Override public GSet<X> getUsedDomainX() {
+		GSet<X> used = new GSet<X>();
+		for (X x : this.getDomainX())
+			if (this.containsX(x))
+				used.add(x);
+		return used;
+	}
+	
+	@Override public GSet<Y> getUsedDomainY() {
+		GSet<Y> used = new GSet<Y>();
+		for (Y y : this.getDomainY())
+			if (this.containsY(y))
+				used.add(y);
+		return used;
+	}
+
+	@Override public GSet<Z> getUsedCodomain() {
+		GSet<Z> used = new GSet<Z>();
+		for (Z z : this.getCodomain())
+			if (this.containsZ(z))
+				used.add(z);
+		return used;
 	}
 
 	protected GSet<Triple<X, Y, Z>> getFunction() {
@@ -81,30 +107,13 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 
 	@Override public abstract boolean add(X x, Y y, Z z);
 
-	@Override public boolean remove(X x, Y y, Z z) {
-		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
-		boolean removed = this.getFunction().remove(triple);
-		if (this.getAllForX(x).isEmpty())
-			this.getDomainX().remove(x);
-		if (this.getAllForY(y).isEmpty())
-			this.getDomainY().remove(y);
-		return removed;
-	}
-
-	@Override public boolean removeAllForXY(X x, Y y) {
-		boolean removed = false;
-		for (Triple<X, Y, Z> triple : this.getFunction())
-			if (triple.getX().equals(x)
-					&& triple.getY().equals(y))
-				removed = this.remove(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;
-		return removed;
-	}
+	
 
 	@Override public boolean removeAllForX(X x) {
 		boolean removed = false;
 		for (Triple<X, Y, Z> triple : this.getFunction())
 			if (triple.getX().equals(x))
-				removed = this.remove(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;		
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;		
 		return removed;
 	}
 
@@ -112,17 +121,49 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 		boolean removed = false;
 		for (Triple<X, Y, Z> triple : this.getFunction())
 			if (triple.getY().equals(y))
-				removed = this.remove(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;	
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;	
 		return removed;
 	}
+	
+	@Override public boolean removeAllForZ(Z z) {
+		boolean removed = false;
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getZ().equals(z))
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;	
+		return removed;
+	}		
 
-	@Override public GSet<Triple<X, Y, Z>> getAllForXY(X x, Y y) {
-		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();		
-		for (Triple<X, Y, Z> triple : this.getFunction()) 
+	@Override public boolean removeAllForXY(X x, Y y) {
+		boolean removed = false;
+		for (Triple<X, Y, Z> triple : this.getFunction())
 			if (triple.getX().equals(x)
 					&& triple.getY().equals(y))
-				triples.add(triple);		
-		return triples;
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;
+		return removed;
+	}
+	
+	@Override public boolean removeAllForXZ(X x, Z z) {
+		boolean removed = false;
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getX().equals(x)
+					&& triple.getZ().equals(z))
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;
+		return removed;
+	}
+	
+	@Override public boolean removeAllForYZ(Y y, Z z) {
+		boolean removed = false;
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getY().equals(y)
+					&& triple.getZ().equals(z))
+				removed = this.removeXYZ(triple.getX(), triple.getY(), triple.getZ()) ? true : removed;
+		return removed;
+	}
+	
+	@Override public boolean removeXYZ(X x, Y y, Z z) {
+		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
+		boolean removed = this.getFunction().remove(triple);
+		return removed;
 	}
 
 	@Override public GSet<Triple<X, Y, Z>> getAllForX(X x) {
@@ -139,24 +180,51 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 			if (triple.getY().equals(y))
 				triples.add(triple);
 		return triples;
+	}	
+	
+	@Override public GSet<Triple<X, Y, Z>> getAllForZ(Z z) {
+		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();
+		for (Triple<X, Y, Z> triple : this.getFunction()) 
+			if (triple.getZ().equals(z))
+				triples.add(triple);
+		return triples;
 	}
-
-	@Override public boolean containsXYZ(X x, Y y, Z z) {
-		for (Triple<X, Y, Z> triple : this.getFunction())
+	
+	@Override public GSet<Triple<X, Y, Z>> getAllForXY(X x, Y y) {
+		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();		
+		for (Triple<X, Y, Z> triple : this.getFunction()) 
+			if (triple.getX().equals(x)
+					&& triple.getY().equals(y))
+				triples.add(triple);		
+		return triples;
+	}
+	
+	@Override public GSet<Triple<X, Y, Z>> getAllForXZ(X x, Z z) {
+		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();		
+		for (Triple<X, Y, Z> triple : this.getFunction()) 
+			if (triple.getX().equals(x)
+					&& triple.getZ().equals(z))
+				triples.add(triple);		
+		return triples;
+	}
+	
+	@Override public GSet<Triple<X, Y, Z>> getAllForYZ(Y y, Z z) {
+		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();		
+		for (Triple<X, Y, Z> triple : this.getFunction()) 
+			if (triple.getY().equals(y)
+					&& triple.getZ().equals(z))
+				triples.add(triple);		
+		return triples;
+	}
+	
+	@Override public Triple<X, Y, Z> getXYZ(X x, Y y, Z z) {
+		for (Triple<X, Y, Z> triple : this.getFunction()) 
 			if (triple.getX().equals(x)
 					&& triple.getY().equals(y)
 					&& triple.getZ().equals(z))
-				return true;
-		return false;
-	}
-
-	@Override public boolean containsXY(X x, Y y) {
-		for (Triple<X, Y, Z> triple : this.getFunction())
-			if (triple.getX().equals(x)
-					&& triple.getY().equals(y))
-				return true;
-		return false;
-	}
+				return triple;		
+		return null;
+	}		
 
 	@Override public boolean containsX(X x) {
 		for (Triple<X, Y, Z> triple : this.getFunction())
@@ -177,6 +245,45 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 			if (triple.getZ().equals(z))
 				return true;
 		return false;
+	}
+	
+	@Override public boolean containsXY(X x, Y y) {
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getX().equals(x)
+					&& triple.getY().equals(y))
+				return true;
+		return false;
+	}
+	
+	@Override public boolean containsXZ(X x, Z z) {
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getX().equals(x)
+					&& triple.getZ().equals(z))
+				return true;
+		return false;
+	}
+	
+	@Override public boolean containsYZ(Y y, Z z) {
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getY().equals(y)
+					&& triple.getZ().equals(z))
+				return true;
+		return false;
+	}
+	
+	@Override public boolean containsXYZ(X x, Y y, Z z) {
+		for (Triple<X, Y, Z> triple : this.getFunction())
+			if (triple.getX().equals(x)
+					&& triple.getY().equals(y)
+					&& triple.getZ().equals(z))
+				return true;
+		return false;
+	}
+	
+	@Override public boolean isDefined(X x, Y y, Z z) {
+		return (this.getDomainX().contains(x)
+				&& this.getDomainY().contains(y)
+				&& this.getCodomain().contains(z));
 	}
 	
 	@Override public abstract String toFormattedFunction();

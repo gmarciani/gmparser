@@ -23,11 +23,11 @@
 
 package com.gmarciani.gmparser.models.automaton.finite;
 
-import com.gmarciani.gmparser.models.automaton.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.function.DeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class FiniteAutomaton extends AbstractAutomaton 
@@ -36,12 +36,20 @@ public class FiniteAutomaton extends AbstractAutomaton
 	public FiniteAutomaton(State initialState) {
 		this.states = new States();
 		this.alphabet = new Alphabet();
-		this.transitionFunction = new DeterministicTransitionFunction(this.getStates(), this.getAlphabet());
+		this.transitionFunction = new DeterministicTransitionFunction(this.getStates(), this.getAlphabet(), this.getStates());
 		this.addAsInitialState(initialState);
+	}
+	
+	@Override public boolean addSymbol(Character symbol) {
+		if (symbol.equals(Grammar.EPSILON))
+			return false;
+		return super.getAlphabet().add(symbol);
 	}
 	
 	@Override public boolean isAccepted(String word) {
 		State currentState = this.getInitialState();
+		if (currentState == null)
+			return false;
 		for (Character symbol : word.toCharArray()) {
 			currentState = this.getTransitionFunction().getTransition(currentState, symbol);
 			if (currentState == null)

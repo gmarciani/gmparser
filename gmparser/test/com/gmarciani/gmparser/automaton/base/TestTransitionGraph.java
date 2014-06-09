@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.automaton.base;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
@@ -47,6 +46,12 @@ public class TestTransitionGraph {
 		graph.addState(stateThree);
 		graph.addAsFinalState(stateFour);
 		
+		graph.addSymbol('a');
+		graph.addSymbol('b');
+		graph.addSymbol('c');
+		graph.addSymbol('d');
+		graph.addSymbol(Grammar.EPSILON);
+		
 		graph.addTransition(stateOne, stateTwo, 'a');
 		graph.addTransition(stateOne, stateTwo, Grammar.EPSILON);
 		graph.addTransition(stateTwo, stateOne, 'b');
@@ -59,7 +64,7 @@ public class TestTransitionGraph {
 		return graph;
 	}
 
-	@Test @Before public void create() {
+	@Test public void create() {
 		TransitionGraph graph = this.createTransitionGraph();
 		
 		State stateOne = graph.getStates().getState(1);
@@ -70,7 +75,7 @@ public class TestTransitionGraph {
 		States expectedStates = new States(stateOne, stateTwo, stateThree, stateFour);
 		State expectedInitialState = stateOne;
 		States expectedFinalStates = new States(stateFour);
-		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON); //remove epsilon
+		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON);
 		
 		assertEquals("Uncorrect transition-graph creation (states)", 
 				expectedStates, graph.getStates());
@@ -94,53 +99,6 @@ public class TestTransitionGraph {
 				&& graph.containsTransition(stateFour, stateOne, 'd')
 				&& graph.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
 	}
-	
-	@Test public void createByTransitions() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
-		
-		TransitionGraph graph = new TransitionGraph(stateOne);	
-		
-		graph.addTransition(stateOne, stateTwo, 'a');
-		graph.addTransition(stateOne, stateTwo, Grammar.EPSILON);
-		graph.addTransition(stateTwo, stateOne, 'b');
-		graph.addTransition(stateTwo, stateThree, 'c');
-		graph.addTransition(stateTwo, stateFour, Grammar.EPSILON);
-		graph.addTransition(stateThree, stateFour, 'c');
-		graph.addTransition(stateFour, stateOne, 'd');
-		graph.addTransition(stateFour, stateTwo, Grammar.EPSILON);
-		
-		graph.addAsFinalState(stateFour);		
-		
-		States expectedStates = new States(stateOne, stateTwo, stateThree, stateFour);
-		State expectedInitialState = stateOne;
-		States expectedFinalStates = new States(stateFour);
-		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON); // remove epsilon
-		
-		assertEquals("Uncorrect transition-graph creation (states)", 
-				expectedStates, graph.getStates());
-		
-		assertEquals("Uncorrect transition-graph creation (initial state)",
-				expectedInitialState, graph.getInitialState());
-		
-		assertEquals("Uncorrect transition-graph creation (final states)",
-				expectedFinalStates, graph.getFinalStates());
-		
-		assertEquals("Uncorrect transition-graph creation (alphabet)", 
-				expectedAlphabet, graph.getAlphabet());
-		
-		assertTrue("Uncorrect transition-graph creation (missing transitions)", 
-				graph.containsTransition(stateOne, stateTwo, 'a')
-				&& graph.containsTransition(stateOne, stateTwo, Grammar.EPSILON)
-				&& graph.containsTransition(stateTwo, stateOne, 'b')
-				&& graph.containsTransition(stateTwo, stateThree, 'c')
-				&& graph.containsTransition(stateTwo, stateFour, Grammar.EPSILON)
-				&& graph.containsTransition(stateThree, stateFour, 'c')
-				&& graph.containsTransition(stateFour, stateOne, 'd')
-				&& graph.containsTransition(stateFour, stateTwo, Grammar.EPSILON));
-	}	
 	
 	@Test public void computeImages() {
 		TransitionGraph graph = this.createTransitionGraph();

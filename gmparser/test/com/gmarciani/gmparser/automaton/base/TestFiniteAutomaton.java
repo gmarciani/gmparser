@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.automaton.base;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.Automaton;
@@ -36,24 +35,30 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestFiniteAutomaton {
 	
-	private FiniteAutomaton createFiniteAutomaton() {
+	private Automaton createFiniteAutomaton() {
 		State stateOne = new State(1);
 		State stateTwo = new State(2);
 		State stateThree = new State(3);
 		
-		FiniteAutomaton automaton = new FiniteAutomaton(stateOne);
+		Automaton automaton = new FiniteAutomaton(stateOne);
 		automaton.addState(stateTwo);
 		automaton.addAsFinalState(stateThree);
+		
+		automaton.addSymbol('a');
+		automaton.addSymbol('b');
+		automaton.addSymbol('c');
 		
 		automaton.addTransition(stateOne, stateTwo, 'a');
 		automaton.addTransition(stateTwo, stateOne, 'b');
 		automaton.addTransition(stateTwo, stateThree, 'c');
 		
+		System.out.println(automaton.toFormattedAutomaton());
+		
 		return automaton;
 	}
 
-	@Test @Before public void create() {
-		FiniteAutomaton automaton = this.createFiniteAutomaton();
+	@Test public void create() {
+		Automaton automaton = this.createFiniteAutomaton();
 		
 		State stateOne = automaton.getStates().getState(1);
 		State stateTwo = automaton.getStates().getState(2);
@@ -82,22 +87,33 @@ public class TestFiniteAutomaton {
 				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
 	}
 	
-	@Test public void createWithTransitions() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
+	@Test public void modify() {
+		Automaton automaton = this.createFiniteAutomaton();		
 		
-		Automaton automaton = new FiniteAutomaton(stateOne);			
-		automaton.addTransition(stateOne, stateTwo, 'a');
-		automaton.addTransition(stateTwo, stateOne, 'b');
-		automaton.addTransition(stateTwo, stateThree, 'c');
+		State stateOne = automaton.getStates().getState(1);
+		State stateTwo = automaton.getStates().getState(2);
+		State stateThree = automaton.getStates().getState(3);
+		State stateFour = new State(4);
+		State stateFive = new State(5);
 		
-		automaton.addAsFinalState(stateThree);
+		automaton.addState(stateFour);
+		automaton.addState(stateFive);
 		
-		States expectedStates = new States(stateOne, stateTwo, stateThree);
-		State expectedInitialState = stateOne;
-		States expectedFinalStates = new States(stateThree);
-		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c');
+		automaton.addTransition(stateFour, stateOne, 'a');
+		automaton.addTransition(stateFour, stateTwo, 'b');
+		automaton.addTransition(stateFour, stateFive, 'c');
+		
+		automaton.addAsInitialState(stateFour);
+		automaton.removeFromFinalStates(stateThree);
+		automaton.addAsFinalState(stateOne);
+		automaton.addAsFinalState(stateFive);
+		automaton.removeState(stateTwo);
+		automaton.removeSymbol('b');
+		
+		States expectedStates = new States(stateOne, stateThree, stateFour, stateFive);
+		State expectedInitialState = stateFour;
+		States expectedFinalStates = new States(stateOne, stateFive);
+		Alphabet expectedAlphabet = new Alphabet('a', 'c');
 		
 		assertEquals("Uncorrect finite-automaton creation (states)", 
 				expectedStates, automaton.getStates());
@@ -112,13 +128,16 @@ public class TestFiniteAutomaton {
 				expectedAlphabet, automaton.getAlphabet());
 		
 		assertTrue("Uncorrect finite-automaton creation (missing transitions)", 
-				automaton.containsTransition(stateOne, stateTwo, 'a')
-				&& automaton.containsTransition(stateTwo, stateOne, 'b')
-				&& automaton.containsTransition(stateTwo, stateThree, 'c'));
+				!automaton.containsTransition(stateOne, stateTwo, 'a')
+				&& !automaton.containsTransition(stateTwo, stateOne, 'b')
+				&& !automaton.containsTransition(stateTwo, stateThree, 'c')
+				&& automaton.containsTransition(stateFour, stateOne, 'a')
+				&& !automaton.containsTransition(stateFour, stateTwo, 'b')
+				&& automaton.containsTransition(stateFour, stateFive, 'c'));
 	}
 	
 	@Test public void accept() {
-		FiniteAutomaton automaton = this.createFiniteAutomaton();
+		Automaton automaton = this.createFiniteAutomaton();
 		
 		String wordToAccept[] = {"ac", "abac", "ababac", "abababac", "ababababac"};
 		String wordToNotAccept[] = {"", "c", "a", "ab", "abc"};
@@ -133,7 +152,7 @@ public class TestFiniteAutomaton {
 	}
 	
 	@Test public void represent() {
-		FiniteAutomaton automaton = this.createFiniteAutomaton();
+		Automaton automaton = this.createFiniteAutomaton();
 		
 		System.out.println(automaton);
 		System.out.println(automaton.toFormattedAutomaton());

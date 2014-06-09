@@ -1,7 +1,31 @@
-package com.gmarciani.gmparser.models.automaton;
+/*	The MIT License (MIT)
+ *
+ *	Copyright (c) 2014 Giacomo Marciani
+ *	
+ *	Permission is hereby granted, free of charge, to any person obtaining a copy
+ *	of this software and associated documentation files (the "Software"), to deal
+ *	in the Software without restriction, including without limitation the rights
+ *	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *	copies of the Software, and to permit persons to whom the Software is
+ *	furnished to do so, subject to the following conditions:
+ *	
+ *	The above copyright notice and this permission notice shall be included in all
+ *	copies or substantial portions of the Software.
+ *	
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *	SOFTWARE.
+*/
+
+package com.gmarciani.gmparser.models.automaton.finite;
 
 import java.util.Objects;
 
+import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.function.TransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
@@ -41,43 +65,48 @@ public abstract class AbstractAutomaton implements Automaton {
 	}
 
 	@Override public boolean addState(State state) {
+		if (this.containsState(state))
+			return false;
 		state.setNormal();
 		boolean added = this.getStates().add(state);
 		return added;
 	}
 	
-	@Override public boolean addAsInitialState(State state) {
+	@Override public void addAsInitialState(State state) {
 		for (State s : this.getStates())
 			if (s.isInitial())
 				s.setIsInitial(false);
+		if (this.containsState(state)) {			
+			this.getStates().getState(state.getId()).setIsInitial(true);
+			return;
+		}		
 		state.setIsInitial(true);
-		boolean added = this.getStates().add(state);
-		return added;
+		this.getStates().add(state);
 	}
 	
-	@Override public boolean addAsFinalState(State state) {
+	@Override public void addAsFinalState(State state) {
+		if (this.containsState(state)) {
+			this.getStates().getState(state.getId()).setIsFinal(true);
+			return;
+		}			
 		state.setIsFinal(true);
-		boolean added = this.getStates().add(state);
-		return added;
-	}
-	
-	@Override public boolean addAsInitialFinalState(State state) {
-		state.setIsFinal(true);
-		state.setIsFinal(true);
-		boolean added = this.getStates().add(state);
-		return added;
+		this.getStates().add(state);
 	}
 
 	@Override public boolean removeState(State state) {
-		return this.getTransitionFunction().removeAllTransitionsForState(state);
+		boolean removedFrom = this.getTransitionFunction().removeAllTransitionsFromState(state);
+		boolean removedTo = this.getTransitionFunction().removeAllTransitionsToState(state);
+		boolean removedFromStates = this.getStates().remove(state);
+		return removedFrom || removedTo || removedFromStates;
 	}
 
 	@Override public boolean containsState(State state) {
 		return this.getStates().contains(state);
 	}
 
-	@Override public boolean removeFromFinalStates(State state) {
-		return this.getFinalStates().remove(state);
+	@Override public void removeFromFinalStates(State state) {
+		if (this.containsState(state))
+			this.getStates().getState(state.getId()).setIsFinal(false);
 	}
 
 	@Override public boolean isInitialState(State state) {
@@ -93,7 +122,9 @@ public abstract class AbstractAutomaton implements Automaton {
 	}
 
 	@Override public boolean removeSymbol(Character symbol) {
-		return this.getTransitionFunction().removeAllTransitionsForSymbol(symbol);
+		boolean removedTransitions = this.getTransitionFunction().removeAllTransitionsBySymbol(symbol);
+		boolean removedFromAlphabet = this.getAlphabet().remove(symbol);
+		return removedTransitions || removedFromAlphabet;
 	}
 
 	@Override public boolean containsSymbol(Character symbol) {

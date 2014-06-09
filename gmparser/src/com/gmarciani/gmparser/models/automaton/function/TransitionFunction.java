@@ -31,9 +31,12 @@ public interface TransitionFunction {
 	public boolean addTransition(State sState, State dState, Character symbol);
 	
 	public boolean removeTransition(State sState, State dState, Character symbol);
-	public boolean removeAllTransitionsForState(State state);
-	public boolean removeAllTransitionsForSymbol(Character symbol);
-	public boolean removeAllTransitionsForStateSymbol(State state, Character symbol);
+	public boolean removeAllTransitionsFromState(State state);
+	public boolean removeAllTransitionsToState(State state);
+	public boolean removeAllTransitionsFromStateToState(State sState, State dState);
+	public boolean removeAllTransitionsBySymbol(Character symbol);
+	public boolean removeAllTransitionsFromStateBySymbol(State state, Character symbol);
+	public boolean removeAllTransitionsToStateBySymbol(State state, Character symbol);
 	
 	public State getTransition(State state, Character symbol);
 	public States getTransitions(State state, Character symbol);

@@ -26,7 +26,7 @@ package com.gmarciani.gmparser.models.parser.lr;
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
-import com.gmarciani.gmparser.models.automaton.pushdown.PushDownAutomaton;
+import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
@@ -46,7 +46,7 @@ public class LROneParser implements Parser {
 		TransitionGraph graph = this.generateTransitionGraph(bigProductions);
 		FiniteAutomaton automaton = this.generateFiniteStateAutomaton(graph);
 		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
-		PushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
+		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
 		LROneAction finalAction = pda.parse(word);
 		return finalAction.isActionType(LROneActionType.ACCEPT);
 	}	
@@ -79,7 +79,7 @@ public class LROneParser implements Parser {
 		return null;
 	}
 	
-	private PushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {
+	private NonDeterministPushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,10 +1,11 @@
 package com.gmarciani.gmparser.models.automaton.pushdown;
 
+import com.gmarciani.gmparser.models.automaton.PushDownAutomaton;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
 
-public class PushDownAutomaton {
+public class NonDeterministPushDownAutomaton implements PushDownAutomaton {
 
-	public PushDownAutomaton() {
+	public NonDeterministPushDownAutomaton() {
 		// TODO Auto-generated constructor stub
 	}
 

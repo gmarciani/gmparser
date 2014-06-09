@@ -22,6 +22,12 @@ public class TestPowersetConstruction {
 		graph.addState(stateThree);
 		graph.addAsFinalState(stateFour);
 		
+		graph.addSymbol('a');
+		graph.addSymbol('b');
+		graph.addSymbol('c');
+		graph.addSymbol('d');
+		graph.addSymbol(Grammar.EPSILON);
+		
 		graph.addTransition(stateOne, stateTwo, 'a');
 		graph.addTransition(stateOne, stateTwo, Grammar.EPSILON);
 		graph.addTransition(stateTwo, stateOne, 'b');
@@ -40,9 +46,14 @@ public class TestPowersetConstruction {
 		State stateThree = new State(3);
 		
 		FiniteAutomaton automaton = new FiniteAutomaton(stateOneTwoFour);
-		automaton.addAsInitialFinalState(stateOneTwoFour);
+		automaton.addAsFinalState(stateOneTwoFour);
 		automaton.addAsFinalState(stateTwoFour);
 		automaton.addState(stateThree);
+		
+		automaton.addSymbol('a');
+		automaton.addSymbol('b');
+		automaton.addSymbol('c');
+		automaton.addSymbol('d');
 		
 		automaton.addTransition(stateOneTwoFour, stateTwoFour, 'a');
 		automaton.addTransition(stateOneTwoFour, stateOneTwoFour, 'b');
@@ -59,6 +70,9 @@ public class TestPowersetConstruction {
 	@Test public void powersetConstruction() {
 		TransitionGraph graph = this.createTransitionGraph();
 		FiniteAutomaton expectedAutomaton = this.createExpectedAutomaton();
+		
+		System.out.println(graph.toFormattedAutomaton());
+		System.out.println(graph.powersetConstruction().toFormattedAutomaton());
 		
 		assertEquals("Uncorrect powerset-construction", 
 				expectedAutomaton, graph.powersetConstruction());

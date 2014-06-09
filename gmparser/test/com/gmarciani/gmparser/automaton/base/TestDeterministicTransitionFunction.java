@@ -33,6 +33,45 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestDeterministicTransitionFunction {
 	
+	@Test public void createCompleteFunction() {
+		System.out.println("#createCompleteFunction");
+		State stateOne = new State(1);
+		State stateTwo = new State(2);
+		State stateThree = new State(3);
+		
+		States states = new States(stateOne, stateTwo, stateThree);
+		Alphabet alphabet = new Alphabet('a', 'b', 'c');
+		
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
+		for (State state : states) {
+			for (Character symbol : alphabet) {
+				function.addTransition(state, state, symbol);
+				function.addTransition(state, stateThree, symbol);
+			}				
+		}			
+		
+		System.out.println(function);
+		System.out.println(function.toFormattedTransitionFunction());
+	}
+	
+	@Test public void createIncompleteFunction() {
+		System.out.println("#createIncompleteFunction");
+		State stateOne = new State(1);
+		State stateTwo = new State(2);
+		State stateThree = new State(3);
+		
+		States states = new States(stateOne, stateTwo, stateThree);
+		Alphabet alphabet = new Alphabet('a', 'b', 'c');
+		
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
+		function.addTransition(stateOne, stateTwo, 'a');
+		function.addTransition(stateTwo, stateThree, 'b');
+		function.addTransition(stateThree, stateThree, 'c');
+		
+		System.out.println(function);
+		System.out.println(function.toFormattedTransitionFunction());
+	}
+	
 	@Test public void createCompleteAndRemoveAllStateSymbol() {
 		System.out.println("#createCompleteAndRemoveAllStateSymbol");
 		State stateOne = new State(1);
@@ -42,15 +81,15 @@ public class TestDeterministicTransitionFunction {
 		States states = new States(stateOne, stateTwo, stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		for (State state : states) {
 			for (Character symbol : alphabet) {
 				function.addTransition(state, state, symbol);
 				function.addTransition(state, stateThree, symbol);
 			}				
-		}			
+		}		
 		
-		function.removeAllTransitionsForStateSymbol(stateTwo, 'b');
+		function.removeAllTransitionsFromStateBySymbol(stateTwo, 'b');
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
@@ -65,15 +104,15 @@ public class TestDeterministicTransitionFunction {
 		States states = new States(stateOne, stateTwo, stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		for (State state : states) {
 			for (Character symbol : alphabet) {
 				function.addTransition(state, state, symbol);
 				function.addTransition(state, stateThree, symbol);
 			}				
-		}			
+		}		
 		
-		function.removeAllTransitionsForState(stateTwo);
+		function.removeAllTransitionsFromState(stateTwo);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
@@ -88,7 +127,7 @@ public class TestDeterministicTransitionFunction {
 		States states = new States(stateOne, stateTwo, stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		for (State state : states) {
 			for (Character symbol : alphabet) {
 				function.addTransition(state, state, symbol);
@@ -96,74 +135,14 @@ public class TestDeterministicTransitionFunction {
 			}				
 		}			
 		
-		function.removeAllTransitionsForSymbol('b');
+		function.removeAllTransitionsBySymbol('b');
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
-	}
-	
-	@Test public void createComplete() {
-		System.out.println("#createComplete");
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		States states = new States(stateOne, stateTwo, stateThree);
-		Alphabet alphabet = new Alphabet('a', 'b', 'c');
-		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
-		for (State state : states) {
-			for (Character symbol : alphabet) {
-				function.addTransition(state, state, symbol);
-				function.addTransition(state, stateThree, symbol);
-			}				
-		}			
-		
-		System.out.println(function);
-		System.out.println(function.toFormattedTransitionFunction());
-	}
-	
-	@Test public void createCompleteByTransitions() {
-		System.out.println("#createCompleteByTransitions");
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		States states = new States(stateOne, stateTwo, stateThree);
-		Alphabet alphabet = new Alphabet('a', 'b', 'c');
-		
-		TransitionFunction function = new DeterministicTransitionFunction();
-		for (State state : states) {
-			for (Character symbol : alphabet) {
-				function.addTransition(state, state, symbol);
-				function.addTransition(state, stateThree, symbol);
-			}				
-		}			
-		
-		System.out.println(function);
-		System.out.println(function.toFormattedTransitionFunction());
-	}
-	
-	@Test public void createIncompleteTransitions() {
-		System.out.println("#createIncompleteTransitions");
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		
-		States states = new States(stateOne, stateTwo, stateThree);
-		Alphabet alphabet = new Alphabet('a', 'b', 'c');
-		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
-		function.addTransition(stateOne, stateTwo, 'a');
-		function.addTransition(stateTwo, stateThree, 'b');
-		function.addTransition(stateThree, stateThree, 'c');
-		
-		System.out.println(function);
-		System.out.println(function.toFormattedTransitionFunction());
-	}
+	}	
 
-	@Test public void createEmptyTransitions() {
-		System.out.println("#createEmptyTransitions");
+	@Test public void createEmptyFunction() {
+		System.out.println("#createEmptyFunction");
 		State stateOne = new State(1);
 		State stateTwo = new State(2);
 		State stateThree = new State(3);
@@ -171,18 +150,18 @@ public class TestDeterministicTransitionFunction {
 		States states = new States(stateOne, stateTwo, stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
 	}
 	
 	@Test public void createEmptyStates() {
-		System.out.println("#createEmptyStates");		
+		System.out.println("#createEmptyStates");			
 		States states = new States();
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
@@ -197,19 +176,18 @@ public class TestDeterministicTransitionFunction {
 		States states = new States(stateOne, stateTwo, stateThree);
 		Alphabet alphabet = new Alphabet();
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());
 	}
 	
 	@Test public void createEmptyStatesAlphabet() {
-		System.out.println("#createEmptyStatesAlphabet");
-		
+		System.out.println("#createEmptyStatesAlphabet");		
 		States states = new States();
 		Alphabet alphabet = new Alphabet();
 		
-		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet);
+		TransitionFunction function = new DeterministicTransitionFunction(states, alphabet, states);
 		
 		System.out.println(function);
 		System.out.println(function.toFormattedTransitionFunction());

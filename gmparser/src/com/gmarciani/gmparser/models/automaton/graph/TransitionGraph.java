@@ -23,8 +23,8 @@
 
 package com.gmarciani.gmparser.models.automaton.graph;
 
-import com.gmarciani.gmparser.models.automaton.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.Automaton;
+import com.gmarciani.gmparser.models.automaton.finite.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
@@ -38,7 +38,7 @@ public class TransitionGraph extends AbstractAutomaton
 	public TransitionGraph(State initialState) {
 		this.states = new States();		
 		this.alphabet = new Alphabet();
-		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet());
+		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet(), this.getStates());
 		this.addAsInitialState(initialState);
 	}	
 	
@@ -52,20 +52,24 @@ public class TransitionGraph extends AbstractAutomaton
 		States addedStates = new States();
 		while(!newStates.isEmpty()) {
 			State state = newStates.getFirst();
+			automaton.addState(state);
 			for (Character symbol : this.getAlphabet()) {
 				if (symbol.equals(Grammar.EPSILON)) // to be removed
 					continue;
+				automaton.addSymbol(symbol);
 				States sStates = new States();
 				for (Integer id : state.getId())
 					sStates.add(this.getStates().getState(id));
 				States dStates = this.getImage(sStates, symbol);
 				if (!dStates.isEmpty()) {
 					State dState = new State(dStates.getIds());
-					automaton.addTransition(state, dState, symbol);
+					if (!automaton.containsState(dState))
+						automaton.addState(dState);
 					if (this.getFinalStates().containsSome(dStates))
 						automaton.addAsFinalState(dState);
 					if (!addedStates.contains(dState))
-						newStates.add(dState);
+						newStates.add(dState);					
+					automaton.addTransition(state, dState, symbol);
 				}				
 			}
 			addedStates.add(state);

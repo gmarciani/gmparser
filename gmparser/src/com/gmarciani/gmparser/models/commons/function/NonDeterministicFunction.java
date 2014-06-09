@@ -34,8 +34,8 @@ public class NonDeterministicFunction<X extends Comparable<X>,
 									  Z extends Comparable<Z>> 
 									  extends AbstractFunction<X, Y, Z>{
 	
-	public NonDeterministicFunction(GSet<X> domainX, GSet<Y> domainY) {
-		super(domainX, domainY);	
+	public NonDeterministicFunction(GSet<X> domainX, GSet<Y> domainY, GSet<Z> codomain) {
+		super(domainX, domainY, codomain);	
 	}
 	
 	public NonDeterministicFunction() {
@@ -43,9 +43,9 @@ public class NonDeterministicFunction<X extends Comparable<X>,
 	}
 	
 	@Override public boolean add(X x, Y y, Z z) {
+		if (!super.isDefined(x, y, z))
+			return false;
 		Triple<X, Y, Z> triple = new Triple<X, Y, Z>(x, y, z);
-		this.getDomainX().add(x);
-		this.getDomainY().add(y);
 		return this.getFunction().add(triple);
 	}
 

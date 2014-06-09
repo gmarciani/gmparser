@@ -32,8 +32,8 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 public class NonDeterministicTransitionFunction extends NonDeterministicFunction<State, Character, State> 
 												implements TransitionFunction {
 	
-	public NonDeterministicTransitionFunction(States states, Alphabet alphabet) {
-		super(states, alphabet);
+	public NonDeterministicTransitionFunction(States sStates, Alphabet alphabet, States dStates) {
+		super(sStates, alphabet, dStates);
 	}
 	
 	public NonDeterministicTransitionFunction() {
@@ -41,23 +41,37 @@ public class NonDeterministicTransitionFunction extends NonDeterministicFunction
 	}
 
 	@Override public boolean addTransition(State sState, State dState, Character symbol) {
-		return super.add(sState, symbol, dState);
+		State sStateNow = super.getDomainX().get(sState);
+		State dStateNow = super.getCodomain().get(dState);
+		return super.add(sStateNow, symbol, dStateNow);
 	}
 
 	@Override public boolean removeTransition(State sState, State dState, Character symbol) {
-		return super.remove(sState, symbol, dState);
+		return super.removeXYZ(sState, symbol, dState);
 	}
 
-	@Override public boolean removeAllTransitionsForState(State state) {
+	@Override public boolean removeAllTransitionsFromState(State state) {
 		return super.removeAllForX(state);
 	}
+	
+	@Override public boolean removeAllTransitionsToState(State state) {
+		return super.removeAllForZ(state);
+	}
+	
+	@Override public boolean removeAllTransitionsFromStateToState(State sState, State dState) {
+		return super.removeAllForXZ(sState, dState);
+	}
 
-	@Override public boolean removeAllTransitionsForSymbol(Character symbol) {
+	@Override public boolean removeAllTransitionsBySymbol(Character symbol) {
 		return super.removeAllForY(symbol);
 	}
 
-	@Override public boolean removeAllTransitionsForStateSymbol(State state, Character symbol) {
+	@Override public boolean removeAllTransitionsFromStateBySymbol(State state, Character symbol) {
 		return super.removeAllForXY(state, symbol);
+	}
+	
+	@Override public boolean removeAllTransitionsToStateBySymbol(State state, Character symbol) {
+		return super.removeAllForYZ(symbol, state);
 	}
 	
 	@Override public State getTransition(State state, Character symbol) {

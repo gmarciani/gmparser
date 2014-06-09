@@ -1,5 +1,5 @@
 package com.gmarciani.gmparser.models.grammar.validator;
 
-public @interface GrammarRepresentation {
+public @interface Production {
 
 }

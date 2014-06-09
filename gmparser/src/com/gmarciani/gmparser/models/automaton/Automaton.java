@@ -35,12 +35,11 @@ public interface Automaton {
 	public States getFinalStates();
 	
 	public boolean addState(State state);
-	public boolean addAsInitialState(State state);
-	public boolean addAsFinalState(State state);
-	public boolean addAsInitialFinalState(State state);
+	public void addAsInitialState(State state);
+	public void addAsFinalState(State state);
 	public boolean removeState(State state);
 	public boolean containsState(State state);
-	public boolean removeFromFinalStates(State state);	
+	public void removeFromFinalStates(State state);	
 	public boolean isInitialState(State state);
 	public boolean isFinalState(State state);
 	

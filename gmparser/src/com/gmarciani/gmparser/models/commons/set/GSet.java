@@ -49,6 +49,13 @@ public class GSet<T> extends CopyOnWriteArraySet<T> {
 		return false;
 	}
 	
+	public T get(T element) {
+		for (T e : this)
+			if (e.equals(element))
+				return e;
+		return null;
+	}
+	
 	public T getFirst() {
 		return new ArrayList<T>(this).get(0);
 	}
