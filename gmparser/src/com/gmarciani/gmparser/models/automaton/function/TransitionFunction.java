@@ -26,23 +26,26 @@ package com.gmarciani.gmparser.models.automaton.function;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 
-public interface TransitionFunction {
+public interface TransitionFunction<V> {
 	
-	public boolean addTransition(State sState, State dState, Character symbol);
+	public boolean addTransition(State<V> sState, State<V> dState, Character symbol);
 	
-	public boolean removeTransition(State sState, State dState, Character symbol);
-	public boolean removeAllTransitionsFromState(State state);
-	public boolean removeAllTransitionsToState(State state);
-	public boolean removeAllTransitionsFromStateToState(State sState, State dState);
+	public States<V> getStates();
+	
+	public boolean removeTransition(State<V> sState, State<V> dState, Character symbol);
+	public boolean removeAllTransitionsFromState(State<V> state);
+	public boolean removeAllTransitionsToState(State<V> state);
+	public boolean removeAllTransitionsFromStateToState(State<V> sState, State<V> dState);
 	public boolean removeAllTransitionsBySymbol(Character symbol);
-	public boolean removeAllTransitionsFromStateBySymbol(State state, Character symbol);
-	public boolean removeAllTransitionsToStateBySymbol(State state, Character symbol);
+	public boolean removeAllTransitionsFromStateBySymbol(State<V> state, Character symbol);
+	public boolean removeAllTransitionsToStateBySymbol(State<V> state, Character symbol);
 	
-	public State getTransition(State state, Character symbol);
-	public States getTransitions(State state, Character symbol);
+	public State<V> getTransition(State<V> state, Character symbol);
+	public States<V> getTransitions(State<V> state, Character symbol);
 	
-	public boolean containsTransition(State sState, State dState, Character symbol);
+	public boolean containsTransition(State<V> sState, State<V> dState, Character symbol);
 	
 	public String toFormattedTransitionFunction();
+	public String toExtendedFormattedTransitionFunction();
 	
 }

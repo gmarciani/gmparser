@@ -35,13 +35,6 @@ public class GSet<T> extends CopyOnWriteArraySet<T> {
 			this.addAll(set);
 	}
 	
-	public boolean addAll(@SuppressWarnings("unchecked") T ... members) {
-		boolean added = false;
-		for (T member : members)
-			added = this.add(member) ? true : added;
-		return added;
-	}
-	
 	public boolean containsSome(Collection<T> collection) {
 		for (T element : collection)
 			if (this.contains(element))
@@ -65,7 +58,7 @@ public class GSet<T> extends CopyOnWriteArraySet<T> {
 		
 		Iterator<T> iter = this.iterator();
 		while(iter.hasNext()) {
-			string += iter.next().toString();
+			string += String.valueOf(iter.next());
 			if (iter.hasNext())
 				string += ",";
 		}

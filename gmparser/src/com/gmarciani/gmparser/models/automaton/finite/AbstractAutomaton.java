@@ -31,13 +31,13 @@ import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public abstract class AbstractAutomaton implements Automaton {
+public abstract class AbstractAutomaton<V> implements Automaton<V> {
 	
-	protected States states;
+	protected States<V> states;
 	protected Alphabet alphabet;
-	protected TransitionFunction transitionFunction;
+	protected TransitionFunction<V> transitionFunction;
 
-	@Override public States getStates() {
+	@Override public States<V> getStates() {
 		return this.states;
 	}
 
@@ -45,26 +45,26 @@ public abstract class AbstractAutomaton implements Automaton {
 		return this.alphabet;
 	}
 
-	@Override public State getInitialState() {
-		for (State state : this.getStates())
+	@Override public State<V> getInitialState() {
+		for (State<V> state : this.getStates())
 			if (state.isInitial())
 				return state;
 		return null;
 	}
 
-	@Override public States getFinalStates() {
-		States finals = new States();
-		for (State state : this.getStates())
+	@Override public States<V> getFinalStates() {
+		States<V> finals = new States<V>();
+		for (State<V> state : this.getStates())
 			if (state.isFinal())
 				finals.add(state);
 		return finals;
 	}
 
-	protected TransitionFunction getTransitionFunction() {
+	protected TransitionFunction<V> getTransitionFunction() {
 		return this.transitionFunction;
 	}
 
-	@Override public boolean addState(State state) {
+	@Override public boolean addState(State<V> state) {
 		if (this.containsState(state))
 			return false;
 		state.setNormal();
@@ -72,8 +72,8 @@ public abstract class AbstractAutomaton implements Automaton {
 		return added;
 	}
 	
-	@Override public void addAsInitialState(State state) {
-		for (State s : this.getStates())
+	@Override public void addAsInitialState(State<V> state) {
+		for (State<V> s : this.getStates())
 			if (s.isInitial())
 				s.setIsInitial(false);
 		if (this.containsState(state)) {			
@@ -84,7 +84,7 @@ public abstract class AbstractAutomaton implements Automaton {
 		this.getStates().add(state);
 	}
 	
-	@Override public void addAsFinalState(State state) {
+	@Override public void addAsFinalState(State<V> state) {
 		if (this.containsState(state)) {
 			this.getStates().getState(state.getId()).setIsFinal(true);
 			return;
@@ -93,27 +93,27 @@ public abstract class AbstractAutomaton implements Automaton {
 		this.getStates().add(state);
 	}
 
-	@Override public boolean removeState(State state) {
+	@Override public boolean removeState(State<V> state) {
 		boolean removedFrom = this.getTransitionFunction().removeAllTransitionsFromState(state);
 		boolean removedTo = this.getTransitionFunction().removeAllTransitionsToState(state);
 		boolean removedFromStates = this.getStates().remove(state);
 		return removedFrom || removedTo || removedFromStates;
 	}
 
-	@Override public boolean containsState(State state) {
+	@Override public boolean containsState(State<V> state) {
 		return this.getStates().contains(state);
 	}
 
-	@Override public void removeFromFinalStates(State state) {
+	@Override public void removeFromFinalStates(State<V> state) {
 		if (this.containsState(state))
 			this.getStates().getState(state.getId()).setIsFinal(false);
 	}
 
-	@Override public boolean isInitialState(State state) {
+	@Override public boolean isInitialState(State<V> state) {
 		return this.getInitialState().equals(state);
 	}
 
-	@Override public boolean isFinalState(State state) {
+	@Override public boolean isFinalState(State<V> state) {
 		return this.getFinalStates().contains(state);
 	}
 
@@ -131,23 +131,23 @@ public abstract class AbstractAutomaton implements Automaton {
 		return this.getAlphabet().contains(symbol);
 	}
 
-	@Override public boolean addTransition(State sState, State dState, Character symbol) {
+	@Override public boolean addTransition(State<V> sState, State<V> dState, Character symbol) {
 		return this.getTransitionFunction().addTransition(sState, dState, symbol);
 	}
 
-	@Override public boolean removeTransition(State sState, State dState, Character symbol) {
+	@Override public boolean removeTransition(State<V> sState, State<V> dState, Character symbol) {
 		return this.getTransitionFunction().removeTransition(sState, dState, symbol);
 	}
 	
-	@Override public States getTransitions(State sState, Character symbol) {
+	@Override public States<V> getTransitions(State<V> sState, Character symbol) {
 		return this.getTransitionFunction().getTransitions(sState, symbol);
 	}
 	
-	@Override public State getTransition(State sState, Character symbol) {
+	@Override public State<V> getTransition(State<V> sState, Character symbol) {
 		return this.getTransitionFunction().getTransition(sState, symbol);
 	}
 
-	@Override public boolean containsTransition(State sState, State dState, Character symbol) {
+	@Override public boolean containsTransition(State<V> sState, State<V> dState, Character symbol) {
 		return this.getTransitionFunction().containsTransition(sState, dState, symbol);
 	}
 
@@ -157,11 +157,15 @@ public abstract class AbstractAutomaton implements Automaton {
 		return this.getTransitionFunction().toFormattedTransitionFunction();
 	}
 	
+	@Override public String toExtendedFormattedAutomaton() {
+		return this.getTransitionFunction().toExtendedFormattedTransitionFunction();
+	}
+	
 	@Override public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		AbstractAutomaton other = (AbstractAutomaton) obj;
+		AbstractAutomaton<?> other = (AbstractAutomaton<?>) obj;
 		
 		return (this.getStates().equals(other.getStates())
 				&& this.getAlphabet().equals(other.getAlphabet())

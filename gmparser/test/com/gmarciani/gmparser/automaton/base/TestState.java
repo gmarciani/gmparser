@@ -5,17 +5,19 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestState {
 
 	@Test public void equal() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateOneTwo = new State(1, 2);
-		State stateTwoOne = new State(2, 1);
-		State stateOneTwoThree = new State(1, 2, 3);
-		State stateThreeOneTwo = new State(3, 1, 2);		
-		State stateOneTwoThreeFour = new State(1, 2, 3, 4);
+		State<Object> stateOne = new State<Object>(new StateId(1));
+		State<Object> stateTwo = new State<Object>(new StateId(2));
+		State<Object> stateOneTwo = new State<Object>(new StateId(1, 2));
+		State<Object> stateTwoOne = new State<Object>(new StateId(2, 1));
+		State<Object> stateOneTwoThree = new State<Object>(new StateId(1, 2, 3));
+		State<Object> stateThreeOneTwo = new State<Object>(new StateId(3, 1, 2));		
+		State<Object> stateOneTwoThreeFour = new State<Object>(new StateId(1, 2, 3, 4));
 		
 		assertEquals("Uncorrect state equality. Should be equals: " + stateOne + " and " + stateOne, 
 				stateOne, stateOne);
@@ -31,6 +33,25 @@ public class TestState {
 				stateOneTwoThree, stateOneTwo);
 		assertNotEquals("Uncorrect state equality. Should not be equals: " + stateOneTwoThree + " and " + stateOneTwoThreeFour, 
 				stateOneTwoThree, stateOneTwoThreeFour);
+	}
+	
+	@Test public void represent() {
+		State<String> stateOne = new State<String>(new StateId(1), "one");
+		State<String> stateTwo = new State<String>(new StateId(2), "two");
+		State<String> stateOneTwo = new State<String>(new StateId(1, 2), "one-two");
+		State<String> stateTwoOne = new State<String>(new StateId(2, 1), "two-one");
+		
+		GSet<State<String>> states = new GSet<State<String>>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateOneTwo);
+		states.add(stateTwoOne);
+		
+		for (State<String> state : states)
+			System.out.println(state);
+		
+		for (State<String> state : states)
+			System.out.println(state.toExtendedString());
 	}
 
 }

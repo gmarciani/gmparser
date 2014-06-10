@@ -24,11 +24,14 @@
 package com.gmarciani.gmparser.models.parser.lr.bigproduction;
 
 import com.gmarciani.gmparser.models.automaton.graph.AbstractGraph;
+import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class BigProductionGraph extends AbstractGraph<Item, Character> {
+	
+	protected Grammar grammar;
 	
 	public BigProductionGraph(Grammar grammar) {
 		super();
@@ -58,6 +61,11 @@ public class BigProductionGraph extends AbstractGraph<Item, Character> {
 		}
 			
 		
+	}
+
+	public TransitionGraph generateTransitionGraph() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

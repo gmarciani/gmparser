@@ -29,19 +29,20 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestTransitionGraph {
 	
-	private TransitionGraph createTransitionGraph() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
+	private TransitionGraph<String> createTransitionGraph() {
+		State<String> stateOne = new State<String>(new StateId(1), "one");
+		State<String> stateTwo = new State<String>(new StateId(2), "two");
+		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateFour = new State<String>(new StateId(4), "four");
 		
-		TransitionGraph graph = new TransitionGraph(stateOne);		
+		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);
 		graph.addState(stateThree);
 		graph.addAsFinalState(stateFour);
@@ -65,16 +66,16 @@ public class TestTransitionGraph {
 	}
 
 	@Test public void create() {
-		TransitionGraph graph = this.createTransitionGraph();
+		TransitionGraph<String> graph = this.createTransitionGraph();
 		
-		State stateOne = graph.getStates().getState(1);
-		State stateTwo = graph.getStates().getState(2);
-		State stateThree = graph.getStates().getState(3);
-		State stateFour = graph.getStates().getState(4);
+		State<String> stateOne = graph.getStates().getState(1);
+		State<String> stateTwo = graph.getStates().getState(2);
+		State<String> stateThree = graph.getStates().getState(3);
+		State<String> stateFour = graph.getStates().getState(4);
 		
-		States expectedStates = new States(stateOne, stateTwo, stateThree, stateFour);
-		State expectedInitialState = stateOne;
-		States expectedFinalStates = new States(stateFour);
+		States<String> expectedStates = new States<String>(stateOne, stateTwo, stateThree, stateFour);
+		State<String> expectedInitialState = stateOne;
+		States<String> expectedFinalStates = new States<String>(stateFour);
 		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c', 'd', Grammar.EPSILON);
 		
 		assertEquals("Uncorrect transition-graph creation (states)", 
@@ -101,62 +102,62 @@ public class TestTransitionGraph {
 	}
 	
 	@Test public void computeImages() {
-		TransitionGraph graph = this.createTransitionGraph();
+		TransitionGraph<String> graph = this.createTransitionGraph();
 		
-		State stateOne = graph.getStates().getState(1);
-		State stateTwo = graph.getStates().getState(2);
-		State stateThree = graph.getStates().getState(3);
-		State stateFour = graph.getStates().getState(4);
+		State<String> stateOne = graph.getStates().getState(1);
+		State<String> stateTwo = graph.getStates().getState(2);
+		State<String> stateThree = graph.getStates().getState(3);
+		State<String> stateFour = graph.getStates().getState(4);
 		
-		States imageOneA = new States(stateTwo, stateFour);
-		States imageOneB = new States(stateOne, stateTwo, stateFour);
-		States imageOneC = new States(stateThree);
-		States imageOneD = new States(stateOne, stateTwo, stateFour);
+		States<String> imageOneA = new States<String>(stateTwo, stateFour);
+		States<String> imageOneB = new States<String>(stateOne, stateTwo, stateFour);
+		States<String> imageOneC = new States<String>(stateThree);
+		States<String> imageOneD = new States<String>(stateOne, stateTwo, stateFour);
 		
-		States imageTwoA = new States();
-		States imageTwoB = new States(stateOne, stateTwo, stateFour);
-		States imageTwoC = new States(stateThree);
-		States imageTwoD = new States(stateOne, stateTwo, stateFour);
+		States<String> imageTwoA = new States<String>();
+		States<String> imageTwoB = new States<String>(stateOne, stateTwo, stateFour);
+		States<String> imageTwoC = new States<String>(stateThree);
+		States<String> imageTwoD = new States<String>(stateOne, stateTwo, stateFour);
 		
-		States imageThreeA = new States();
-		States imageThreeB = new States();
-		States imageThreeC = new States(stateTwo, stateFour);
-		States imageThreeD = new States();
+		States<String> imageThreeA = new States<String>();
+		States<String> imageThreeB = new States<String>();
+		States<String> imageThreeC = new States<String>(stateTwo, stateFour);
+		States<String> imageThreeD = new States<String>();
 		
-		States imageFourA = new States();
-		States imageFourB = new States(stateOne, stateTwo, stateFour);
-		States imageFourC = new States(stateThree);
-		States imageFourD = new States(stateOne, stateTwo, stateFour);
+		States<String> imageFourA = new States<String>();
+		States<String> imageFourB = new States<String>(stateOne, stateTwo, stateFour);
+		States<String> imageFourC = new States<String>(stateThree);
+		States<String> imageFourD = new States<String>(stateOne, stateTwo, stateFour);
 		
-		States imageOneTwoA = new States(imageOneA, imageTwoA);
-		States imageOneTwoB = new States(imageOneB, imageTwoB);
-		States imageOneTwoC = new States(imageOneC, imageTwoC);
-		States imageOneTwoD = new States(imageOneD, imageTwoD);
+		States<String> imageOneTwoA = new States<String>(imageOneA, imageTwoA);
+		States<String> imageOneTwoB = new States<String>(imageOneB, imageTwoB);
+		States<String> imageOneTwoC = new States<String>(imageOneC, imageTwoC);
+		States<String> imageOneTwoD = new States<String>(imageOneD, imageTwoD);
 		
-		States imageOneThreeA = new States(imageOneA, imageThreeA);
-		States imageOneThreeB = new States(imageOneB, imageThreeB);
-		States imageOneThreeC = new States(imageOneC, imageThreeC);
-		States imageOneThreeD = new States(imageOneD, imageThreeD);
+		States<String> imageOneThreeA = new States<String>(imageOneA, imageThreeA);
+		States<String> imageOneThreeB = new States<String>(imageOneB, imageThreeB);
+		States<String> imageOneThreeC = new States<String>(imageOneC, imageThreeC);
+		States<String> imageOneThreeD = new States<String>(imageOneD, imageThreeD);
 		
-		States imageOneFourA = new States(imageOneA, imageFourA);
-		States imageOneFourB = new States(imageOneB, imageFourB);
-		States imageOneFourC = new States(imageOneC, imageFourC);
-		States imageOneFourD = new States(imageOneD, imageFourD);
+		States<String> imageOneFourA = new States<String>(imageOneA, imageFourA);
+		States<String> imageOneFourB = new States<String>(imageOneB, imageFourB);
+		States<String> imageOneFourC = new States<String>(imageOneC, imageFourC);
+		States<String> imageOneFourD = new States<String>(imageOneD, imageFourD);
 		
-		States imageTwoThreeA = new States(imageTwoA, imageThreeA);
-		States imageTwoThreeB = new States(imageTwoB, imageThreeB);
-		States imageTwoThreeC = new States(imageTwoC, imageThreeC);
-		States imageTwoThreeD = new States(imageTwoD, imageThreeD);
+		States<String> imageTwoThreeA = new States<String>(imageTwoA, imageThreeA);
+		States<String> imageTwoThreeB = new States<String>(imageTwoB, imageThreeB);
+		States<String> imageTwoThreeC = new States<String>(imageTwoC, imageThreeC);
+		States<String> imageTwoThreeD = new States<String>(imageTwoD, imageThreeD);
 		
-		States imageTwoFourA = new States(imageTwoA, imageFourA);
-		States imageTwoFourB = new States(imageTwoB, imageFourB);
-		States imageTwoFourC = new States(imageTwoC, imageFourC);
-		States imageTwoFourD = new States(imageTwoD, imageFourD);
+		States<String> imageTwoFourA = new States<String>(imageTwoA, imageFourA);
+		States<String> imageTwoFourB = new States<String>(imageTwoB, imageFourB);
+		States<String> imageTwoFourC = new States<String>(imageTwoC, imageFourC);
+		States<String> imageTwoFourD = new States<String>(imageTwoD, imageFourD);
 		
-		States imageThreeFourA = new States(imageThreeA, imageFourA);
-		States imageThreeFourB = new States(imageThreeB, imageFourB);
-		States imageThreeFourC = new States(imageThreeC, imageFourC);
-		States imageThreeFourD = new States(imageThreeD, imageFourD);		
+		States<String> imageThreeFourA = new States<String>(imageThreeA, imageFourA);
+		States<String> imageThreeFourB = new States<String>(imageThreeB, imageFourB);
+		States<String> imageThreeFourC = new States<String>(imageThreeC, imageFourC);
+		States<String> imageThreeFourD = new States<String>(imageThreeD, imageFourD);		
 		
 		assertTrue("Uncorrect transition-graph state images computation", 
 				graph.getImage(stateOne, 'a').equals(imageOneA)
@@ -177,34 +178,34 @@ public class TestTransitionGraph {
 				&& graph.getImage(stateFour, 'd').equals(imageFourD));
 		
 		assertTrue("Uncorrect transition-graph states images computation",
-				graph.getImage(new States(stateOne, stateTwo), 'a').equals(imageOneTwoA)
-				&& graph.getImage(new States(stateOne, stateTwo), 'b').equals(imageOneTwoB)
-				&& graph.getImage(new States(stateOne, stateTwo), 'c').equals(imageOneTwoC)
-				&& graph.getImage(new States(stateOne, stateTwo), 'd').equals(imageOneTwoD)
-				&& graph.getImage(new States(stateOne, stateThree), 'a').equals(imageOneThreeA)
-				&& graph.getImage(new States(stateOne, stateThree), 'b').equals(imageOneThreeB)
-				&& graph.getImage(new States(stateOne, stateThree), 'c').equals(imageOneThreeC)
-				&& graph.getImage(new States(stateOne, stateThree), 'd').equals(imageOneThreeD)
-				&& graph.getImage(new States(stateOne, stateFour), 'a').equals(imageOneFourA)
-				&& graph.getImage(new States(stateOne, stateFour), 'b').equals(imageOneFourB)
-				&& graph.getImage(new States(stateOne, stateFour), 'c').equals(imageOneFourC)
-				&& graph.getImage(new States(stateOne, stateFour), 'd').equals(imageOneFourD)
-				&& graph.getImage(new States(stateTwo, stateThree), 'a').equals(imageTwoThreeA)
-				&& graph.getImage(new States(stateTwo, stateThree), 'b').equals(imageTwoThreeB)
-				&& graph.getImage(new States(stateTwo, stateThree), 'c').equals(imageTwoThreeC)
-				&& graph.getImage(new States(stateTwo, stateThree), 'd').equals(imageTwoThreeD)
-				&& graph.getImage(new States(stateTwo, stateFour), 'a').equals(imageTwoFourA)
-				&& graph.getImage(new States(stateTwo, stateFour), 'b').equals(imageTwoFourB)
-				&& graph.getImage(new States(stateTwo, stateFour), 'c').equals(imageTwoFourC)
-				&& graph.getImage(new States(stateTwo, stateFour), 'd').equals(imageTwoFourD)
-				&& graph.getImage(new States(stateThree, stateFour), 'a').equals(imageThreeFourA)
-				&& graph.getImage(new States(stateThree, stateFour), 'b').equals(imageThreeFourB)
-				&& graph.getImage(new States(stateThree, stateFour), 'c').equals(imageThreeFourC)
-				&& graph.getImage(new States(stateThree, stateFour), 'd').equals(imageThreeFourD));
+				graph.getImage(new States<String>(stateOne, stateTwo), 'a').equals(imageOneTwoA)
+				&& graph.getImage(new States<String>(stateOne, stateTwo), 'b').equals(imageOneTwoB)
+				&& graph.getImage(new States<String>(stateOne, stateTwo), 'c').equals(imageOneTwoC)
+				&& graph.getImage(new States<String>(stateOne, stateTwo), 'd').equals(imageOneTwoD)
+				&& graph.getImage(new States<String>(stateOne, stateThree), 'a').equals(imageOneThreeA)
+				&& graph.getImage(new States<String>(stateOne, stateThree), 'b').equals(imageOneThreeB)
+				&& graph.getImage(new States<String>(stateOne, stateThree), 'c').equals(imageOneThreeC)
+				&& graph.getImage(new States<String>(stateOne, stateThree), 'd').equals(imageOneThreeD)
+				&& graph.getImage(new States<String>(stateOne, stateFour), 'a').equals(imageOneFourA)
+				&& graph.getImage(new States<String>(stateOne, stateFour), 'b').equals(imageOneFourB)
+				&& graph.getImage(new States<String>(stateOne, stateFour), 'c').equals(imageOneFourC)
+				&& graph.getImage(new States<String>(stateOne, stateFour), 'd').equals(imageOneFourD)
+				&& graph.getImage(new States<String>(stateTwo, stateThree), 'a').equals(imageTwoThreeA)
+				&& graph.getImage(new States<String>(stateTwo, stateThree), 'b').equals(imageTwoThreeB)
+				&& graph.getImage(new States<String>(stateTwo, stateThree), 'c').equals(imageTwoThreeC)
+				&& graph.getImage(new States<String>(stateTwo, stateThree), 'd').equals(imageTwoThreeD)
+				&& graph.getImage(new States<String>(stateTwo, stateFour), 'a').equals(imageTwoFourA)
+				&& graph.getImage(new States<String>(stateTwo, stateFour), 'b').equals(imageTwoFourB)
+				&& graph.getImage(new States<String>(stateTwo, stateFour), 'c').equals(imageTwoFourC)
+				&& graph.getImage(new States<String>(stateTwo, stateFour), 'd').equals(imageTwoFourD)
+				&& graph.getImage(new States<String>(stateThree, stateFour), 'a').equals(imageThreeFourA)
+				&& graph.getImage(new States<String>(stateThree, stateFour), 'b').equals(imageThreeFourB)
+				&& graph.getImage(new States<String>(stateThree, stateFour), 'c').equals(imageThreeFourC)
+				&& graph.getImage(new States<String>(stateThree, stateFour), 'd').equals(imageThreeFourD));
 	}
 	
 	@Test public void accept() {
-		TransitionGraph graph = this.createTransitionGraph();
+		TransitionGraph<String> graph = this.createTransitionGraph();
 		
 		String wordToAccept[] = {"", "b", "d", "bdbbdd", "a", "ab", "ad", "adba", "abdbbddba", "abadacc", "bdbbdda", "bdbbddababadadabada", "cc", "cccc", "ccccbadabddcc"};
 		String wordToNotAccept[] = {"abcd", "ababac", "adadac", "cababab", "aaabbcab"};
@@ -219,7 +220,7 @@ public class TestTransitionGraph {
 	}
 	
 	@Test public void acceptWithPowerset() {
-		TransitionGraph graph = this.createTransitionGraph();
+		TransitionGraph<String> graph = this.createTransitionGraph();
 		
 		String wordToAccept[] = {"", "b", "d", "bdbbdd", "a", "ab", "ad", "adba", "abdbbddba", "abadacc", "bdbbdda", "bdbbddababadadabada", "cc", "cccc", "ccccbadabddcc"};
 		String wordToNotAccept[] = {"abcd", "ababac", "adadac", "cababab", "aaabbcab"};
@@ -240,10 +241,10 @@ public class TestTransitionGraph {
 	}
 	
 	@Test public void represent() {
-		TransitionGraph graph = this.createTransitionGraph();
+		TransitionGraph<String> graph = this.createTransitionGraph();
 		
 		System.out.println(graph);
-		System.out.println(graph.toFormattedAutomaton());
+		System.out.println(graph.toExtendedFormattedAutomaton());
 	}
 
 }

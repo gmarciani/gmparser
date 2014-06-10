@@ -65,12 +65,11 @@ public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends 
 		return byX;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		Triple<X, Y, Z> other = (Triple<X, Y, Z>) obj;
+		Triple<?, ?, ?> other = (Triple<?, ?, ?>) obj;
 		
 		return (this.getX().equals(other.getX())
 				&& this.getY().equals(other.getY())

@@ -23,9 +23,10 @@
 
 package com.gmarciani.gmparser.models.automaton.state;
 
+import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
-public class States extends GSet<State> {
+public class States<V> extends GSet<State<V>> {
 
 	private static final long serialVersionUID = -971990098522233593L;
 
@@ -33,59 +34,59 @@ public class States extends GSet<State> {
 		super();
 	}
 	
-	public States(State ... states) {
-		super(states);
-	}
-	
-	public States(State[] ... states) {
-		super(states);
-	}
-	
-	public States(States ... states) {
-		super(states);
-	}
-	
-	public States(Integer ... ids) {
+	@SafeVarargs
+	public States(States<V> ... states) {
 		super();
-		for (Integer id : ids)
-			super.add(new State(new StateId(id)));
+		for (States<V> s : states)
+			this.addAll(s);
 	}
 	
-	public boolean add(StateId id) {
-		return super.add(new State(id));
+	@SafeVarargs
+	public States(State<V> ... states) {
+		super(states);
 	}
 	
-	public boolean add(Integer id) {
-		return super.add(new State(new StateId(id)));
-	}
-	
-	public boolean remove(StateId id) {
-		State state = this.getState(id);
-		if (state != null)
-			return super.remove(state);
-		return false;
-	}
-	
-	public boolean remove(Integer id) {
-		return super.remove(new StateId(id));
-	}
-	
-	public State getState(StateId id) {
-		for (State state : this)
+	public State<V> getState(StateId id) {
+		for (State<V> state : this)
 			if (state.getId().equals(id))
 				return state;
 		return null;
 	}
 	
-	public State getState(Integer id) {
+	public State<V> getState(Integer id) {
 		return this.getState(new StateId(id));
 	}
 	
 	public GSet<StateId> getIds() {
 		GSet<StateId> ids = new GSet<StateId>();
-		for (State state : this)
+		for (State<V> state : this)
 			ids.add(state.getId());
 		return ids;
+	}
+	
+	public GSet<V> getValues() {
+		GSet<V> values = new GSet<V>();
+		for (State<V> state : this)
+			values.addAll(state.getValue());
+		return values;
+	}
+	
+	public String toExtendedString() {
+		String header[] = {"State", "Value"};		
+		if (this.isEmpty()) {
+			String data[][] = {{"null", "null"}};
+			return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
+		}
+		
+		String data[][] = new String[this.size()][2];
+		int r = 0;
+		for (State<V> state : this) {
+			data[r][0] = String.valueOf(state.getId());
+			data[r][1] = String.valueOf(state.getValue());
+			r ++;
+		}
+			
+		return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);		
 	}
 
 }

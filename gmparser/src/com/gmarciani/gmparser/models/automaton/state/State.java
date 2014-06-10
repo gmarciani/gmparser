@@ -26,25 +26,38 @@ package com.gmarciani.gmparser.models.automaton.state;
 import java.util.Objects;
 import java.util.Set;
 
-public class State implements Comparable<State> {
+import com.gmarciani.gmparser.models.commons.set.GSet;
+
+public class State<V> implements Comparable<State<V>> {
 	
 	private final StateId id;
 	private boolean isInitial;
 	private boolean isFinal;
-
-	public State(StateId id) {
+	private GSet<V> value;
+	
+	public State(StateId id, V value) {
 		this.id = id;
+		this.value = (value != null) ? new GSet<V>(value) : new GSet<V>();
 		this.setIsInitial(false);
 		this.setIsFinal(false);
 	}
 	
-	public State(Integer id) {
-		this(new StateId(id));
+	public State(Set<StateId> ids, V value) {
+		this(new StateId(ids), value);
 	}
 	
-	public State(Integer ... ids) {
+	public State(Set<StateId> ids, Set<V> values) {
 		this(new StateId(ids));
+		this.getValue().addAll(values);
 	}
+	
+	public State(States<V> states) {
+		this(states.getIds(), states.getValues());
+	}
+
+	public State(StateId id) {
+		this(id, null);
+	}	
 	
 	public State(Set<StateId> ids) {
 		this(new StateId(ids));
@@ -67,6 +80,14 @@ public class State implements Comparable<State> {
 		this.setIsFinal(false);
 	}
 	
+	public GSet<V> getValue() {
+		return this.value;
+	}
+	
+	public void setValue(GSet<V> value) {
+		this.value = value;
+	}
+	
 	public boolean isFinal() {
 		return this.isFinal;
 	}
@@ -85,16 +106,20 @@ public class State implements Comparable<State> {
 		return string;
 	}
 	
+	public String toExtendedString() {
+		return this.toString() + "[" + this.getValue() + "]";
+	}
+	
 	@Override public boolean equals(Object obj) {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
-		State other = (State) obj;
+		State<?> other = (State<?>) obj;
 		
 		return this.getId().equals(other.getId());
 	}
 	
-	@Override public int compareTo(State other) {
+	@Override public int compareTo(State<V> other) {
 		return this.getId().compareTo(other.getId());
 	}
 	

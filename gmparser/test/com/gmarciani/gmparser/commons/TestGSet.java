@@ -33,6 +33,7 @@ import java.util.Queue;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestGSet {
@@ -85,23 +86,23 @@ public class TestGSet {
 	}
 	
 	@Test public void addCustom() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateOneTwo = new State(1, 2);
+		State<Object> stateOne = new State<Object>(new StateId(1));
+		State<Object> stateTwo = new State<Object>(new StateId(2));
+		State<Object> stateThree = new State<Object>(new StateId(3));
+		State<Object> stateOneTwo = new State<Object>(new StateId(1, 2));
 		
-		GSet<State> set = new GSet<State>();
+		GSet<State<Object>> set = new GSet<State<Object>>();
 		
-		List<State> list = new ArrayList<State>();
+		List<State<Object>> list = new ArrayList<State<Object>>();
 		list.add(stateOne);
 		list.add(stateTwo);
 		list.add(stateThree);
 		list.add(stateOneTwo);
 		
-		for (State state : list)
+		for (State<Object> state : list)
 			assertTrue("Uncorrect GSet insertion. Should be added: " + state + " in " + set, set.add(state));
 		
-		for (State state : list)
+		for (State<Object> state : list)
 			assertFalse("Uncorrect GSet insertion. Should not be added: " + state + " in " + set, set.add(state));		
 	}
 	

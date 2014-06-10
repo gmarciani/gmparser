@@ -27,34 +27,35 @@ import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public interface Automaton {
+public interface Automaton<V> {
 	
-	public States getStates();
+	public States<V> getStates();
 	public Alphabet getAlphabet();
-	public State getInitialState();
-	public States getFinalStates();
+	public State<V> getInitialState();
+	public States<V> getFinalStates();
 	
-	public boolean addState(State state);
-	public void addAsInitialState(State state);
-	public void addAsFinalState(State state);
-	public boolean removeState(State state);
-	public boolean containsState(State state);
-	public void removeFromFinalStates(State state);	
-	public boolean isInitialState(State state);
-	public boolean isFinalState(State state);
+	public boolean addState(State<V> state);
+	public void addAsInitialState(State<V> state);
+	public void addAsFinalState(State<V> state);
+	public boolean removeState(State<V> state);
+	public boolean containsState(State<V> state);
+	public void removeFromFinalStates(State<V> state);	
+	public boolean isInitialState(State<V> state);
+	public boolean isFinalState(State<V> state);
 	
 	public boolean addSymbol(Character symbol);	
 	public boolean removeSymbol(Character symbol);
 	public boolean containsSymbol(Character symbol);
 	
-	public boolean addTransition(State sState, State dState, Character symbol);
-	public boolean removeTransition(State sState, State dState, Character symbol);	
-	public States getTransitions(State sState, Character symbol);
-	public State getTransition(State sState, Character symbol);
-	public boolean containsTransition(State sState, State dState, Character symbol);
+	public boolean addTransition(State<V> sState, State<V> dState, Character symbol);
+	public boolean removeTransition(State<V> sState, State<V> dState, Character symbol);	
+	public States<V> getTransitions(State<V> sState, Character symbol);
+	public State<V> getTransition(State<V> sState, Character symbol);
+	public boolean containsTransition(State<V> sState, State<V> dState, Character symbol);
 	
 	public boolean isAccepted(String word);
 	
 	public String toFormattedAutomaton();
+	public String toExtendedFormattedAutomaton();
 
 }

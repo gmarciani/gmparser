@@ -32,37 +32,37 @@ import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class TransitionGraph extends AbstractAutomaton 
-							 implements Automaton {
+public class TransitionGraph<V> extends AbstractAutomaton<V> 
+							 implements Automaton<V> {
 	
-	public TransitionGraph(State initialState) {
-		this.states = new States();		
+	public TransitionGraph(State<V> initialState) {
+		this.states = new States<V>();		
 		this.alphabet = new Alphabet();
-		this.transitionFunction = new NonDeterministicTransitionFunction(this.getStates(), this.getAlphabet(), this.getStates());
+		this.transitionFunction = new NonDeterministicTransitionFunction<V>(this.getStates(), this.getAlphabet(), this.getStates());
 		this.addAsInitialState(initialState);
 	}	
 	
-	public FiniteAutomaton powersetConstruction() {
-		States initialStates = this.getEpsilonImage(this.getInitialState());
-		State initialState = new State(initialStates.getIds());
-		FiniteAutomaton automaton = new FiniteAutomaton(initialState);
+	public FiniteAutomaton<V> powersetConstruction() {
+		States<V> initialStates = this.getEpsilonImage(this.getInitialState());
+		State<V> initialState = new State<V>(initialStates);//new State<V>(initialStates.getIds());
+		FiniteAutomaton<V> automaton = new FiniteAutomaton<V>(initialState);
 		if (this.getFinalStates().containsSome(initialStates))
 				automaton.addAsFinalState(initialState);
-		States newStates = new States(automaton.getInitialState());
-		States addedStates = new States();
+		States<V> newStates = new States<V>(automaton.getInitialState());
+		States<V> addedStates = new States<V>();
 		while(!newStates.isEmpty()) {
-			State state = newStates.getFirst();
+			State<V> state = newStates.getFirst();
 			automaton.addState(state);
 			for (Character symbol : this.getAlphabet()) {
 				if (symbol.equals(Grammar.EPSILON)) // to be removed
 					continue;
 				automaton.addSymbol(symbol);
-				States sStates = new States();
+				States<V> sStates = new States<V>();
 				for (Integer id : state.getId())
 					sStates.add(this.getStates().getState(id));
-				States dStates = this.getImage(sStates, symbol);
+				States<V> dStates = this.getImage(sStates, symbol);
 				if (!dStates.isEmpty()) {
-					State dState = new State(dStates.getIds());
+					State<V> dState = new State<V>(dStates);
 					if (!automaton.containsState(dState))
 						automaton.addState(dState);
 					if (this.getFinalStates().containsSome(dStates))
@@ -80,47 +80,47 @@ public class TransitionGraph extends AbstractAutomaton
 	}
 	
 	@Override public boolean isAccepted(String word) {
-		States currentStates = new States(this.getInitialState());
+		States<V> currentStates = new States<V>(this.getInitialState());
 		for (Character symbol : word.toCharArray())
 			currentStates = this.getImage(currentStates, symbol);	
-		for (State state : this.getEpsilonImage(currentStates))
+		for (State<V> state : this.getEpsilonImage(currentStates))
 			if (this.isFinalState(state))
 				return true;		
 		return false;
 	}
 	
-	public States getImage(States states, Character symbol) {
-		States images = new States();
-		for (State state : states)
+	public States<V> getImage(States<V> states, Character symbol) {
+		States<V> images = new States<V>();
+		for (State<V> state : states)
 			images.addAll(this.getImage(state, symbol));	
 		return images;
 	}	
 	
-	public States getImage(State state, Character symbol) {
+	public States<V> getImage(State<V> state, Character symbol) {
 		if (symbol.equals(Grammar.EPSILON))
 			return this.getEpsilonImage(state);		
-		States images = new States();
-		for (State epsilonImageState : this.getEpsilonImage(state))
+		States<V> images = new States<V>();
+		for (State<V> epsilonImageState : this.getEpsilonImage(state))
 			images.addAll(this.getTransitions(epsilonImageState, symbol));
 		images.addAll(this.getEpsilonImage(images));
 		return images;
 	}
 	
-	public States getEpsilonImage(States states) {
-		States images = new States();
-		for (State state : states)
+	public States<V> getEpsilonImage(States<V> states) {
+		States<V> images = new States<V>();
+		for (State<V> state : states)
 			images.addAll(this.getEpsilonImage(state));
 		return images;
 	}
 	
-	public States getEpsilonImage(State state) {
-		return this.getEpsilonImage(new States(), state);
+	public States<V> getEpsilonImage(State<V> state) {
+		return this.getEpsilonImage(new States<V>(), state);
 	}
 	
-	protected States getEpsilonImage(States images, State state) {
+	protected States<V> getEpsilonImage(States<V> images, State<V> state) {
 		images.add(state);
-		States epsilonMoves = this.getTransitions(state, Grammar.EPSILON);
-		for (State epsilonMove : epsilonMoves)
+		States<V> epsilonMoves = this.getTransitions(state, Grammar.EPSILON);
+		for (State<V> epsilonMove : epsilonMoves)
 			if (!images.contains(epsilonMove))
 				images.addAll(this.getEpsilonImage(images, epsilonMove));
 		return images;

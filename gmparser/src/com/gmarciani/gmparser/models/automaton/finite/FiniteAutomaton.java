@@ -30,13 +30,13 @@ import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
-public class FiniteAutomaton extends AbstractAutomaton 
-							 implements Automaton {
+public class FiniteAutomaton<V> extends AbstractAutomaton<V> 
+							 implements Automaton<V> {
 	
-	public FiniteAutomaton(State initialState) {
-		this.states = new States();
+	public FiniteAutomaton(State<V> initialState) {
+		this.states = new States<V>();
 		this.alphabet = new Alphabet();
-		this.transitionFunction = new DeterministicTransitionFunction(this.getStates(), this.getAlphabet(), this.getStates());
+		this.transitionFunction = new DeterministicTransitionFunction<V>(this.getStates(), this.getAlphabet(), this.getStates());
 		this.addAsInitialState(initialState);
 	}
 	
@@ -47,7 +47,7 @@ public class FiniteAutomaton extends AbstractAutomaton
 	}
 	
 	@Override public boolean isAccepted(String word) {
-		State currentState = this.getInitialState();
+		State<V> currentState = this.getInitialState();
 		if (currentState == null)
 			return false;
 		for (Character symbol : word.toCharArray()) {

@@ -7,17 +7,18 @@ import org.junit.Test;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 
 public class TestPowersetConstruction {
 	
-	private TransitionGraph createTransitionGraph() {
-		State stateOne = new State(1);
-		State stateTwo = new State(2);
-		State stateThree = new State(3);
-		State stateFour = new State(4);
+	private TransitionGraph<String> createTransitionGraph() {
+		State<String> stateOne = new State<String>(new StateId(1), "one");
+		State<String> stateTwo = new State<String>(new StateId(2), "two");
+		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateFour = new State<String>(new StateId(4), "four");
 		
-		TransitionGraph graph = new TransitionGraph(stateOne);		
+		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);
 		graph.addState(stateThree);
 		graph.addAsFinalState(stateFour);
@@ -40,12 +41,12 @@ public class TestPowersetConstruction {
 		return graph;
 	}
 	
-	private FiniteAutomaton createExpectedAutomaton() {
-		State stateOneTwoFour = new State(1, 2, 4);
-		State stateTwoFour = new State(2, 4);
-		State stateThree = new State(3);
+	private FiniteAutomaton<String> createExpectedAutomaton() {
+		State<String> stateOneTwoFour = new State<String>(new StateId(1, 2, 4), "one-two-four");
+		State<String> stateTwoFour = new State<String>(new StateId(2, 4), "two-four");
+		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		FiniteAutomaton automaton = new FiniteAutomaton(stateOneTwoFour);
+		FiniteAutomaton<String> automaton = new FiniteAutomaton<String>(stateOneTwoFour);
 		automaton.addAsFinalState(stateOneTwoFour);
 		automaton.addAsFinalState(stateTwoFour);
 		automaton.addState(stateThree);
@@ -68,11 +69,11 @@ public class TestPowersetConstruction {
 	}
 
 	@Test public void powersetConstruction() {
-		TransitionGraph graph = this.createTransitionGraph();
-		FiniteAutomaton expectedAutomaton = this.createExpectedAutomaton();
+		TransitionGraph<String> graph = this.createTransitionGraph();
+		FiniteAutomaton<String> expectedAutomaton = this.createExpectedAutomaton();
 		
-		System.out.println(graph.toFormattedAutomaton());
-		System.out.println(graph.powersetConstruction().toFormattedAutomaton());
+		System.out.println(graph.toExtendedFormattedAutomaton());
+		System.out.println(graph.powersetConstruction().toExtendedFormattedAutomaton());
 		
 		assertEquals("Uncorrect powerset-construction", 
 				expectedAutomaton, graph.powersetConstruction());
