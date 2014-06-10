@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.models.parser.lr;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
@@ -43,19 +42,13 @@ public class LROneParser implements Parser {
 	@Override public boolean parse(Grammar grammar, String word) {
 		Grammar augmentedGrammar = this.generateAugmentedGrammar(grammar);
 		BigProductions bigProductions = this.generateBigProductions(augmentedGrammar);
-		TransitionGraph graph = this.generateTransitionGraph(bigProductions);
-		FiniteAutomaton automaton = this.generateFiniteStateAutomaton(graph);
+		FiniteAutomaton automaton = this.generateFiniteAutomaton(bigProductions);
 		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
 		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
 		LROneAction finalAction = pda.parse(word);
 		return finalAction.isActionType(LROneActionType.ACCEPT);
 	}	
-
-	private BigProductions generateBigProductions(Grammar grammar) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	private Grammar generateAugmentedGrammar(Grammar grammar) {
 		if (grammar.getProductionsForNonTerminal(grammar.getAxiom()).size() > 1
 				|| grammar.getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
@@ -63,14 +56,12 @@ public class LROneParser implements Parser {
 		
 		return grammar;
 	}
+
+	private BigProductions generateBigProductions(Grammar grammar) {
+		return BigProductions.generate(grammar);
+	}	
 	
-	private TransitionGraph generateTransitionGraph(BigProductions bigProductions) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	private FiniteAutomaton generateFiniteStateAutomaton(TransitionGraph transitionGraph) {
-		// TODO Auto-generated method stub
+	private FiniteAutomaton generateFiniteAutomaton(BigProductions bigProductions) {
 		return null;
 	}
 	

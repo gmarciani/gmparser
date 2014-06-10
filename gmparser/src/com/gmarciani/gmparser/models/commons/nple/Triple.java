@@ -57,14 +57,11 @@ public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends 
 	@Override public int compareTo(Triple<X, Y, Z> other) {
 		int byX = this.getX().compareTo(other.getX());
 		int byY = this.getY().compareTo(other.getY());
-		int byZ = this.getZ().compareTo(other.getZ());
-		
+		int byZ = this.getZ().compareTo(other.getZ());		
 		if (byX == 0 && byY == 0)
-			return byZ;
-		
+			return byZ;		
 		if (byX == 0)
-			return byY;
-		
+			return byY;		
 		return byX;
 	}
 	

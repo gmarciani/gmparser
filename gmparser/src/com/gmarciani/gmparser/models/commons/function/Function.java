@@ -59,6 +59,7 @@ public interface Function<X extends Comparable<X>,
 	public GSet<Triple<X, Y, Z>> getAllForXZ(X x, Z z);
 	public GSet<Triple<X, Y, Z>> getAllForYZ(Y y, Z z);
 	public Triple<X, Y, Z> getXYZ(X x, Y y, Z z);
+	public GSet<Triple<X, Y, Z>> getAll();
 	
 	public boolean containsX(X x);
 	public boolean containsY(Y y);

@@ -225,6 +225,14 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 				return triple;		
 		return null;
 	}		
+	
+	@Override public GSet<Triple<X, Y, Z>> getAll() {
+		GSet<Triple<X, Y, Z>> triples = new GSet<Triple<X, Y, Z>>();
+		for (Triple<X, Y, Z> triple : this.function) {
+			triples.add(triple);
+		}
+		return triples;
+	}
 
 	@Override public boolean containsX(X x) {
 		for (Triple<X, Y, Z> triple : this.getFunction())

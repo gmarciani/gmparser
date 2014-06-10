@@ -23,43 +23,25 @@
 
 package com.gmarciani.gmparser.parser.lr;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.production.Production;
-import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProduction;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.GrammarFactory;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 
 public class TestBigProduction {
+	
+	private final static String GRAMMAR = "S->CC;C->cC;C->d.";
 
 	@Test public void create() {
-		BigProduction bigProduction = new BigProduction(new Production("S", "ABcdEF"), 1, new Alphabet("cd$"));
-		//System.out.println(bigProduction);
-	}
-	
-	@Test public void sort() {
-		BigProduction bigProductionOne = new BigProduction(new Production("A", "ABC"), 0, new Alphabet("cd$"));
-		BigProduction bigProductionTwo = new BigProduction(new Production("A", "ABC"), 1, new Alphabet("cd$"));
-		BigProduction bigProductionThree = new BigProduction(new Production("B", "ABC"), 0, new Alphabet("cd$"));
-		BigProduction bigProductionFour = new BigProduction(new Production("B", "ABC"), 1, new Alphabet("cd$"));
-		BigProduction bigProductionFive = new BigProduction(new Production("A", "XYZ"), 0, new Alphabet("cd$"));
-		BigProduction bigProductionSix = new BigProduction(new Production("A", "XYZ"), 1, new Alphabet("cd$"));
-		BigProduction bigProductionSeven = new BigProduction(new Production("B", "XYZ"), 0, new Alphabet("cd$"));
-		BigProduction bigProductionEight = new BigProduction(new Production("B", "XYZ"), 1, new Alphabet("cd$"));
-		
-		SortedSet<BigProduction> set = new TreeSet<BigProduction>();
-		set.add(bigProductionOne);
-		set.add(bigProductionTwo);
-		set.add(bigProductionThree);
-		set.add(bigProductionFour);
-		set.add(bigProductionFive);
-		set.add(bigProductionSix);
-		set.add(bigProductionSeven);
-		set.add(bigProductionEight);
-
-		//System.out.println(set);
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR)
+				.withAxiom('S')
+				.withEpsilon(Grammar.EPSILON)
+				.create();
+		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
+		System.out.println(bigProduction);
+		System.out.println(bigProduction.toFormattedGraph());
 	}
 
 }
