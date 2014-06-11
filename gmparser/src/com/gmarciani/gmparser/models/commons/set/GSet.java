@@ -13,26 +13,13 @@ public class GSet<T> extends CopyOnWriteArraySet<T> {
 		super();
 	}
 	
-	@SafeVarargs
-	public GSet(T ... members) {
+	public GSet(T member) {
 		super();
-		for (T member : members)
-			this.add(member);
+		super.add(member);
 	}
 	
-	@SafeVarargs
-	public GSet(T[] ... membersArray) {
-		super();
-		for (T[] members : membersArray)
-			for (T member : members)
-				this.add(member);
-	}
-
-	@SafeVarargs
-	public GSet(Collection<T> ... sets) {
-		super();
-		for (Collection<T> set : sets)
-			this.addAll(set);
+	public GSet(Collection<T> collection) {
+		super(collection);
 	}
 	
 	public boolean containsSome(Collection<T> collection) {

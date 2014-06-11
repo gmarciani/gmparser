@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
@@ -303,6 +304,14 @@ public class Grammar {
 		return this.getProductions().getUseless(this.getNonTerminals(), this.getTerminals(), this.getAxiom());
 	}
 	
+	public Productions getProductionsWithLeft(Member left) {
+		return this.getProductions().getProductionsWithLeft(left);
+	}
+	
+	public Productions getProductionsWithRight(Member right) {
+		return this.getProductions().getProductionsWithRight(right);
+	}
+	
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		return this.getProductions().getProductionsWithin(alphabet);
 	}
@@ -383,6 +392,31 @@ public class Grammar {
 		this.rebuildAlphabet();
 	}
 	
+	public Alphabet getFirstOne(Character symbol) {		
+		if (symbol.equals(Grammar.EPSILON))
+			return new Alphabet(Grammar.EPSILON);
+		if (this.getTerminals().contains(symbol))
+			return new Alphabet(symbol);
+		Alphabet first = new Alphabet();
+		Alphabet nullables = this.getNullables();
+		for (Production production : this.getProductions()) {
+			if (!production.getLeft().getValue().equals(String.valueOf(symbol)))
+				continue;
+			for (int i = 0; i < production.getRightSize(); i ++) {	
+				Character pSymbol = production.getRight().getValue().charAt(i);
+				if (!nullables.contains(pSymbol)) {
+					Alphabet newFirst = this.getFirstOne(pSymbol);
+					first.addAll(newFirst);
+					first.remove(Grammar.EPSILON);
+					break;
+				}				
+			}
+			if (nullables.containsAll(production.getRight().getNonTerminalAlphabet()))
+				first.add(Grammar.EPSILON);
+		}
+		return first;
+	}
+	
 	private void rebuildAlphabet() {
 		this.nonTerminals = this.getProductions().getNonTerminalAlphabet();
 		this.terminals = this.getProductions().getTerminalAlphabet();
@@ -392,6 +426,20 @@ public class Grammar {
 		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
 		
 		return Pattern.matches(regex, strGrammar);
+	}
+	
+	public static Grammar generateAugmentedGrammar(Grammar grammar) {
+		Grammar augmentedGrammar = new Grammar(grammar);
+		Character newNonTerminalForOldAxiom = augmentedGrammar.getNewNonTerminal();
+		Character newAxiom = 'S';
+		
+		augmentedGrammar.renameNonTerminal(augmentedGrammar.getAxiom(), newNonTerminalForOldAxiom);
+		Production augmentedProduction = new Production(newAxiom, newNonTerminalForOldAxiom);
+		augmentedGrammar.addProduction(augmentedProduction);
+		
+		augmentedGrammar.addTerminal('$');
+		
+		return augmentedGrammar;
 	}
 
 	@Override public String toString() {

@@ -34,8 +34,14 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createCompleteFunction() {
 		System.out.println("#createCompleteFunction");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		for (Character c : domainX) {
@@ -61,8 +67,14 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createCompleteAndRemoveAllX() {
 		System.out.println("#createCompleteAndRemoveAllX");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		for (Character c : domainX) {
@@ -89,8 +101,14 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createCompleteAndRemoveAllY() {
 		System.out.println("#createCompleteAndRemoveAllY");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		for (Character c : domainX) {
@@ -117,8 +135,14 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createCompleteAndRemoveAllXY() {
 		System.out.println("#createCompleteAndRemoveAllXY");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		for (Character c : domainX) {
@@ -145,8 +169,14 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createIncompleteFunction() {
 		System.out.println("#createIncompleteFunction");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		for (Character c : domainX)
@@ -165,8 +195,14 @@ public class TestNonDeterministicFunction {
 
 	@Test public void createEmptyFunction() {
 		System.out.println("#createEmptyFunction");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		Function<Character, Integer, String> function = new NonDeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
@@ -178,7 +214,10 @@ public class TestNonDeterministicFunction {
 	@Test public void createEmptyDomainX() {
 		System.out.println("#createEmptyDomainX");
 		GSet<Character> domainX = new GSet<Character>();
-		GSet<Integer> domainY = new GSet<Integer>(1, 2, 3);
+		GSet<Integer> domainY = new GSet<Integer>();
+		domainY.add(1);
+		domainY.add(2);
+		domainY.add(3);
 		GSet<String> domainZ = new GSet<String>();
 		
 		Function<Character, Integer, String> function = new NonDeterministicFunction<Character, Integer, String>(domainX, domainY, domainZ);
@@ -189,7 +228,10 @@ public class TestNonDeterministicFunction {
 	
 	@Test public void createEmptyDomainY() {
 		System.out.println("#createEmptyDomainY");
-		GSet<Character> domainX = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> domainX = new GSet<Character>();
+		domainX.add('a');
+		domainX.add('b');
+		domainX.add('c');
 		GSet<Integer> domainY = new GSet<Integer>();
 		GSet<String> domainZ = new GSet<String>();
 		

@@ -65,7 +65,10 @@ public class TestFiniteAutomaton {
 		State<String> stateTwo = automaton.getStates().getState(2);
 		State<String> stateThree = automaton.getStates().getState(3);
 		
-		States<String> expectedStates = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> expectedStates = new States<String>();
+		expectedStates.add(stateOne);
+		expectedStates.add(stateTwo);
+		expectedStates.add(stateThree);
 		State<String> expectedInitialState = stateOne;
 		States<String> expectedFinalStates = new States<String>(stateThree);
 		Alphabet expectedAlphabet = new Alphabet('a', 'b', 'c');
@@ -111,9 +114,15 @@ public class TestFiniteAutomaton {
 		automaton.removeState(stateTwo);
 		automaton.removeSymbol('b');
 		
-		States<String> expectedStates = new States<String>(stateOne, stateThree, stateFour, stateFive);
+		States<String> expectedStates = new States<String>();
+		expectedStates.add(stateOne);
+		expectedStates.add(stateThree);
+		expectedStates.add(stateFour);
+		expectedStates.add(stateFive);
 		State<String> expectedInitialState = stateFour;
-		States<String> expectedFinalStates = new States<String>(stateOne, stateFive);
+		States<String> expectedFinalStates = new States<String>();
+		expectedFinalStates.add(stateOne);
+		expectedFinalStates.add(stateFive);
 		Alphabet expectedAlphabet = new Alphabet('a', 'c');
 		
 		assertEquals("Uncorrect finite-automaton creation (states)", 

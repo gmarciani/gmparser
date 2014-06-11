@@ -25,10 +25,8 @@ package com.gmarciani.gmparser.commons;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import org.junit.Test;
 
@@ -38,11 +36,7 @@ import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestGSet {
 
-	@Test public void create() {
-		Character symbols[] = {'a', 'b', 'c'};
-		Character pSymbolsOne[] = {'a'};
-		Character pSymbolsTwo[] = {'b', 'c'};
-		
+	@Test public void create() {		
 		GSet<Character> setOne = new GSet<Character>();
 		setOne.add('a');
 		setOne.add('b');
@@ -52,22 +46,16 @@ public class TestGSet {
 		setTwo.add('b');
 		setTwo.add('c');
 		
-		GSet<Character> setThree = new GSet<Character>('a', 'b', 'c');
+		GSet<Character> setThree = new GSet<Character>();
+		setThree.add('a');
+		setThree.add('b');
+		setThree.add('c');
 		
-		GSet<Character> setFour = new GSet<Character>(symbols);		
-		
-		GSet<Character> setFive = new GSet<Character>(pSymbolsOne, pSymbolsTwo);
-		
-		GSet<Character> setSix = new GSet<Character>(setOne, setTwo, setThree);
-		
-		GSet<Character> setSeven = new GSet<Character>(setOne);
+		GSet<Character> setFour = new GSet<Character>(setOne);
 		
 		assertEquals("Uncorrect GSet creation. Should be equals: " + setOne + " and " + setTwo, setOne, setTwo);
 		assertEquals("Uncorrect GSet creation. Should be equals: " + setTwo + " and " + setThree, setTwo, setThree);
 		assertEquals("Uncorrect GSet creation. Should be equals: " + setThree + " and " + setFour, setThree, setFour);
-		assertEquals("Uncorrect GSet creation. Should be equals: " + setFour + " and " + setFive, setFour, setFive);
-		assertEquals("Uncorrect GSet creation. Should be equals: " + setFive + " and " + setSix, setFive, setSix);
-		assertEquals("Uncorrect GSet creation. Should be equals: " + setSix + " and " + setSeven, setSix, setSeven);
 	}
 	
 	@Test public void add() {
@@ -104,25 +92,6 @@ public class TestGSet {
 		
 		for (State<Object> state : list)
 			assertFalse("Uncorrect GSet insertion. Should not be added: " + state + " in " + set, set.add(state));		
-	}
-	
-	@Test public void iterate() {
-		GSet<Integer> set = new GSet<Integer>(1, 2, 3);
-		
-		for (int n : set)
-			if (n < 100)
-				set.add(n *2);
-		
-		Queue<Integer> queue = new ArrayDeque<Integer>();
-		queue.addAll(set);
-		while(!queue.isEmpty()) {
-			int n = queue.poll();
-			if (n < 100) {
-				queue.add(n*2);
-				set.add(n);
-			}
-		}
-		
 	}
 
 }

@@ -59,15 +59,15 @@ public class Productions extends GSet<Production> {
 	}
 	
 	public Productions(Production ... productions) {
-		super(productions);
-	}
-	
-	public Productions(Production[] ... productions) {
-		super(productions);
+		super();
+		for (Production production : productions)
+			super.add(production);
 	}
 	
 	public Productions(Productions ... productions) {
-		super(productions);
+		super();
+		for (Productions production : productions)
+			super.addAll(production);
 	}
 		
 	public boolean add(Member left, Member right) {
@@ -78,6 +78,22 @@ public class Productions extends GSet<Production> {
 	public boolean remove(Member left, Member right) {
 		Production production = new Production(left, right);
 		return this.remove(production);
+	}
+	
+	public Productions getProductionsWithLeft(Member left) {
+		Productions target = new Productions();
+		for (Production production : this)
+			if (production.getLeft().equals(left))
+				target.add(production);
+		return target;
+	}
+	
+	public Productions getProductionsWithRight(Member right) {
+		Productions target = new Productions();
+		for (Production production : this)
+			if (production.getRight().equals(right))
+				target.add(production);
+		return target;
 	}
 	
 	public Productions getProductionsWithin(Alphabet alphabet) {

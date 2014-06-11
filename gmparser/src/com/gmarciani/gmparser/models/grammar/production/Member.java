@@ -57,7 +57,8 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public Member(Character value) {
-		this.setValue(value);
+		this("" + value);
+		//this.setValue(value);
 	}
 
 	public String getValue() {
@@ -70,8 +71,9 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public void setValue(Character value) {
-		this.value = "" + value;
-		this.rebuild();
+		this.setValue("" + value);
+		//this.value = "" + value;
+		//this.rebuild();
 	}
 	
 	public int getSize() {
@@ -181,14 +183,24 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public boolean isEpsilon() {
-		return this.getValue().matches("^" + Grammar.EPSILON + "+$");
+		for (Character symbol : this.getValue().toCharArray())
+			if (!symbol.equals(Grammar.EPSILON))
+				return false;
+		return true;
+		//return this.getValue().matches("^" + Grammar.EPSILON + "+$");
 	}
 	
 	private void rebuild() {
 		if (this.isEpsilon()) {
 			this.value = Grammar.EPSILON.toString();
 		} else {
-			this.value = this.getValue().replace(Grammar.EPSILON.toString(), "");
+			String oldValue = this.getValue();
+			String newValue = "";
+			for (Character symbol : oldValue.toCharArray())
+				if (!symbol.equals(Grammar.EPSILON))
+					newValue += symbol;
+			this.value = newValue;
+			//this.value = this.getValue().replace(Grammar.EPSILON.toString(), "");
 		}			
 	}
 	

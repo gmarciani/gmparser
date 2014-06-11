@@ -40,11 +40,9 @@ public class Alphabet extends GSet<Character> {
 	}
 	
 	public Alphabet(Character ... symbols) {
-		super(symbols);
-	}
-	
-	public Alphabet(Character[] ... symbols) {
-		super(symbols);
+		super();
+		for (Character symbol : symbols)
+			super.add(symbol);
 	}
 	
 	public Alphabet(String symbols) {
@@ -53,7 +51,9 @@ public class Alphabet extends GSet<Character> {
 	}	
 	
 	public Alphabet(Alphabet ... alphabets) {
-		super(alphabets);
+		super();
+		for (Alphabet alphabet : alphabets)
+			super.addAll(alphabet);
 	}		
 	
 	public Alphabet(AlphabetType type) {

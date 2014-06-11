@@ -34,16 +34,8 @@ public class States<V> extends GSet<State<V>> {
 		super();
 	}
 	
-	@SafeVarargs
-	public States(States<V> ... states) {
-		super();
-		for (States<V> s : states)
-			this.addAll(s);
-	}
-	
-	@SafeVarargs
-	public States(State<V> ... states) {
-		super(states);
+	public States(State<V> state) {
+		super(state);
 	}
 	
 	public State<V> getState(StateId id) {
@@ -81,7 +73,7 @@ public class States<V> extends GSet<State<V>> {
 		String data[][] = new String[this.size()][2];
 		int r = 0;
 		for (State<V> state : this) {
-			data[r][0] = String.valueOf(state.getId());
+			data[r][0] = String.valueOf(state);
 			data[r][1] = String.valueOf(state.getValue());
 			r ++;
 		}

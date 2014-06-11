@@ -25,37 +25,38 @@ package com.gmarciani.gmparser.models.parser.lr.bigproduction;
 
 import java.util.Objects;
 
-import com.gmarciani.gmparser.models.commons.nple.Pair;
-import com.gmarciani.gmparser.models.commons.set.GSet;
-import com.gmarciani.gmparser.models.grammar.production.Member;
+import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class Item implements Comparable<Item> {
 	
-	public static final String DOT_SEPARATOR = ".";
+	public static final Character DOT_SEPARATOR = '.';
+	public static final Character END_MARKER = '$';
 	
 	private final Production production;
-	private final Integer dot;
+	private final int dot;
+	private Alphabet lookAhead;
 	
-	public Item(Production production, Integer dot) {
+	public Item(Production production, int dot, Alphabet lookAhead) {
 		this.production = production;
 		this.dot = dot;
-	}
-
-	public Item(Member left, Member right, Integer dot) {
-		this(new Production(left, right), dot);
+		this.lookAhead = (lookAhead != null) ? lookAhead : new Alphabet();
 	}
 	
-	public Item(String left, String right, Integer dot) {
-		this(new Member(left), new Member(right), dot);
+	public Item(Production production, int dot) {
+		this(production, dot, null);
 	}
 	
 	public Production getProduction() {
 		return this.production;
 	}
 	
-	public Integer getDot() {
+	public int getDot() {
 		return this.dot;
+	}
+	
+	public Alphabet getLookAhead() {
+		return this.lookAhead;
 	}
 	
 	public Character getJustReadCharacter() {
@@ -65,45 +66,36 @@ public class Item implements Comparable<Item> {
 	}
 	
 	public boolean hasJustReadCharacter() {
-		return !this.getDot().equals(0);
+		return this.getDot() >= 1;
 	}
 	
 	public Character getNextCharacter() {
-		if (this.hasNextCharacter())
-			return this.getProduction().getRight().getValue().charAt(this.getDot());
+		return this.getNextCharacter(0);
+	}
+	
+	public Character getNextCharacter(int index) {
+		if (this.hasNextCharacter(index))
+			return this.getProduction().getRight().getValue().charAt(this.getDot() + index);
 		return null;
 	}
 	
 	public boolean hasNextCharacter() {
-		return !this.getDot().equals(this.getProduction().getRightSize());
+		return this.hasNextCharacter(0);
+	}
+	
+	public boolean hasNextCharacter(int index) {
+		return this.getProduction().getRightSize() >= this.getDot() + index + 1;
 	}
 	
 	public boolean isStart() {
-		return this.getDot().equals(0);
+		return this.getDot() == 0;
 	}
 	
 	public boolean isComplete() {
-		return this.getDot().equals(Integer.valueOf(this.getProduction().getRightSize()));
+		return this.getDot() == this.getProduction().getRightSize();
 	}
 	
-	public static GSet<Item> generateItems(Production production) {
-		if (production.isEpsilonProduction())
-			return new GSet<Item>(new Item(production, 1));
-		GSet<Item> items = new GSet<Item>();			
-		for (int i = 0; i <= production.getRightSize(); i ++)
-			items.add(new Item(production, i));		
-		return items;
-	}
 	
-	public static GSet<Pair<Item, Item>> generateItemPair(Production production) {
-		GSet<Pair<Item, Item>> pairs = new GSet<Pair<Item, Item>>();
-		for (int i = 0; i < production.getRightSize(); i ++) {
-			Item sItem = new Item(production, i);
-			Item dItem = new Item(production, i +1);
-			pairs.add(new Pair<Item, Item>(sItem, dItem));
-		}			
-		return pairs;		
-	}
 	
 	@Override public String toString() {
 		String lhs = this.getProduction().getLeft().toString();
@@ -111,7 +103,7 @@ public class Item implements Comparable<Item> {
 				DOT_SEPARATOR + 
 				this.getProduction().getRight().toString().substring(this.getDot());
 		
-		return lhs + Production.MEMBER_SEPARATOR + rhs;
+		return "(" + lhs + Production.MEMBER_SEPARATOR + rhs + "," + this.getLookAhead() + ")";
 	}	
 	
 	@Override public boolean equals(Object obj) {
@@ -121,13 +113,14 @@ public class Item implements Comparable<Item> {
 		Item other = (Item) obj;
 		
 		return (this.getProduction().equals(other.getProduction()))
-				&& this.getDot().equals(other.getDot());
+				&& this.getDot() == other.getDot()
+				&& this.getLookAhead().equals(other.getLookAhead());
 	}	
 	
 	@Override public int compareTo(Item other) {
 		int byProduction = this.getProduction().compareTo(other.getProduction());
 		if (byProduction == 0)
-			return this.getDot().compareTo(other.getDot());
+			return Integer.valueOf(this.getDot()).compareTo(other.getDot());
 		return byProduction;	
 	}
 	

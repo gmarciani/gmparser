@@ -40,7 +40,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -61,7 +64,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -79,7 +85,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -102,7 +111,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -125,7 +137,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -148,7 +163,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet('a', 'b', 'c');
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);
@@ -174,7 +192,10 @@ public class TestDeterministicTransitionFunction {
 		State<String> stateTwo = new State<String>(new StateId(2), "two");
 		State<String> stateThree = new State<String>(new StateId(3), "three");
 		
-		States<String> states = new States<String>(stateOne, stateTwo, stateThree);
+		States<String> states = new States<String>();
+		states.add(stateOne);
+		states.add(stateTwo);
+		states.add(stateThree);
 		Alphabet alphabet = new Alphabet();
 		
 		TransitionFunction<String> function = new DeterministicTransitionFunction<String>(states, alphabet, states);

@@ -33,12 +33,12 @@ import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
 public class TestBigProduction {
 	
-	private final static String GRAMMAR = "S->CC;C->cC;C->d.";
+	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
 
 	@Test public void createTransitionGraph() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR)
-				.withAxiom('S')
+				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
