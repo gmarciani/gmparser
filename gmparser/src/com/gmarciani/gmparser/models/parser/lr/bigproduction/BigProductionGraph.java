@@ -23,49 +23,63 @@
 
 package com.gmarciani.gmparser.models.parser.lr.bigproduction;
 
-import com.gmarciani.gmparser.models.automaton.graph.AbstractGraph;
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
-public class BigProductionGraph extends AbstractGraph<Item, Character> {
+public class BigProductionGraph extends TransitionGraph<Item> {
 	
-	protected Grammar grammar;
+	private Grammar grammar;
 	
 	public BigProductionGraph(Grammar grammar) {
-		super();
-		this.generate(grammar);		
+		super();		
+		this.grammar = new Grammar(grammar);
+		this.generate();		
 	}
 	
-	protected void generate(Grammar grammar) {
+	public Grammar getGrammar() {
+		return this.grammar;
+	}
+	
+	protected void generate() {
 		GSet<Item> items = new GSet<Item>();
-		for (Production production : grammar.getProductions())
+		for (Production production : this.getGrammar().getProductions())
 			items.addAll(Item.generateItems(production));
+		int id = 1;
 		for (Item item : items) {
-			super.addVertex(item);
+			super.addState(new State<Item>(new StateId(id), item));
+			id ++;
 			if (item.hasNextCharacter())
-				super.addEdge(item.getNextCharacter());
+				super.addSymbol(item.getNextCharacter());
 		}
-		super.addEdge(Grammar.EPSILON);
-		for (Item sItem : items) {
-			for (Item dItem : items) {
+		super.addSymbol(Grammar.EPSILON);
+		for (State<Item> sState : super.getStates()) {
+			Item sItem = sState.getValue().getFirst();
+			for (State<Item> dState : super.getStates()) {
+				Item dItem = dState.getValue().getFirst();
 				if (sItem.getProduction().equals(dItem.getProduction())
 						&& dItem.getDot().equals(sItem.getDot() + 1))
-					super.addTransition(sItem, dItem, sItem.getNextCharacter());
+					super.addTransition(sState, dState, sItem.getNextCharacter());
 				if (sItem.hasNextCharacter()
 						&& !dItem.hasJustReadCharacter()
 						&& sItem.getNextCharacter().equals(dItem.getProduction().getLeft().getValue().charAt(0)))
-						super.addTransition(sItem, dItem, Grammar.EPSILON);
+						super.addTransition(sState, dState, Grammar.EPSILON);
 			}
+		}	
+		for (State<Item> state : super.getStates()) {
+			Item item = state.getValue().getFirst();
+			if (item.getProduction().getLeftSize() == 1
+					&& item.getProduction().getLeft().getValue().charAt(0) == this.getGrammar().getAxiom()
+					&& item.isStart())
+				super.addAsInitialState(state);
+			if (item.getProduction().getLeftSize() == 1
+					&& item.getProduction().getLeft().getValue().charAt(0) == this.getGrammar().getAxiom()
+					&& item.isComplete())
+				super.addAsFinalState(state);
 		}
-			
-		
-	}
-
-	public TransitionGraph generateTransitionGraph() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 
 }

@@ -27,6 +27,7 @@ import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
 import com.gmarciani.gmparser.models.commons.nple.Triple;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class NonDeterministicTransitionFunction<V> extends NonDeterministicFunction<State<V>, Character, State<V>> 
@@ -90,6 +91,10 @@ public class NonDeterministicTransitionFunction<V> extends NonDeterministicFunct
 		for (Triple<State<V>, Character, State<V>> triple : super.getAllForXY(state, symbol))
 			transitions.add(triple.getZ());
 		return transitions;
+	}
+	
+	@Override public GSet<Triple<State<V>, Character, State<V>>> getAllTransitions() {
+		return super.getAll();
 	}
 
 	@Override public boolean containsTransition(State<V> sState, State<V> dState, Character symbol) {

@@ -25,6 +25,8 @@ package com.gmarciani.gmparser.models.automaton;
 
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public interface Automaton<V> {
@@ -52,6 +54,7 @@ public interface Automaton<V> {
 	public States<V> getTransitions(State<V> sState, Character symbol);
 	public State<V> getTransition(State<V> sState, Character symbol);
 	public boolean containsTransition(State<V> sState, State<V> dState, Character symbol);
+	public GSet<Triple<State<V>, Character, State<V>>> getAllTransitions();
 	
 	public boolean isAccepted(String word);
 	

@@ -25,15 +25,17 @@ package com.gmarciani.gmparser.parser.lr;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
 public class TestBigProduction {
 	
 	private final static String GRAMMAR = "S->CC;C->cC;C->d.";
 
-	@Test public void create() {
+	@Test public void createTransitionGraph() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR)
 				.withAxiom('S')
@@ -41,7 +43,19 @@ public class TestBigProduction {
 				.create();
 		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
 		System.out.println(bigProduction);
-		System.out.println(bigProduction.toFormattedGraph());
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
+	}
+	
+	@Test public void createFiniteAutomaton() {
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(GRAMMAR)
+				.withAxiom('S')
+				.withEpsilon(Grammar.EPSILON)
+				.create();
+		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
+		FiniteAutomaton<Item> automaton = bigProduction.powersetConstruction();
+		System.out.println(automaton);
+		System.out.println(automaton.toExtendedFormattedAutomaton());
 	}
 
 }

@@ -25,13 +25,13 @@ package com.gmarciani.gmparser.models.parser.lr;
 
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
 import com.gmarciani.gmparser.models.parser.lr.action.LROneActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
 
 public class LROneParser implements Parser {
@@ -42,7 +42,7 @@ public class LROneParser implements Parser {
 
 	@Override public boolean parse(Grammar grammar, String word) {
 		Grammar augmentedGrammar = this.generateAugmentedGrammar(grammar);
-		FiniteAutomaton automaton = this.generateBigProductionFiniteAutomaton(augmentedGrammar);
+		FiniteAutomaton<Item> automaton = this.generateBigProductionFiniteAutomaton(augmentedGrammar);
 		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
 		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
 		LROneAction finalAction = pda.parse(word);
@@ -57,14 +57,13 @@ public class LROneParser implements Parser {
 		return grammar;
 	}
 
-	private FiniteAutomaton generateBigProductionFiniteAutomaton(Grammar grammar) {
+	private FiniteAutomaton<Item> generateBigProductionFiniteAutomaton(Grammar grammar) {
 		BigProductionGraph bigProductionGraph = new BigProductionGraph(grammar);
-		TransitionGraph bigProductionTransitionGraph = bigProductionGraph.generateTransitionGraph();
-		FiniteAutomaton bigProductionFiniteAutomaton = bigProductionTransitionGraph.powersetConstruction();
+		FiniteAutomaton<Item> bigProductionFiniteAutomaton = bigProductionGraph.powersetConstruction();
 		return bigProductionFiniteAutomaton;
 	}
 	
-	private LROneMatrix generateRecognitionMatrix(FiniteAutomaton automaton) {
+	private LROneMatrix generateRecognitionMatrix(FiniteAutomaton<Item> automaton) {
 		// TODO Auto-generated method stub
 		return null;
 	}

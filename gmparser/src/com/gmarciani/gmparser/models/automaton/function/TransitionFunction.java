@@ -25,6 +25,8 @@ package com.gmarciani.gmparser.models.automaton.function;
 
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public interface TransitionFunction<V> {
 	
@@ -42,6 +44,7 @@ public interface TransitionFunction<V> {
 	
 	public State<V> getTransition(State<V> state, Character symbol);
 	public States<V> getTransitions(State<V> state, Character symbol);
+	public GSet<Triple<State<V>, Character, State<V>>> getAllTransitions();
 	
 	public boolean containsTransition(State<V> sState, State<V> dState, Character symbol);
 	

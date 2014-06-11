@@ -78,6 +78,10 @@ public class Item implements Comparable<Item> {
 		return !this.getDot().equals(this.getProduction().getRightSize());
 	}
 	
+	public boolean isStart() {
+		return this.getDot().equals(0);
+	}
+	
 	public boolean isComplete() {
 		return this.getDot().equals(Integer.valueOf(this.getProduction().getRightSize()));
 	}

@@ -29,6 +29,8 @@ import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.function.TransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public abstract class AbstractAutomaton<V> implements Automaton<V> {
@@ -145,6 +147,10 @@ public abstract class AbstractAutomaton<V> implements Automaton<V> {
 	
 	@Override public State<V> getTransition(State<V> sState, Character symbol) {
 		return this.getTransitionFunction().getTransition(sState, symbol);
+	}
+	
+	@Override public GSet<Triple<State<V>, Character, State<V>>> getAllTransitions() {
+		return this.getTransitionFunction().getAllTransitions();
 	}
 
 	@Override public boolean containsTransition(State<V> sState, State<V> dState, Character symbol) {

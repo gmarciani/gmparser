@@ -40,7 +40,13 @@ public class TransitionGraph<V> extends AbstractAutomaton<V>
 		this.alphabet = new Alphabet();
 		this.transitionFunction = new NonDeterministicTransitionFunction<V>(this.getStates(), this.getAlphabet(), this.getStates());
 		this.addAsInitialState(initialState);
-	}	
+	}
+	
+	public TransitionGraph() {
+		this.states = new States<V>();		
+		this.alphabet = new Alphabet();
+		this.transitionFunction = new NonDeterministicTransitionFunction<V>(this.getStates(), this.getAlphabet(), this.getStates());
+	}
 	
 	public FiniteAutomaton<V> powersetConstruction() {
 		States<V> initialStates = this.getEpsilonImage(this.getInitialState());

@@ -25,17 +25,23 @@ package com.gmarciani.gmparser.models.parser.lr.action;
 
 public enum LROneActionType {
 	
-	SHIFT("Shift", "sh"),
-	REDUCE("Reduce", "red"),
-	GOTO("Goto", "go"),
-	ACCEPT("Accept", "acc");
+	SHIFT(1, "Shift", "sh"),
+	REDUCE(2, "Reduce", "red"),
+	GOTO(3, "Goto", "go"),
+	ACCEPT(4, "Accept", "acc");
 	
+	private Integer id;
 	private String name;
 	private String shortName;
 	
-	private LROneActionType(String name, String shortName) {
+	private LROneActionType(Integer id, String name, String shortName) {
+		this.id = id;
 		this.name = name;
 		this.shortName = shortName;
+	}
+	
+	public Integer getId() {
+		return this.id;
 	}
 
 	public String getName() {
