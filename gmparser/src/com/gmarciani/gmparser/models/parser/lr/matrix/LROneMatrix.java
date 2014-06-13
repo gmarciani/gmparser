@@ -27,15 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
+import com.gmarciani.gmparser.models.automaton.state.State;
+import com.gmarciani.gmparser.models.commons.function.DeterministicFunction;
+import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.parser.lr.action.Action;
 import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
-public class LROneMatrix extends NonDeterministicFunction<Integer, Character, Action> {
+public final class LROneMatrix extends DeterministicFunction<Integer, Character, Action> {
 	
 	private final Grammar grammar;
 	private final FiniteAutomaton<Item> automaton;
@@ -43,6 +46,7 @@ public class LROneMatrix extends NonDeterministicFunction<Integer, Character, Ac
 
 	public LROneMatrix(Grammar grammar, FiniteAutomaton<Item> automaton) {
 		super(automaton.getStates().getIds(), automaton.getAlphabet(), new GSet<Action>());
+		super.getDomainY().add(BigProductionGraph.END_MARKER);
 		this.grammar = grammar;
 		this.automaton = automaton;
 		this.productions = new ArrayList<Production>();
@@ -55,7 +59,7 @@ public class LROneMatrix extends NonDeterministicFunction<Integer, Character, Ac
 		return this.grammar;
 	}
 	
-	public FiniteAutomaton<Item> getFiniteAutomaton() {
+	public FiniteAutomaton<Item> getAutomaton() {
 		return this.automaton;
 	}
 	
@@ -64,11 +68,29 @@ public class LROneMatrix extends NonDeterministicFunction<Integer, Character, Ac
 	}
 	
 	private void generate() {
-		
+		State<Item> finalState = this.getAutomaton().getFinalStates().getFirst();
+		this.addAction(ActionType.ACCEPT, null, finalState.getId(), BigProductionGraph.END_MARKER);
+		for (State<Item> state : this.getAutomaton().getStates()) {
+			if (this.getAutomaton().isFinalState(state))
+				continue;
+			Item item = state.getValue().getFirst();
+			if (item.isComplete())
+				for (Character symbol : item.getLookAhead())
+					this.addAction(ActionType.REDUCE, this.getProductions().indexOf(item.getProduction()), state.getId(), symbol);
+		}		
+		for (Triple<State<Item>, Character, State<Item>> transition : this.getAutomaton().getAllTransitions()) {
+			State<Item> sState = transition.getX();
+			State<Item> dState = transition.getZ();
+			Character symbol = transition.getY();
+			if (this.getGrammar().getTerminals().contains(symbol))
+				this.addAction(ActionType.SHIFT, dState.getId(), sState.getId(), symbol);
+			if (this.getGrammar().getNonTerminals().contains(symbol))
+				this.addAction(ActionType.GOTO, dState.getId(), sState.getId(), symbol);
+		}
 	}
 	
 	private boolean addAction(ActionType type, Integer value, Integer stateId, Character symbol) {
-		return super.add(stateId, symbol, new Action(type, value));
+		return super.addAndInsert(stateId, symbol, new Action(type, value));
 	}
 
 }

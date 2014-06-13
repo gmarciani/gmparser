@@ -43,7 +43,7 @@ public class LROneParser implements Parser {
 	@Override public boolean parse(Grammar grammar, String word) {
 		Grammar augmentedGrammar = this.generateAugmentedGrammar(grammar);
 		FiniteAutomaton<Item> automaton = this.generateBigProductionFiniteAutomaton(augmentedGrammar);
-		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
+		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(augmentedGrammar, automaton);
 		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
 		Action finalAction = pda.parse(word);
 		return finalAction.isActionType(ActionType.ACCEPT);
@@ -63,9 +63,8 @@ public class LROneParser implements Parser {
 		return bigProductionFiniteAutomaton;
 	}
 	
-	private LROneMatrix generateRecognitionMatrix(FiniteAutomaton<Item> automaton) {
-		// TODO Auto-generated method stub
-		return null;
+	private LROneMatrix generateRecognitionMatrix(Grammar grammar, FiniteAutomaton<Item> automaton) {
+		return new LROneMatrix(grammar, automaton);
 	}
 	
 	private NonDeterministPushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {

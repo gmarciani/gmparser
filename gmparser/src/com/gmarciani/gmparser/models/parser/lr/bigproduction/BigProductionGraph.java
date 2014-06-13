@@ -52,19 +52,19 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 	private void generate() {
 		GSet<Pair<Item, Item>> epsilonTransitions = new GSet<Pair<Item, Item>>();
 		GSet<Item> items = new GSet<Item>();
-		items.addAll(generateAxiomItems(grammar));
+		items.addAll(generateAxiomItems(this.getGrammar()));
 		boolean loop = true;
 		while(loop) {
 			loop = false;
 			for (Item item : items) {
 				if (item.isComplete()
-						|| !grammar.getNonTerminals().contains(item.getNextCharacter()))
+						|| !this.getGrammar().getNonTerminals().contains(item.getNextCharacter()))
 					continue;
 				Character nextNonTerminal = item.getNextCharacter();
-				Productions nextProductions = grammar.getProductionsWithLeft(new Member(nextNonTerminal));
+				Productions nextProductions = this.getGrammar().getProductionsWithLeft(new Member(nextNonTerminal));
 				for (Production nextProduction : nextProductions) {
 					GSet<Item> nextItems = generateItemsWithoutLookAhead(nextProduction);
-					Alphabet lookAheadSet = generateLookAheadSet(grammar, item);
+					Alphabet lookAheadSet = generateLookAheadSet(this.getGrammar(), item);
 					for (Item nextItem : nextItems) {
 						if (nextItem.isStart())
 							epsilonTransitions.add(new Pair<Item, Item>(item, nextItem));
@@ -128,7 +128,8 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 			first.remove(Grammar.EPSILON);			
 			lookAheadSet.addAll(item.getLookAhead());
 			lookAheadSet.addAll(first);
-		}			
+			return lookAheadSet;
+		}		
 		return grammar.getFirstOne(symbol); // b != epsilon, b != nullable
 	}
 	

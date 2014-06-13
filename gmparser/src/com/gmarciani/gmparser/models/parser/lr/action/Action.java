@@ -32,7 +32,7 @@ public class Action implements Comparable<Action> {
 
 	public Action(ActionType type, Integer value) {
 		this.type = type;
-		this.value = value;
+		this.value = (value != null) ? value : -1;
 	}
 	
 	public ActionType getType() {
@@ -48,7 +48,7 @@ public class Action implements Comparable<Action> {
 	}
 	
 	@Override public String toString() {
-		return "(" + this.getType().getShortName() + ","  + this.getValue() + ")";
+		return "(" + this.getType().getShortName() + ((this.getValue() != -1) ? "," + this.getValue() : "") + ")";
 	}
 
 	@Override public int compareTo(Action other) {

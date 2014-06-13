@@ -23,6 +23,8 @@
 
 package com.gmarciani.gmparser.models.grammar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -402,17 +404,23 @@ public class Grammar {
 		for (Production production : this.getProductions()) {
 			if (!production.getLeft().getValue().equals(String.valueOf(symbol)))
 				continue;
-			for (int i = 0; i < production.getRightSize(); i ++) {	
-				Character pSymbol = production.getRight().getValue().charAt(i);
-				if (!nullables.contains(pSymbol)) {
-					Alphabet newFirst = this.getFirstOne(pSymbol);
-					first.addAll(newFirst);
+			Character firstSymbol = production.getRight().getValue().toCharArray()[0];
+			first.addAll(this.getFirstOne(firstSymbol));
+			first.remove(Grammar.EPSILON);
+			List<Character> scannedSymbols = new ArrayList<Character>();
+			for (int i = 0; i < production.getRightSize(); i ++) {
+				Character rSymbol = production.getRight().getValue().charAt(i);
+				scannedSymbols.add(rSymbol);
+				if (nullables.containsAll(scannedSymbols)) {
+					Character nextSymbol = production.getRight().getValue().toCharArray()[i + 1];
+					first.addAll(this.getFirstOne(nextSymbol));
 					first.remove(Grammar.EPSILON);
-					break;
-				}				
+				}		
 			}
-			if (nullables.containsAll(production.getRight().getNonTerminalAlphabet()))
+			if (nullables.containsAll(scannedSymbols)) {
 				first.add(Grammar.EPSILON);
+			}
+				
 		}
 		return first;
 	}
