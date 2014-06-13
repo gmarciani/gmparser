@@ -110,7 +110,7 @@ public class NonDeterministicFunction<X extends Comparable<X>,
 						if (header[yIndex].equals(String.valueOf(y)))
 							break;						
 					
-					data[xIndex][yIndex] = String.valueOf(z);
+					data[xIndex][yIndex] = (z == null || z.isEmpty()) ? "" : String.valueOf(z);
 				}
 			}
 			table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);

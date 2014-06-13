@@ -43,6 +43,7 @@ public interface Function<X extends Comparable<X>,
 	public int getCodomainCardinality();
 	
 	public boolean add(X x, Y y, Z z);	
+	public boolean addAndInsert(X x, Y y, Z z);
 		
 	public boolean removeAllForX(X x);	
 	public boolean removeAllForY(Y y);

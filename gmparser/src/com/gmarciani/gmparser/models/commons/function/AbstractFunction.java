@@ -107,7 +107,12 @@ public abstract class AbstractFunction<X extends Comparable<X>,
 
 	@Override public abstract boolean add(X x, Y y, Z z);
 
-	
+	@Override public boolean addAndInsert( X x, Y y, Z z) {
+		this.getDomainX().add(x);
+		this.getDomainY().add(y);
+		this.getCodomain().add(z);
+		return this.add(x, y, z);
+	}
 
 	@Override public boolean removeAllForX(X x) {
 		boolean removed = false;
