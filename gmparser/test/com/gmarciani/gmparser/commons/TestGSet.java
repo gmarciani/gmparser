@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-
-import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestGSet {
@@ -71,27 +68,6 @@ public class TestGSet {
 		
 		for (Character c : list)
 			assertFalse("Uncorrect GSet insertion. Should not be added: " + c + " in " + set, set.add(c));		
-	}
-	
-	@Test public void addCustom() {
-		State<Object> stateOne = new State<Object>(new StateId(1));
-		State<Object> stateTwo = new State<Object>(new StateId(2));
-		State<Object> stateThree = new State<Object>(new StateId(3));
-		State<Object> stateOneTwo = new State<Object>(new StateId(1, 2));
-		
-		GSet<State<Object>> set = new GSet<State<Object>>();
-		
-		List<State<Object>> list = new ArrayList<State<Object>>();
-		list.add(stateOne);
-		list.add(stateTwo);
-		list.add(stateThree);
-		list.add(stateOneTwo);
-		
-		for (State<Object> state : list)
-			assertTrue("Uncorrect GSet insertion. Should be added: " + state + " in " + set, set.add(state));
-		
-		for (State<Object> state : list)
-			assertFalse("Uncorrect GSet insertion. Should not be added: " + state + " in " + set, set.add(state));		
 	}
 
 }

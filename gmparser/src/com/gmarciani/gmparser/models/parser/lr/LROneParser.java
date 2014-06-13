@@ -28,8 +28,8 @@ import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.Parser;
-import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
-import com.gmarciani.gmparser.models.parser.lr.action.LROneActionType;
+import com.gmarciani.gmparser.models.parser.lr.action.Action;
+import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
@@ -45,8 +45,8 @@ public class LROneParser implements Parser {
 		FiniteAutomaton<Item> automaton = this.generateBigProductionFiniteAutomaton(augmentedGrammar);
 		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(automaton);
 		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
-		LROneAction finalAction = pda.parse(word);
-		return finalAction.isActionType(LROneActionType.ACCEPT);
+		Action finalAction = pda.parse(word);
+		return finalAction.isActionType(ActionType.ACCEPT);
 	}	
 	
 	private Grammar generateAugmentedGrammar(Grammar grammar) {

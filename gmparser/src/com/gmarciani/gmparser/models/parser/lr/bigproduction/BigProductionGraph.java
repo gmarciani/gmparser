@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.models.parser.lr.bigproduction;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.nple.Pair;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -76,9 +75,9 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 			}
 		}		
 		
-		int id = 1;
+		int id = 0;
 		for (Item item : items) {
-			super.addState(new State<Item>(new StateId(id), item));
+			super.addState(new State<Item>(id, item));
 			id ++;
 			if (item.hasNextCharacter())
 				super.addSymbol(item.getNextCharacter());

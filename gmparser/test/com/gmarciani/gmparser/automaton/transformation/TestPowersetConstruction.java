@@ -7,16 +7,15 @@ import org.junit.Test;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 
 public class TestPowersetConstruction {
 	
 	private TransitionGraph<String> createTransitionGraph() {
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
-		State<String> stateFour = new State<String>(new StateId(4), "four");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
+		State<String> stateFour = new State<String>(4, "four");
 		
 		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);
@@ -42,9 +41,9 @@ public class TestPowersetConstruction {
 	}
 	
 	private FiniteAutomaton<String> createExpectedAutomaton() {
-		State<String> stateOneTwoFour = new State<String>(new StateId(1, 2, 4), "one-two-four");
-		State<String> stateTwoFour = new State<String>(new StateId(2, 4), "two-four");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOneTwoFour = new State<String>(0, "one-two-four");
+		State<String> stateTwoFour = new State<String>(1, "two-four");
+		State<String> stateThree = new State<String>(2, "three");
 		
 		FiniteAutomaton<String> automaton = new FiniteAutomaton<String>(stateOneTwoFour);
 		automaton.addAsFinalState(stateOneTwoFour);

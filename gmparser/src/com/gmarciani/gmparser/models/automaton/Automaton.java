@@ -36,6 +36,8 @@ public interface Automaton<V> {
 	public State<V> getInitialState();
 	public States<V> getFinalStates();
 	
+	public Integer getNextId();
+	
 	public boolean addState(State<V> state);
 	public void addAsInitialState(State<V> state);
 	public void addAsFinalState(State<V> state);

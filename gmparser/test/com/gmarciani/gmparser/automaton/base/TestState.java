@@ -1,3 +1,25 @@
+/*	The MIT License (MIT)
+ *
+ *	Copyright (c) 2014 Giacomo Marciani
+ *	
+ *	Permission is hereby granted, free of charge, to any person obtaining a copy
+ *	of this software and associated documentation files (the "Software"), to deal
+ *	in the Software without restriction, including without limitation the rights
+ *	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *	copies of the Software, and to permit persons to whom the Software is
+ *	furnished to do so, subject to the following conditions:
+ *	
+ *	The above copyright notice and this permission notice shall be included in all
+ *	copies or substantial portions of the Software.
+ *	
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *	SOFTWARE.
+*/
 package com.gmarciani.gmparser.automaton.base;
 
 import static org.junit.Assert.*;
@@ -5,47 +27,27 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class TestState {
 
 	@Test public void equal() {
-		State<Object> stateOne = new State<Object>(new StateId(1));
-		State<Object> stateTwo = new State<Object>(new StateId(2));
-		State<Object> stateOneTwo = new State<Object>(new StateId(1, 2));
-		State<Object> stateTwoOne = new State<Object>(new StateId(2, 1));
-		State<Object> stateOneTwoThree = new State<Object>(new StateId(1, 2, 3));
-		State<Object> stateThreeOneTwo = new State<Object>(new StateId(3, 1, 2));		
-		State<Object> stateOneTwoThreeFour = new State<Object>(new StateId(1, 2, 3, 4));
+		State<Object> stateOne = new State<Object>(1);
+		State<Object> stateTwo = new State<Object>(2);
 		
 		assertEquals("Uncorrect state equality. Should be equals: " + stateOne + " and " + stateOne, 
 				stateOne, stateOne);
-		assertEquals("Uncorrect state equality. Should be equals: " + stateOneTwo + " and " + stateOneTwo, 
-				stateOneTwo, stateOneTwo);
-		assertEquals("Uncorrect state equality. Should be equals: " + stateOneTwo + " and " + stateTwoOne, 
-				stateOneTwo, stateTwoOne);
-		assertEquals("Uncorrect state equality. Should be equals: " + stateOneTwoThree + " and " + stateThreeOneTwo, 
-				stateOneTwoThree, stateThreeOneTwo);
 		assertNotEquals("Uncorrect state equality. Should not be equals: " + stateOne + " and " + stateTwo, 
 				stateOne, stateTwo);
-		assertNotEquals("Uncorrect state equality. Should not be equals: " + stateOneTwoThree + " and " + stateOneTwo, 
-				stateOneTwoThree, stateOneTwo);
-		assertNotEquals("Uncorrect state equality. Should not be equals: " + stateOneTwoThree + " and " + stateOneTwoThreeFour, 
-				stateOneTwoThree, stateOneTwoThreeFour);
 	}
 	
 	@Test public void represent() {
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateOneTwo = new State<String>(new StateId(1, 2), "one-two");
-		State<String> stateTwoOne = new State<String>(new StateId(2, 1), "two-one");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
 		
 		GSet<State<String>> states = new GSet<State<String>>();
 		states.add(stateOne);
 		states.add(stateTwo);
-		states.add(stateOneTwo);
-		states.add(stateTwoOne);
 		
 		for (State<String> state : states)
 			System.out.println(state);

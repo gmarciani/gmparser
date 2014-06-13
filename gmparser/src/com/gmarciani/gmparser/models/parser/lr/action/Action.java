@@ -23,37 +23,54 @@
 
 package com.gmarciani.gmparser.models.parser.lr.action;
 
-public enum LROneActionType {
-	
-	SHIFT(1, "Shift", "sh"),
-	REDUCE(2, "Reduce", "red"),
-	GOTO(3, "Goto", "go"),
-	ACCEPT(4, "Accept", "acc");
-	
-	private Integer id;
-	private String name;
-	private String shortName;
-	
-	private LROneActionType(Integer id, String name, String shortName) {
-		this.id = id;
-		this.name = name;
-		this.shortName = shortName;
-	}
-	
-	public Integer getId() {
-		return this.id;
-	}
+import java.util.Objects;
 
-	public String getName() {
-		return this.name;
+public class Action implements Comparable<Action> {
+	
+	private final ActionType type;
+	private final Integer value;
+
+	public Action(ActionType type, Integer value) {
+		this.type = type;
+		this.value = value;
 	}
 	
-	public String getShortName() {
-		return this.shortName;
+	public ActionType getType() {
+		return this.type;
+	}
+	
+	public Integer getValue() {
+		return this.value;
+	}
+	
+	public boolean isActionType(ActionType type) {
+		return this.getType().equals(type);
 	}
 	
 	@Override public String toString() {
-		return this.getShortName();
+		return "(" + this.getType().getShortName() + ","  + this.getValue() + ")";
 	}
+
+	@Override public int compareTo(Action other) {
+		int byType = this.getType().compareTo(other.getType());
+		int byValue = this.getValue().compareTo(other.getValue());
+		if (byType == 0)
+			return byValue;
+		return byType;
+	}
+	
+	@Override public boolean equals(Object obj) {
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		Action other = (Action) obj;
+		
+		return (this.getType().equals(other.getType())
+				&& this.getValue().equals(other.getValue()));
+	}
+	
+	@Override public int hashCode() {
+		return Objects.hash(this.getType(), this.getValue());
+	}	
 
 }

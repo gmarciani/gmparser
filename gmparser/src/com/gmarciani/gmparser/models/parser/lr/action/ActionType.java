@@ -21,20 +21,33 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.automaton.pushdown;
+package com.gmarciani.gmparser.models.parser.lr.action;
 
-import com.gmarciani.gmparser.models.automaton.PushDownAutomaton;
-import com.gmarciani.gmparser.models.parser.lr.action.Action;
-
-public class NonDeterministPushDownAutomaton implements PushDownAutomaton {
-
-	public NonDeterministPushDownAutomaton() {
-		// TODO Auto-generated constructor stub
+public enum ActionType {
+	
+	SHIFT("Shift", "sh"),
+	REDUCE("Reduce", "red"),
+	GOTO("Goto", "go"),
+	ACCEPT("Accept", "acc");
+	
+	private String name;
+	private String shortName;
+	
+	private ActionType(String name, String shortName) {
+		this.name = name;
+		this.shortName = shortName;
 	}
 
-	public Action parse(String word) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getShortName() {
+		return this.shortName;
+	}
+	
+	@Override public String toString() {
+		return this.getShortName();
 	}
 
 }

@@ -53,6 +53,6 @@ public class GSet<T> extends CopyOnWriteArraySet<T> {
 		string += "}";
 		
 		return string;
-	}	
+	}
 
 }

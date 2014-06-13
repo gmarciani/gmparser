@@ -23,12 +23,16 @@
 
 package com.gmarciani.gmparser.models.automaton.graph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.gmarciani.gmparser.models.automaton.Automaton;
 import com.gmarciani.gmparser.models.automaton.finite.AbstractAutomaton;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.function.NonDeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
+import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
@@ -49,37 +53,41 @@ public class TransitionGraph<V> extends AbstractAutomaton<V>
 	}
 	
 	public FiniteAutomaton<V> powersetConstruction() {
-		States<V> initialStates = this.getEpsilonImage(this.getInitialState());
-		State<V> initialState = new State<V>(initialStates);//new State<V>(initialStates.getIds());
-		FiniteAutomaton<V> automaton = new FiniteAutomaton<V>(initialState);
-		if (this.getFinalStates().containsSome(initialStates))
-				automaton.addAsFinalState(initialState);
-		States<V> newStates = new States<V>(automaton.getInitialState());
-		States<V> addedStates = new States<V>();
-		while(!newStates.isEmpty()) {
-			State<V> state = newStates.getFirst();
-			automaton.addState(state);
+		List<States<V>> renaming = new ArrayList<States<V>>();
+		States<V> iStateImage = this.getEpsilonImage(this.getInitialState());
+		renaming.add(0, iStateImage);
+		State<V> iState = new State<V>(0, iStateImage.getValues());
+		FiniteAutomaton<V> automaton = new FiniteAutomaton<V>(iState);
+		GSet<States<V>> uncompleteStates = new GSet<States<V>>(iStateImage);
+		GSet<States<V>> completeStates = new GSet<States<V>>();
+		while(!uncompleteStates.isEmpty()) {
+			States<V> sStates = uncompleteStates.getFirst();
+			int nextSId = renaming.indexOf(sStates);
+			State<V> sState = new State<V>(nextSId, sStates.getValues());
+			automaton.addState(sState);
+			if (this.getFinalStates().containsSome(sStates))
+				automaton.addAsFinalState(sState);
 			for (Character symbol : this.getAlphabet()) {
 				if (symbol.equals(Grammar.EPSILON)) // to be removed
 					continue;
 				automaton.addSymbol(symbol);
-				States<V> sStates = new States<V>();
-				for (Integer id : state.getId())
-					sStates.add(this.getStates().getState(id));
 				States<V> dStates = this.getImage(sStates, symbol);
 				if (!dStates.isEmpty()) {
-					State<V> dState = new State<V>(dStates);
+					if (!renaming.contains(dStates))
+						renaming.add(automaton.getNextId(), dStates);
+					int nextDId = renaming.indexOf(dStates);
+					State<V> dState = new State<V>(nextDId, dStates.getValues());
 					if (!automaton.containsState(dState))
 						automaton.addState(dState);
 					if (this.getFinalStates().containsSome(dStates))
 						automaton.addAsFinalState(dState);
-					if (!addedStates.contains(dState))
-						newStates.add(dState);					
-					automaton.addTransition(state, dState, symbol);
+					if (!completeStates.contains(dStates))
+						uncompleteStates.add(dStates);					
+					automaton.addTransition(sState, dState, symbol);
 				}				
 			}
-			addedStates.add(state);
-			newStates.remove(state);
+			completeStates.add(sStates);
+			uncompleteStates.remove(sStates);
 		}
 		
 		return automaton;

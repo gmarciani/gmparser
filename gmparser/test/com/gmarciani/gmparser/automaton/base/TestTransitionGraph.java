@@ -29,7 +29,6 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -37,10 +36,10 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 public class TestTransitionGraph {
 	
 	private TransitionGraph<String> createTransitionGraph() {
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
-		State<String> stateFour = new State<String>(new StateId(4), "four");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
+		State<String> stateFour = new State<String>(4, "four");
 		
 		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);

@@ -27,22 +27,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.production.Production;
-import com.gmarciani.gmparser.models.parser.lr.action.LROneAction;
+import com.gmarciani.gmparser.models.parser.lr.action.Action;
+import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
-public class LROneMatrix extends NonDeterministicFunction<StateId, Character, LROneAction> {
+public class LROneMatrix extends NonDeterministicFunction<Integer, Character, Action> {
 	
 	private final Grammar grammar;
 	private final FiniteAutomaton<Item> automaton;
 	private final List<Production> productions;
 
 	public LROneMatrix(Grammar grammar, FiniteAutomaton<Item> automaton) {
-		super(automaton.getStates().getIds(), automaton.getAlphabet(), new GSet<LROneAction>());
+		super(automaton.getStates().getIds(), automaton.getAlphabet(), new GSet<Action>());
 		this.grammar = grammar;
 		this.automaton = automaton;
 		this.productions = new ArrayList<Production>();
@@ -63,13 +63,12 @@ public class LROneMatrix extends NonDeterministicFunction<StateId, Character, LR
 		return this.productions;
 	}
 	
-	protected void generate() {
+	private void generate() {
 		
 	}
 	
-	public boolean addAction(StateId stateId, Character symbol, LROneAction action) {
-		super.getCodomain().add(action);
-		return super.add(stateId, symbol, action);
+	private boolean addAction(ActionType type, Integer value, Integer stateId, Character symbol) {
+		return super.add(stateId, symbol, new Action(type, value));
 	}
 
 }

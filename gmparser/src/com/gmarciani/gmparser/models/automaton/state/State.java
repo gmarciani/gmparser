@@ -23,25 +23,40 @@
 
 package com.gmarciani.gmparser.models.automaton.state;
 
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 public class State<V> implements Comparable<State<V>> {
 	
-	private final StateId id;
+	private final Integer id;
 	private boolean isInitial;
 	private boolean isFinal;
 	private GSet<V> value;
 	
-	public State(StateId id, V value) {
+	public State(Integer id, V value) {
 		this.id = id;
 		this.value = (value != null) ? new GSet<V>(value) : new GSet<V>();
 		this.setIsInitial(false);
 		this.setIsFinal(false);
 	}
 	
+	public State(Integer id) {
+		this.id = id;
+		this.value = new GSet<V>();
+		this.setIsInitial(false);
+		this.setIsFinal(false);
+	}
+	
+	public State(Integer id, Collection<V> values) {
+		this(id);
+		for (V value : values)
+			this.getValue().add(value);
+	}
+	
+	
+	/*
 	public State(Set<StateId> ids, V value) {
 		this(new StateId(ids), value);
 	}
@@ -65,7 +80,11 @@ public class State<V> implements Comparable<State<V>> {
 	
 	public StateId getId() {
 		return this.id;
-	}	
+	}	*/
+	
+	public Integer getId() {
+		return this.id;
+	}
 	
 	public void setIsInitial(boolean isInitial) {
 		this.isInitial = isInitial;

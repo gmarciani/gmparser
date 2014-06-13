@@ -38,19 +38,15 @@ public class States<V> extends GSet<State<V>> {
 		super(state);
 	}
 	
-	public State<V> getState(StateId id) {
+	public State<V> getState(Integer id) {
 		for (State<V> state : this)
 			if (state.getId().equals(id))
 				return state;
 		return null;
 	}
 	
-	public State<V> getState(Integer id) {
-		return this.getState(new StateId(id));
-	}
-	
-	public GSet<StateId> getIds() {
-		GSet<StateId> ids = new GSet<StateId>();
+	public GSet<Integer> getIds() {
+		GSet<Integer> ids = new GSet<Integer>();
 		for (State<V> state : this)
 			ids.add(state.getId());
 		return ids;

@@ -65,6 +65,13 @@ public abstract class AbstractAutomaton<V> implements Automaton<V> {
 	protected TransitionFunction<V> getTransitionFunction() {
 		return this.transitionFunction;
 	}
+	
+	@Override public Integer getNextId() {
+		int id = 0;
+		while (this.getStates().getIds().contains(id))
+			id ++;
+		return id;
+	}
 
 	@Override public boolean addState(State<V> state) {
 		if (this.containsState(state))

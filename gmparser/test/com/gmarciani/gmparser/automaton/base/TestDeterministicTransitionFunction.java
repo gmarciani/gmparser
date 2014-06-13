@@ -28,7 +28,6 @@ import org.junit.Test;
 import com.gmarciani.gmparser.models.automaton.function.DeterministicTransitionFunction;
 import com.gmarciani.gmparser.models.automaton.function.TransitionFunction;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.automaton.state.StateId;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
@@ -36,9 +35,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createCompleteFunction() {
 		System.out.println("#createCompleteFunction");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -60,9 +59,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createIncompleteFunction() {
 		System.out.println("#createIncompleteFunction");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -81,9 +80,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createCompleteAndRemoveAllStateSymbol() {
 		System.out.println("#createCompleteAndRemoveAllStateSymbol");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -107,9 +106,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createCompleteAndRemoveAllState() {
 		System.out.println("#createCompleteAndRemoveAllState");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -133,9 +132,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createCompleteAndRemoveAllSymbol() {
 		System.out.println("#createCompleteAndRemoveAllSymbol");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -159,9 +158,9 @@ public class TestDeterministicTransitionFunction {
 
 	@Test public void createEmptyFunction() {
 		System.out.println("#createEmptyFunction");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
@@ -188,9 +187,9 @@ public class TestDeterministicTransitionFunction {
 	
 	@Test public void createEmptyAlphabet() {
 		System.out.println("#createEmptyAlphabet");
-		State<String> stateOne = new State<String>(new StateId(1), "one");
-		State<String> stateTwo = new State<String>(new StateId(2), "two");
-		State<String> stateThree = new State<String>(new StateId(3), "three");
+		State<String> stateOne = new State<String>(1, "one");
+		State<String> stateTwo = new State<String>(2, "two");
+		State<String> stateThree = new State<String>(3, "three");
 		
 		States<String> states = new States<String>();
 		states.add(stateOne);
