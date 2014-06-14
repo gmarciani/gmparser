@@ -34,7 +34,7 @@ import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
 public class TestLROneParse {
 	
 	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
-	private static final String WORD = "aababb";
+	private static final String WORD = "dcd$";
 	
 	@Test public void parse() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR);

@@ -38,7 +38,6 @@ public class TestBigProduction {
 	@Test public void createTransitionGraph() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
@@ -49,7 +48,6 @@ public class TestBigProduction {
 	@Test public void createFiniteAutomaton() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR)
-				.withAxiom('S')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		BigProductionGraph bigProduction = new BigProductionGraph(grammar);

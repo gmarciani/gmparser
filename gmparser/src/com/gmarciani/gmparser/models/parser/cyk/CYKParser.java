@@ -34,12 +34,12 @@ import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 public class CYKParser {
 
 	public static synchronized boolean parse(Grammar grammar, String word) {
-		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
 		CYKMatrix matrix = getRecognitionMatrix(grammar, word);
 		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
 	}
 	
 	public static synchronized CYKMatrix getRecognitionMatrix(Grammar grammar, String word) {
+		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
 		CYKMatrix matrix = new CYKMatrix(word);
 		
 		Productions productions = grammar.getProductions();

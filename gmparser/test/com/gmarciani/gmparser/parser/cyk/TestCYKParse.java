@@ -33,19 +33,41 @@ import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
 
 public class TestCYKParse {
 	
-	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
-	private static final String WORD = "aababb";
+	private static final String GRAMMAR_CHOMSKY = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
+	private static final String GRAMMAR_CHOMSKY_S_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
+	private static final String GRAMMAR_NOT_CHOMSKY_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB|G;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b;G->" + Grammar.EPSILON + ".";
 
-	@Test public void parse() {
-		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
-		CYKParsingSession session = WordParser.getInstance().getCYKParsingSession(grammar, WORD);
+	@Test public void parseChosmky() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY);
+		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");
+		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
+		CYKParsingSession sessionUnrecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
 		
-		System.out.println(session.toFormattedString());
+		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
+		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());
+		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognizedEpsilon.getResult());
+	}
+	
+	@Test public void parseChomskySExtended() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_S_EXTENDED);
+		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");		
+		CYKParsingSession sessionRecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
+		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
 		
-		boolean parsed = session.getResult();
+		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
+		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognizedEpsilon.getResult());
+		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());		
+	}
+	
+	@Test public void parseNotChomskyExtended() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY_EXTENDED);
+		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");		
+		CYKParsingSession sessionRecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
+		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
 		
-		assertTrue("Uncorrect parsing (should be parsed)",
-				parsed);
+		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
+		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognizedEpsilon.getResult());
+		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());
 	}
 
 }

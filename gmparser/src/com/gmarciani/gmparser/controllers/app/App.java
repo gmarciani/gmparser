@@ -358,6 +358,9 @@ public final class App {
 	    
 	    System.out.print("\n");
 	    
+	    if (input.isEmpty())
+	    	input = Grammar.EPSILON.toString();
+	    
 		return input;
 	}
 	

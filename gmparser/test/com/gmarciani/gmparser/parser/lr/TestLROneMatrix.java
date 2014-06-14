@@ -19,7 +19,6 @@ public class TestLROneMatrix {
 	@Test public void generateOne() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_ONE)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		System.out.println("#GRAMMAR: " + grammar);
@@ -35,7 +34,6 @@ public class TestLROneMatrix {
 	@Test public void generateTwo() {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_TWO)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		System.out.println("#GRAMMAR: " + grammar);
