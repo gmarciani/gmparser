@@ -26,9 +26,10 @@ package com.gmarciani.gmparser.models.parser.lr.matrix;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.state.State;
-import com.gmarciani.gmparser.models.commons.function.DeterministicFunction;
+import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
 import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -38,7 +39,7 @@ import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
-public final class LROneMatrix extends DeterministicFunction<Integer, Character, Action> {
+public final class LROneMatrix extends NonDeterministicFunction<Integer, Character, Action> {
 	
 	private final Grammar grammar;
 	private final FiniteAutomaton<Item> automaton;
@@ -91,6 +92,26 @@ public final class LROneMatrix extends DeterministicFunction<Integer, Character,
 	
 	private boolean addAction(ActionType type, Integer value, Integer stateId, Character symbol) {
 		return super.addAndInsert(stateId, symbol, new Action(type, value));
+	}
+	
+	public String toExtendedFormattedMatrix() {
+		return super.toFormattedFunction() + this.getProductionsRepresentation();
+	}
+	
+	private String getProductionsRepresentation() {
+		String header[] = {"#", "Production"};		
+		if (this.getProductions().isEmpty()) {
+			String data[][] = {{"null", "null"}};
+			return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
+		}		
+		String data[][] = new String[this.getProductions().size()][2];
+		int r = 0;
+		for (Production production : this.getProductions()) {
+			data[r][0] = String.valueOf(this.getProductions().indexOf(production));
+			data[r][1] = String.valueOf(production);
+			r ++;
+		}			
+		return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 	}
 
 }

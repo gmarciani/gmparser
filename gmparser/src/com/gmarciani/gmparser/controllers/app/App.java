@@ -35,7 +35,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.gmarciani.gmparser.controllers.app.Preferences.*;
-import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -65,9 +64,8 @@ import static org.fusesource.jansi.Ansi.*;
 public final class App {	
 	
 	private static App instance;
-	private GrammarAnalyzer analyzer;
-	private GrammarTransformer transformer;
-	private WordParser parser;
+	private GrammarTransformer grammarTransformer;
+	private WordParser wordParser;
 	
 	private Options options;
 	private Menus menus;		
@@ -85,10 +83,8 @@ public final class App {
 	 * @return the controller singleton instance.
 	 */
 	public synchronized static App getInstance() {
-		if (instance == null) {
-			instance = new App();
-		}
-		
+		if (instance == null)
+			instance = new App();		
 		return instance;
 	}	
 	
@@ -106,9 +102,8 @@ public final class App {
 	 */
 	private void setupControllers() {
 		this.output = Output.getInstance();
-		this.analyzer = GrammarAnalyzer.getInstance();
-		this.transformer = GrammarTransformer.getInstance();
-		this.parser = WordParser.getInstance();
+		this.grammarTransformer = GrammarTransformer.getInstance();
+		this.wordParser = WordParser.getInstance();
 	}
 	
 	/**
@@ -229,10 +224,11 @@ public final class App {
 	 * @param strGrammar grammar to analyze, represented as string.
 	 */
 	private void analyze(String strGrammar) {
-		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
+		Grammar grammar = Grammar.generateGrammar(strGrammar);
 		this.getOutput().onResult("This is your grammar: " + grammar.toString());
 		
-		GrammarAnalysis analysis = this.analyzer.analyze(grammar);		
+		GrammarAnalysis analysis = grammar.getGrammarAnalysis();	
+		analysis.setTitle("GRAMMAR ANALYSIS");
 		this.getOutput().onResult("Here we are! This is your grammar analysis");		
 		this.getOutput().onDefault(analysis.toString());
 	}
@@ -245,15 +241,15 @@ public final class App {
 	 * @param transformation target transformation.
 	 */
 	private void transform(String strGrammar, GrammarTransformation transformation) {
-		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
-		this.getOutput().onResult("This is your grammar: " + grammar.toString());
+		Grammar grammar = Grammar.generateGrammar(strGrammar);
+		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your transformation: " + transformation);
 		
-		GrammarAnalysis analysisIn = this.analyzer.analyze(strGrammar);
+		GrammarAnalysis analysisIn = grammar.getGrammarAnalysis();
 		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");
 		
-		Grammar grammarOut = this.transformer.transform(strGrammar, transformation);
-		GrammarAnalysis analysisOut = this.analyzer.analyze(grammarOut);
+		this.grammarTransformer.transform(grammar, transformation);
+		GrammarAnalysis analysisOut = grammar.getGrammarAnalysis();
 		analysisOut.setTitle("GRAMMAR ANALYSIS: output grammar");
 		
 		this.getOutput().onResult("Here we are! This is your transformation result");
@@ -267,17 +263,19 @@ public final class App {
 	 * 
 	 * @param strGrammar grammar to parse with, represented as string.
 	 * @param word word to parse.
-	 * @param parser parser type to parse with.
+	 * @param wordParser wordParser type to parse with.
 	 */
 	private void parse(String strGrammar, String word, ParserType parser) {
-		Grammar grammar = this.analyzer.generateGrammar(strGrammar);
-		this.getOutput().onResult("This is your grammar: " + grammar.toString());
+		Grammar grammar = Grammar.generateGrammar(strGrammar);
+		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your word: " + word);
-		this.getOutput().onResult("This is your parser: " + parser);
-		
-		boolean accepted = this.parser.parse(strGrammar, word, parser);
-		
-		this.getOutput().onResult("Here we are! Your word has " + (accepted ? "" : "NOT ") + "been parsed!");
+		this.getOutput().onResult("This is your wordParser: " + parser);
+		if (parser.equals(ParserType.CYK))
+			this.getOutput().onResult("Here we are! This is your parsing session results!\n\n" + 
+					this.wordParser.getCYKParsingSession(grammar, word).toFormattedString());
+		if (parser.equals(ParserType.LR1))
+			this.getOutput().onResult("Here we are! This is your parsing session results!\n\n" + 
+					this.wordParser.getLROneParsingSession(grammar, word).toFormattedString());		
 	}	
 	
 	/**

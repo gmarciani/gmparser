@@ -24,51 +24,42 @@
 package com.gmarciani.gmparser.models.parser.lr;
 
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.lr.action.Action;
 import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
 
-public class LROneParser implements Parser {
+public class LROneParser {
 
-	public LROneParser() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override public boolean parse(Grammar grammar, String word) {
-		Grammar augmentedGrammar = this.generateAugmentedGrammar(grammar);
-		FiniteAutomaton<Item> automaton = this.generateBigProductionFiniteAutomaton(augmentedGrammar);
-		LROneMatrix recognitionMatrix = this.generateRecognitionMatrix(augmentedGrammar, automaton);
-		NonDeterministPushDownAutomaton pda = this.generatePushDownAutomaton(recognitionMatrix);
-		Action finalAction = pda.parse(word);
+	public static boolean parse(Grammar grammar, String word) {		
+		LROneMatrix recognitionMatrix = getRecognitionMatrix(grammar);
+		Action finalAction = getFinalAction(recognitionMatrix, word);
 		return finalAction.isActionType(ActionType.ACCEPT);
 	}	
 	
-	private Grammar generateAugmentedGrammar(Grammar grammar) {
-		if (grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).size() > 1
-				|| grammar.getProductions().getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
-			return grammar.generateAugmentedGrammar();
-		
-		return grammar;
-	}
-
-	private FiniteAutomaton<Item> generateBigProductionFiniteAutomaton(Grammar grammar) {
-		BigProductionGraph bigProductionGraph = new BigProductionGraph(grammar);
-		FiniteAutomaton<Item> bigProductionFiniteAutomaton = bigProductionGraph.powersetConstruction();
-		return bigProductionFiniteAutomaton;
-	}
-	
-	private LROneMatrix generateRecognitionMatrix(Grammar grammar, FiniteAutomaton<Item> automaton) {
+	public static LROneMatrix getRecognitionMatrix(Grammar grammar) {
+		Grammar augmentedGrammar = generateAugmentedGrammar(grammar);
+		FiniteAutomaton<Item> automaton = generateBigProductionFiniteAutomaton(augmentedGrammar);		
 		return new LROneMatrix(grammar, automaton);
 	}
 	
-	private NonDeterministPushDownAutomaton generatePushDownAutomaton(LROneMatrix recognitionMatrix) {
-		// TODO Auto-generated method stub
-		return null;
+	private static Grammar generateAugmentedGrammar(Grammar grammar) {
+		if (grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).size() > 1
+				|| grammar.getProductions().getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
+			return grammar.generateAugmentedGrammar();		
+		return grammar;
+	}
+
+	private static FiniteAutomaton<Item> generateBigProductionFiniteAutomaton(Grammar grammar) {
+		BigProductionGraph bigProductionGraph = new BigProductionGraph(grammar);
+		FiniteAutomaton<Item> bigProductionFiniteAutomaton = bigProductionGraph.powersetConstruction();
+		return bigProductionFiniteAutomaton;
+	}	
+	
+	private static Action getFinalAction(LROneMatrix recognitionMatrix, String word) {
+		return new Action(ActionType.ACCEPT, null);
 	}
 
 }

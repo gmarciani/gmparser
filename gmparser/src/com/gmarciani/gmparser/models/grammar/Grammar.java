@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
@@ -349,6 +350,18 @@ public class Grammar {
 		augmentedGrammar.addTerminal('$');
 		
 		return augmentedGrammar;
+	}
+	
+	public GrammarAnalysis getGrammarAnalysis() {
+		return new GrammarAnalysis(this);
+	}
+	
+	public static Grammar generateGrammar(String strGrammar) {
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(strGrammar)
+				.withEpsilon(Grammar.EPSILON)
+				.create();		
+		return grammar;
 	}
 
 	@Override public String toString() {

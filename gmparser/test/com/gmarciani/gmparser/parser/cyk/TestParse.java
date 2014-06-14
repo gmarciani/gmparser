@@ -23,13 +23,13 @@
 
 package com.gmarciani.gmparser.parser.cyk;
 
-
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.WordParser;
-import com.gmarciani.gmparser.models.parser.ParserType;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
 
 public class TestParse {
 	
@@ -37,8 +37,12 @@ public class TestParse {
 	private static final String WORD = "aababb";
 
 	@Test public void parse() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
+		CYKParsingSession session = WordParser.getInstance().getCYKParsingSession(grammar, WORD);
 		
-		boolean parsed = WordParser.getInstance().parse(GRAMMAR, WORD, ParserType.CYK);
+		System.out.println(session.toFormattedString());
+		
+		boolean parsed = session.getResult();
 		
 		assertTrue("Uncorrect parsing (should be parsed)",
 				parsed);

@@ -180,13 +180,20 @@ public class GrammarAnalysis {
 		return this.parameters;
 	}
 	
+	public String toFormattedParameters() {
+		String string = "";
+		for (Map.Entry<String, String> parameter : this.getParameters().entrySet())
+        	string += UiManager.getBullet() + " " + parameter.getKey() + ": " + parameter.getValue() + "\n";
+		return string;
+	}
+	
 	@Override public String toString() {
-		String header[] = {UiManager.makeBold(this.getTitle())};
+		String header[] = {this.getTitle()};
 		String data[][] = new String[this.getParameters().size()][1];
 		
         int i = 0;
         for (Map.Entry<String, String> parameter : this.getParameters().entrySet()) {
-        	data[i][0] = UiManager.makeBold(UiManager.getBullet() + " " + parameter.getKey()) + parameter.getValue();
+        	data[i][0] = UiManager.getBullet() + " " + parameter.getKey() + ": " + parameter.getValue();
         	i ++;
         }
         

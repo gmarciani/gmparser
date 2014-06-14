@@ -23,12 +23,13 @@
 
 package com.gmarciani.gmparser.controllers.grammar;
 
-import com.gmarciani.gmparser.controllers.app.Output;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
-import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
+import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
+import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
+import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
 
 /**
  * The word parsing controller.
@@ -52,72 +53,21 @@ public class WordParser {
 	 * @return the controller singleton instance.
 	 */
 	public synchronized static WordParser getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new WordParser();
-		}
-		
 		return instance;
 	}
 	
-	/**
-	 * Parses the specified {@code word} by the specified {@code parser}, according to the specified {@code grammar}.
-	 * 
-	 * @param grammar the grammar to parse according to.
-	 * @param word the word to parse.
-	 * @param parser parser class: can be Cock-Younger-Kasami, or LR(1).
-	 * @return true, if the {@code word} can be parsed by the {@code parser} according to the {@code grammar}; false, otherwise.
-	 */
-	public boolean parse(String strGrammar, String word, ParserType parser) {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
-		
-		return this.parse(grammar, word, parser);
-	}	
-
-	/**
-	 * Parses the specified {@code word} by the specified {@code parser}, according to the specified {@code grammar}.
-	 * 
-	 * @param grammar the grammar to parse according to.
-	 * @param word the word to parse.
-	 * @param parser parser class: can be Cock-Younger-Kasami, or LR(1).
-	 * @return true, if the {@code word} can be parsed by the {@code parser} according to the {@code grammar}; false, otherwise.
-	 */
-	public boolean parse(Grammar grammar, String word, ParserType parser) {
-		if (parser == ParserType.CYK) {
-			return parseCYK(grammar, word);
-		} else if (parser == ParserType.LR1) {
-			return parseLROne(grammar, word);
-		} else {
-			return false;
-		}
-	}	
-
-	/**
-	 * Parses the specified {@code word} by the Cock-Younger-Kasami parser, according to the specified {@code grammar}.
-	 * 
-	 * @param grammar the grammar to parse according to.
-	 * @param word the word to parse.
-	 * @return true, if the {@code word} can be parsed by the Cock-Younger-Kasami parser, according to the {@code grammar}; false, otherwise.
-	 */
-	public boolean parseCYK(Grammar grammar, String word) {
-		CYKParser parser = new CYKParser();
-		Output.getInstance().onLogon("Here is your recognition matrix: \n" + parser.getMatrix(grammar.getProductions(), word).toFormattedString());
-		return parser.parse(grammar, word);
-	}	
+	public CYKParsingSession getCYKParsingSession(Grammar grammar, String word) {
+		CYKMatrix recognitionMatrix = CYKParser.getRecognitionMatrix(grammar, word);
+		boolean result = CYKParser.parse(grammar, word);
+		return new CYKParsingSession(grammar, word, recognitionMatrix, result);
+	}
 	
-	/**
-	 * Parses the specified {@code word} by the LR(1) parser, according to the specified {@code grammar}.
-	 * 
-	 * @param grammar the grammar to parse according to.
-	 * @param word word the word to parse.
-	 * @return true, if the {@code word} can be parsed by the LR(1) parser, according to the {@code grammar}; false, otherwise.
-	 */
-	public boolean parseLROne(Grammar grammar, String word) {
-		LROneParser parser = new LROneParser();
-		return parser.parse(grammar, word);
+	public LROneParsingSession getLROneParsingSession(Grammar grammar, String word) {
+		LROneMatrix recognitionMatrix = LROneParser.getRecognitionMatrix(grammar);
+		boolean result = LROneParser.parse(grammar, word);
+		return new LROneParsingSession(grammar, word, recognitionMatrix, result);
 	}
 
 }

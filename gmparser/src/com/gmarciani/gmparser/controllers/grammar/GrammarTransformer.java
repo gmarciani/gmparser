@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Member;
@@ -61,30 +60,9 @@ public class GrammarTransformer {
 	 * @return controller singleton instance.
 	 */
 	public synchronized static GrammarTransformer getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new GrammarTransformer();
-		}
-		
 		return instance;
-	}
-	
-	/**
-	 * <p>Executes the specified transformation to the specified grammar, represented as string.<p>
-	 * <p>All available transformation<p>
-	 * 
-	 * @param grammar target grammar, represented as string.
-	 * @param transformation target grammar transformation. 
-	 * @return transformed grammar.
-	 */
-	public Grammar transform(String strGrammar, GrammarTransformation transformation) {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(strGrammar)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
-		
-		this.transform(grammar, transformation);
-		
-		return grammar;
 	}
 
 	/**

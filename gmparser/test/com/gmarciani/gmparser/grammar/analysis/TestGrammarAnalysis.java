@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.grammar.analysis;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
@@ -35,9 +34,10 @@ public class TestGrammarAnalysis {
 	
 	@Test public void create() {
 		
-		GrammarAnalysis analysis = GrammarAnalyzer.getInstance().analyze(GRAMMAR);
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
+		GrammarAnalysis analysis = grammar.getGrammarAnalysis();
 		
-		//System.out.println(analysis);
+		System.out.println(analysis);
 	}
 
 }

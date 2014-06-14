@@ -152,7 +152,7 @@ public final class UiManager {
 	}
 	
 	public static String makeBold(String string) {
-		return "\033[0;1m " + string + " \033[0;0m";
+		return "\033[0;1m" + string + "\033[0;0m ";
 	}
 	
 	public static String getBullet() {
@@ -171,16 +171,6 @@ public final class UiManager {
 	 */
 	public static void uninstallAnsiConsole() {
 		AnsiConsole.systemUninstall();
-	}
-
-	public static String makeItalic(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static String makeUnderlined(String formattedState) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -96,7 +96,7 @@ public class CYKMatrix {
 		return this.getMatrix().get(row, column).addAll(nonTerminals);
 	}
 	
-	public String toFormattedString() {
+	public String toFormattedMatrix() {
 		List<Integer> lengths = new LinkedList<Integer>();
 		lengths.addAll(this.getMatrix().rowKeySet());
 		List<Character> symbols = new LinkedList<Character>();

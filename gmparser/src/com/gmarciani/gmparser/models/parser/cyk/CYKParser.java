@@ -28,22 +28,19 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
-import com.gmarciani.gmparser.models.parser.Parser;
 import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 
-public class CYKParser implements Parser {
+public class CYKParser {
 
-	public CYKParser() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override public synchronized boolean parse(Grammar grammar, String word) {
-		CYKMatrix matrix = this.getMatrix(grammar.getProductions(), word);
+	public static synchronized boolean parse(Grammar grammar, String word) {
+		CYKMatrix matrix = getRecognitionMatrix(grammar, word);
 		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
 	}
 	
-	public synchronized CYKMatrix getMatrix(Productions productions, String word) {
+	public static synchronized CYKMatrix getRecognitionMatrix(Grammar grammar, String word) {
 		CYKMatrix matrix = new CYKMatrix(word);
+		
+		Productions productions = grammar.getProductions();
 		
 		for (int j = 1; j <= word.length(); j ++) {
 			Character producedTerminal = word.charAt(j - 1);

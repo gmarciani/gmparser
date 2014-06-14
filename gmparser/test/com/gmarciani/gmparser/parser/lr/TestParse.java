@@ -23,13 +23,29 @@
 
 package com.gmarciani.gmparser.parser.lr;
 
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.controllers.grammar.WordParser;
+import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
+
 public class TestParse {
 	
+	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
+	private static final String WORD = "aababb";
+	
 	@Test public void parse() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
+		LROneParsingSession session = WordParser.getInstance().getLROneParsingSession(grammar, WORD);
 		
+		System.out.println(session.toFormattedString());
+		
+		boolean parsed = session.getResult();
+		
+		assertTrue("Uncorrect parsing (should be parsed)",
+				parsed);
 	}
 
 }

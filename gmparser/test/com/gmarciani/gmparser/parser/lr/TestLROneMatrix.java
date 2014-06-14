@@ -29,7 +29,7 @@ public class TestLROneMatrix {
 		System.out.println(automaton.toExtendedFormattedAutomaton());
 		LROneMatrix matrix = new LROneMatrix(grammar, automaton);
 		
-		System.out.println(matrix.toFormattedFunction());
+		System.out.println(matrix.toExtendedFormattedMatrix());
 	}
 	
 	@Test public void generateTwo() {
@@ -45,7 +45,7 @@ public class TestLROneMatrix {
 		System.out.println(automaton.toExtendedFormattedAutomaton());
 		LROneMatrix matrix = new LROneMatrix(grammar, automaton);
 		
-		System.out.println(matrix.toFormattedFunction());
+		System.out.println(matrix.toExtendedFormattedMatrix());
 	}
 
 }

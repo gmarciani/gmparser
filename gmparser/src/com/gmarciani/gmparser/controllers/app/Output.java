@@ -44,10 +44,8 @@ public final class Output {
 	private Output() {}
 	
 	public static Output getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new Output();
-		}
-		
 		return instance;
 	}
 	
