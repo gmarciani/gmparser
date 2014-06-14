@@ -25,7 +25,6 @@ package com.gmarciani.gmparser.grammar.transformation;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
@@ -38,7 +37,7 @@ public class TestAugmentedGrammar {
 				.hasProductions(GRAMMAR)
 				.create();
 		
-		Grammar augmentedGrammar = GrammarTransformer.getInstance().generateAugmentedGrammar(grammar);
+		Grammar augmentedGrammar = grammar.generateAugmentedGrammar();
 		
 		//System.out.println(augmentedGrammar);
 	}

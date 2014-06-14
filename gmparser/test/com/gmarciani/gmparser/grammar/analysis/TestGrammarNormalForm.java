@@ -42,18 +42,13 @@ public class TestGrammarNormalForm {
 	@Test public void isChomskyNormalForm() {
 		Grammar grammarChomsky = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_CHOMSKY)
-				.withAxiom('E')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarNotChomsky = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_NOT_CHOMSKY)
-				.withAxiom('E')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
-		/*
-		System.out.println("CHOMSKY: " + grammarChomsky);
-		System.out.println("NOT CHOMSKY: " + grammarNotChomsky);*/
 		
 		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
 				(grammarChomsky.isChomskyNormalForm()));
@@ -65,18 +60,13 @@ public class TestGrammarNormalForm {
 	@Test public void isGreibachNormalForm() {
 		Grammar grammarGreibach = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_GREIBACH)
-				.withAxiom('S')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarNotGreibach = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_NOT_GREIBACH)
-				.withAxiom('S')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
-		/*
-		System.out.println("GREIBACH: " + grammarGreibach);
-		System.out.println("NOT GREIBACH: " + grammarNotGreibach);*/
 		
 		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
 				(grammarGreibach.isGreibachNormalForm()));

@@ -61,7 +61,7 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 						|| !this.getGrammar().getNonTerminals().contains(item.getNextCharacter()))
 					continue;
 				Character nextNonTerminal = item.getNextCharacter();
-				Productions nextProductions = this.getGrammar().getProductionsWithLeft(new Member(nextNonTerminal));
+				Productions nextProductions = this.getGrammar().getProductions().getProductionsLeftEqual(new Member(nextNonTerminal));
 				for (Production nextProduction : nextProductions) {
 					GSet<Item> nextItems = generateItemsWithoutLookAhead(nextProduction);
 					Alphabet lookAheadSet = generateLookAheadSet(this.getGrammar(), item);
@@ -111,7 +111,7 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 	
 	private GSet<Item> generateAxiomItems(Grammar grammar) {
 		GSet<Item> items = new GSet<Item>();
-		Production axiomProduction = grammar.getProductionsForNonTerminal(grammar.getAxiom()).getFirst();
+		Production axiomProduction = grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).getFirst();
 		items.addAll(generateItemsWithoutLookAhead(axiomProduction));
 		for (Item item : items)
 			item.getLookAhead().add(END_MARKER);

@@ -45,36 +45,16 @@ public class Production implements Comparable<Production> {
 	private Member left;
 	private Member right;
 	
-	public static final String MEMBER_SEPARATOR = "->";
-	
-	public Production(Production production) {
-		this.setLeft(production.getLeft());
-		this.setRight(production.getRight());
-	}
+	public static final String MEMBER_SEPARATOR = "->";	
 	
 	public Production(Member left, Member right) {
 		this.setLeft(left);
 		this.setRight(right);
-	}		
-	
-	public Production(String left, String right) {
-		this.setLeft(new Member(left));
-		this.setRight(new Member(right));
 	}
 	
-	public Production(Character left, String right) {
-		this.setLeft(new Member(left));
-		this.setRight(new Member(right));
-	}
-	
-	public Production(String left, Character right) {
-		this.setLeft(new Member(left));
-		this.setRight(new Member(right));
-	}
-	
-	public Production(Character left, Character right) {
-		this.setLeft(new Member(left));
-		this.setRight(new Member(right));
+	public Production(Production production) {
+		this.setLeft(production.getLeft());
+		this.setRight(production.getRight());
 	}
 
 	public Member getLeft() {
@@ -102,29 +82,23 @@ public class Production implements Comparable<Production> {
 	}
 	
 	public Alphabet getAlphabet() {
-		Alphabet target = new Alphabet();
-		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getNonTerminalAlphabet());
-		target.addAll(this.getTerminalAlphabet());
-		
+		target.addAll(this.getTerminalAlphabet());		
 		return target;
 	}
 	
 	public Alphabet getNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
 		target.addAll(this.getLeft().getNonTerminalAlphabet());
-		target.addAll(this.getRight().getNonTerminalAlphabet());
-		
+		target.addAll(this.getRight().getNonTerminalAlphabet());		
 		return target;
 	}
 	
 	public Alphabet getTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
-		
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
 		target.addAll(this.getLeft().getTerminalAlphabet());
-		target.addAll(this.getRight().getTerminalAlphabet());
-		
+		target.addAll(this.getRight().getTerminalAlphabet());		
 		return target;
 	}
 	
@@ -177,17 +151,13 @@ public class Production implements Comparable<Production> {
 	
 	public Type getType(Alphabet nonTerminals, Alphabet terminals) {
 		if (this.isRegular(nonTerminals, terminals))
-			return Type.REGULAR;
-		
+			return Type.REGULAR;		
 		if (this.isContextFree(nonTerminals, terminals))
-			return Type.CONTEXT_FREE;
-		
+			return Type.CONTEXT_FREE;		
 		if (this.isContextSensitive(nonTerminals, terminals))
-			return Type.CONTEXT_SENSITIVE;
-		
+			return Type.CONTEXT_SENSITIVE;		
 		if (this.isUnrestricted(nonTerminals, terminals))
-			return Type.UNRESTRICTED;
-		
+			return Type.UNRESTRICTED;		
 		return Type.UNKNOWN;
 	}
 	
@@ -231,24 +201,19 @@ public class Production implements Comparable<Production> {
 	public boolean isChomskyNormalForm(Alphabet nonTerminals, Alphabet terminals) {
 		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
 				&& this.isRightWithin(nonTerminals) && this.getRight().getSize() == 2)
-			return true;
-		
+			return true;		
 		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
 				&& this.isRightWithin(terminals) && this.getRight().getSize() == 1)
-			return true;
-		
-		//aggiungere S->empty e S non sta nel rhs di alcuna produzione
-		
+			return true;		
+		//aggiungere S->empty e S non sta nel rhs di alcuna produzione		
 		return false;
 	}
 	
 	public boolean isGreibachNormalForm(Alphabet nonTerminals, Alphabet terminals) {		
 		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
 				&& this.getRight().matches("^" + terminals.getUnionRegex() + nonTerminals.getUnionRegex() + "*$"))
-			return true;
-		
-		//aggiungere S->empty
-		
+			return true;		
+		//aggiungere S->empty		
 		return false;
 	}
 

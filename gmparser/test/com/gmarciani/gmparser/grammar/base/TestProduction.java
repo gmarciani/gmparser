@@ -28,22 +28,17 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
+import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
 public class TestProduction {
 
 	@Test public void epsilon() {		
-		Production prodOne = new Production("S", Grammar.EPSILON.toString());
-		Production prodTwo = new Production("S", Grammar.EPSILON.toString() + Grammar.EPSILON.toString() + Grammar.EPSILON.toString());
-		Production prodThree = new Production("S", Grammar.EPSILON.toString() + "A");
-		Production prodFour = new Production("S", "A" + Grammar.EPSILON.toString());
-		Production prodFive = new Production("S", Grammar.EPSILON.toString() + "A" + Grammar.EPSILON.toString());
-		/*
-		System.out.println("PRODUCTION ONE: " + prodOne);
-		System.out.println("PRODUCTION TWO: " + prodTwo);
-		System.out.println("PRODUCTION THREE: " + prodThree);
-		System.out.println("PRODUCTION FOUR: " + prodFour);
-		System.out.println("PRODUCTION FIVE: " + prodFive);*/
+		Production prodOne = new Production(new Member("S"), new Member(Grammar.EPSILON));
+		Production prodTwo = new Production(new Member("S"), new Member("" + Grammar.EPSILON + Grammar.EPSILON + Grammar.EPSILON));
+		Production prodThree = new Production(new Member("S"), new Member(Grammar.EPSILON + "A"));
+		Production prodFour = new Production(new Member("S"), new Member("A" + Grammar.EPSILON));
+		Production prodFive = new Production(new Member("S"), new Member(Grammar.EPSILON + "A" + Grammar.EPSILON));
 		
 		assertTrue("Uncorrect equality of one or more epsilons",
 				prodOne.equals(prodTwo));

@@ -23,7 +23,6 @@
 
 package com.gmarciani.gmparser.models.parser.lr;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.pushdown.NonDeterministPushDownAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -50,9 +49,9 @@ public class LROneParser implements Parser {
 	}	
 	
 	private Grammar generateAugmentedGrammar(Grammar grammar) {
-		if (grammar.getProductionsForNonTerminal(grammar.getAxiom()).size() > 1
-				|| grammar.getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
-			return GrammarTransformer.getInstance().generateAugmentedGrammar(grammar);
+		if (grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).size() > 1
+				|| grammar.getProductions().getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
+			return grammar.generateAugmentedGrammar();
 		
 		return grammar;
 	}

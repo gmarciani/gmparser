@@ -33,6 +33,7 @@ import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 
@@ -78,7 +79,6 @@ public class GrammarTransformer {
 	public Grammar transform(String strGrammar, GrammarTransformation transformation) {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
@@ -188,17 +188,17 @@ public class GrammarTransformer {
 				for (Character nullable : nullablesForProduction) {
 					List<Integer> nullableOccurrences = nullablesOccurencesMap.get(nullable);
 					for (int nullableOccurrence : nullableOccurrences) {
-						String lhs = production.getLeft().getValue();
+						Member lhs = production.getLeft();
 						StringBuilder builder = new StringBuilder(production.getRight().getValue());
 						builder.insert(nullableOccurrence, Grammar.EPSILON);
-						String rhs = builder.toString();
+						Member rhs = new Member(builder.toString());
 						Production productionWithoutNullable = new Production(lhs, rhs);
 						grammar.addProduction(productionWithoutNullable);
 					}						
 				}
 				
-				String lhs = production.getLeft().getValue();
-				String rhs = production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EPSILON.toString());
+				Member lhs = production.getLeft();
+				Member rhs = new Member(production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EPSILON.toString()));
 				Production productionWithoutNullables = new Production(lhs, rhs);
 				grammar.addProduction(productionWithoutNullables);
 			}
@@ -208,7 +208,7 @@ public class GrammarTransformer {
 			grammar.removeProduction(epsilonProduction);
 		
 		if (nullables.contains(grammar.getAxiom()))
-			grammar.addProduction(grammar.getAxiom(), Grammar.EPSILON);
+			grammar.addProduction(new Production(new Member(grammar.getAxiom()), new Member(Grammar.EPSILON)));
 	}
 	
 	/**
@@ -229,9 +229,9 @@ public class GrammarTransformer {
 			String lhs = nonTrivialUnitProduction.getLeft().getValue();
 			Character rhs = nonTrivialUnitProduction.getRight().getValue().charAt(0);
 			
-			Set<String> unfoldings = grammar.getRightForNonTerminal(rhs);
+			Set<String> unfoldings = grammar.getProductions().getRightForNonTerminal(rhs);
 			for (String unfolding : unfoldings)
-				grammar.addProduction(lhs, unfolding);
+				grammar.addProduction(new Production(new Member(lhs), new Member(unfolding)));
 			
 			grammar.removeProduction(nonTrivialUnitProduction);
 			
@@ -262,9 +262,11 @@ public class GrammarTransformer {
 				if (production.getRight().getSize() > 2) {
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
-					Production reducedProductionOne = new Production(production.getLeft().getValue(), production.getRight().getValue().substring(0, 1) + newNonTerminal);
+					Member lhs = production.getLeft();
+					Member rhs = new Member(production.getRight().getValue().substring(0, 1) + newNonTerminal);
+					Production reducedProductionOne = new Production(lhs, rhs);
 					
-					Production reducedProductionTwo = new Production(newNonTerminal, production.getRight().getValue().substring(1));
+					Production reducedProductionTwo = new Production(new Member(newNonTerminal), new Member(production.getRight().getValue().substring(1)));
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(reducedProductionOne);
@@ -284,10 +286,11 @@ public class GrammarTransformer {
 					loop = true;
 					Character newNonTerminal = grammar.getNewNonTerminal();
 					Character terminal = production.getRight().getTerminalAlphabet().getFirst();
+					Member lhs = production.getLeft();
+					Member rhs = new Member(production.getRight().getValue().replace(terminal, newNonTerminal));
+					Production promotionProductionOne = new Production(lhs, rhs);
 					
-					Production promotionProductionOne = new Production(production.getLeft().getValue(), production.getRight().getValue().replace(terminal, newNonTerminal));
-					
-					Production promotionProductionTwo = new Production(newNonTerminal, terminal);
+					Production promotionProductionTwo = new Production(new Member(newNonTerminal), new Member(terminal));
 					
 					grammar.removeProduction(production);
 					grammar.addProduction(promotionProductionOne);
@@ -297,21 +300,7 @@ public class GrammarTransformer {
 		}
 		
 		if (emptyGeneration)
-			grammar.addProduction(grammar.getAxiom(), grammar.getEpsilon());		
-	}
-
-	public Grammar generateAugmentedGrammar(Grammar grammar) {
-		Grammar augmentedGrammar = new Grammar(grammar);
-		Character newNonTerminalForOldAxiom = augmentedGrammar.getNewNonTerminal();
-		Character newAxiom = 'S';
-		
-		augmentedGrammar.renameNonTerminal(augmentedGrammar.getAxiom(), newNonTerminalForOldAxiom);
-		Production augmentedProduction = new Production(newAxiom, newNonTerminalForOldAxiom);
-		augmentedGrammar.addProduction(augmentedProduction);
-		
-		augmentedGrammar.addTerminal('$');
-		
-		return augmentedGrammar;
+			grammar.addProduction(new Production(new Member(grammar.getAxiom()), new Member(grammar.getEpsilon())));		
 	}
 	
 }

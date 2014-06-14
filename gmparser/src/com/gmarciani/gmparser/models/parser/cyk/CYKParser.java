@@ -56,15 +56,13 @@ public class CYKParser implements Parser {
 		
 		for (int i = 2; i <= word.length(); i ++) {
 			for (int j = 1; j <= (word.length() - i + 1); j ++) {
-				//System.out.println("#WORD ("+i+","+j+"): " + word.substring(j - 1, j + i - 1));
 				Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
 				for (int i1 = (i - 1), j1 = j, i2 = 1, j2 = (j + i - 1); 
 						i1 >= 1 && j1 == j && i2 <= (i - i1) && j2 >= (j + i1); 
 						i1 --, j1 = j, i2 ++, j2 --) {
-					//System.out.println("\t# " + word.substring(j1 - 1, j1 + i1 - 1) + " " + word.substring(j2 - 1, j2 + i2 - 1));
 					Alphabet entry1 = matrix.get(i1, j1);
 					Alphabet entry2 = matrix.get(i2, j2);
-					Productions prods = productions.getProductionsRightWithinAt(entry1, entry2);
+					Productions prods = productions.getProductionsRightIndexedWithin(entry1, entry2);
 					for (Production prod : prods) {
 						target.addAll(prod.getLeft().getNonTerminalAlphabet());
 					}

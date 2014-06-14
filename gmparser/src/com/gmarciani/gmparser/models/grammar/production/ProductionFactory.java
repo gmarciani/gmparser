@@ -73,7 +73,7 @@ public class ProductionFactory {
 	
 	//(S,Aa)
 	public ProductionFactory hasProduction(String left, String right) {
-		Production production = new Production(left, right);
+		Production production = new Production(new Member(left), new Member(right));
 		this.productions.add(production);
 
 		return instance;

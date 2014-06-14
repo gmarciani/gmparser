@@ -65,7 +65,6 @@ public class GrammarAnalyzer {
 	public Grammar generateGrammar(String strGrammar) {
 		Grammar grammar = GrammarFactory.getInstance()
 				.hasProductions(strGrammar)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		

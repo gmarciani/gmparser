@@ -41,31 +41,26 @@ public class TestGrammarType {
 	@Test public void check() {
 		Grammar grammarUnrestricted = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_UNRESTRICTED)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarContextSensitive = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_CONTEXT_SENSITIVE)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarContextFree = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_CONTEXT_FREE)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarRegularLeftLinear = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_REGULAR_LEFT_LINEAR)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarRegularRightLinear = GrammarFactory.getInstance()
 				.hasProductions(GRAMMAR_REGULAR_RIGHT_LINEAR)
-				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		

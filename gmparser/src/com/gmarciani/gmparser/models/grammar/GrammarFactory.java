@@ -114,6 +114,9 @@ public class GrammarFactory {
 		for (Production prod : created)
 			this.grammarProductions.add(prod);
 		
+		Character axiom = productions.charAt(0);
+		this.withAxiom(axiom);
+		
 		return instance;
 	}
 	

@@ -29,17 +29,17 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.GrammarFactory;
+import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 public class TestGrammar {
 
 	@Test public void create() {		
-		
-		Production prodOne = new Production("S","Aa");
-		Production prodTwo = new Production("S","a");
-		Production prodThree = new Production("A","a");
-		Production prodFour = new Production("A", Grammar.EPSILON);
+		Production prodOne = new Production(new Member("S"),new Member("Aa"));
+		Production prodTwo = new Production(new Member("S"),new Member("a"));
+		Production prodThree = new Production(new Member("A"),new Member("a"));
+		Production prodFour = new Production(new Member("A"),new Member(Grammar.EPSILON));
 		
 		Productions productions = new Productions();
 		productions.add(prodOne);
@@ -49,7 +49,7 @@ public class TestGrammar {
 		
 		Grammar grammarOne = GrammarFactory.getInstance()
 				.hasProductions(productions)
-				.withAxiom('S')
+				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
@@ -58,7 +58,7 @@ public class TestGrammar {
 				.hasProduction(prodTwo)
 				.hasProduction(prodThree)
 				.hasProduction(prodFour)
-				.withAxiom('S')
+				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
@@ -67,13 +67,12 @@ public class TestGrammar {
 				.hasProduction(prodTwo.getLeft(), prodTwo.getRight())
 				.hasProduction(prodThree.getLeft(), prodThree.getRight())
 				.hasProduction(prodFour.getLeft(), prodFour.getRight())
-				.withAxiom('S')
+				.withAxiom(Grammar.AXIOM)
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		
 		Grammar grammarFour = GrammarFactory.getInstance()
 				.hasProductions("S->Aa|a;A->a|" + Grammar.EPSILON + ".")
-				.withAxiom('S')
 				.withEpsilon(Grammar.EPSILON)
 				.create();
 		

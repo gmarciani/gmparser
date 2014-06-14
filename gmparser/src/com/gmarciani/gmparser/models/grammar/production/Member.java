@@ -57,12 +57,15 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public Member(Character value) {
-		this("" + value);
-		//this.setValue(value);
+		this(value.toString());
 	}
 
 	public String getValue() {
 		return this.value;
+	}
+	
+	public char[] getValueAsChars() {
+		return this.getValue().toCharArray();
 	}
 
 	public void setValue(String value) {
@@ -71,9 +74,7 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public void setValue(Character value) {
-		this.setValue("" + value);
-		//this.value = "" + value;
-		//this.rebuild();
+		this.setValue(value.toString());
 	}
 	
 	public int getSize() {
@@ -81,48 +82,37 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public Alphabet getAlphabet() {
-		Alphabet target = new Alphabet();
-		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getNonTerminalAlphabet());
 		target.addAll(this.getTerminalAlphabet());		
-		
 		return target;
 	}
 	
 	public Alphabet getNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		
-		for (Character symbol : this.getValue().toCharArray()) {
+		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isNonTerminal(symbol)) 
 				target.add(symbol);
-		}
-		
 		return target;
 	}
 	
 	public Alphabet getTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);
-		
-		for (Character symbol : this.getValue().toCharArray()) {
+		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
+		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isTerminal(symbol)) 
 				target.add(symbol);
-		}
-		
 		return target;
 	}	
 	
 	public List<Character> getSymbols() {
-		List<Character> target = new ArrayList<Character>();
-		
+		List<Character> target = new ArrayList<Character>();		
 		for (Character symbol : this.getValue().toCharArray()) 
-			target.add(symbol);
-		
+			target.add(symbol);		
 		return target;
 	}
 	
 	public Map<Character, List<Integer>> getSymbolsOccurrences(Alphabet alphabet) {
-		Map<Character, List<Integer>> target = new HashMap<Character, List<Integer>>();
-		
+		Map<Character, List<Integer>> target = new HashMap<Character, List<Integer>>();		
 		for (int index = 0; index < this.getValue().length(); index ++) {
 			Character symbol = this.getValue().charAt(index);			
 			if (alphabet.contains(symbol)) {
@@ -130,28 +120,23 @@ public class Member implements Comparable<Member> {
 					target.put(symbol, new ArrayList<Integer>());
 				target.get(symbol).add(index);
 			}			
-		}
-		
+		}		
 		return target;		
 	}
 	
 	public List<Character> getNonTerminals() {
-		List<Character> target = new ArrayList<Character>();
-		
-		for (Character symbol : this.getValue().toCharArray()) {
+		List<Character> target = new ArrayList<Character>();		
+		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isNonTerminal(symbol))
 				target.add(symbol);
-		}
 		return target;
 	}
 	
 	public List<Character> getTerminals() {
-		List<Character> target = new ArrayList<Character>();
-		
-		for (Character symbol : this.getValue().toCharArray()) {
+		List<Character> target = new ArrayList<Character>();		
+		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isTerminal(symbol))
 				target.add(symbol);
-		}
 		return target;
 	}	
 	
@@ -164,11 +149,9 @@ public class Member implements Comparable<Member> {
 	}
 	
 	public boolean isContaining(Alphabet alphabet) {
-		for (Character symbol : alphabet) {
+		for (Character symbol : alphabet)
 			if (this.isContaining(symbol))
-				return true;
-		}
-		
+				return true;		
 		return false;
 	}
 	
