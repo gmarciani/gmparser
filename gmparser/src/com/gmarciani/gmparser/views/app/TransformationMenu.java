@@ -15,11 +15,13 @@ public class TransformationMenu {
 	public static final int REMOVE_USELESS_SYMBOLS = 3;
 	public static final int REMOVE_EPSILON_PRODUCTIONS = 4;
 	public static final int REMOVE_UNIT_PRODUCTIONS = 5;	
+	public static final int GENERATE_CHOMSKY_NORMAL_FORM = 6;
 	
 	public static final String REMOVE_UNGENERATIVE_SYMBOLS_DESCRIPTION = "Remove ungenerative symbols";
 	public static final String REMOVE_UNREACHEABLES_SYMBOLS_DESCRIPTION = "Remove unreacheables symbols";
 	public static final String REMOVE_USELESS_SYMBOLS_DESCRIPTION = "Remove useless symbols";
 	public static final String REMOVE_EPSILON_PRODUCTIONS_DESCRIPTION = "Remove epsilon productions";
 	public static final String REMOVE_UNIT_PRODUCTIONS_DESCRIPTION = "Remove unit productions";
+	public static final String GENERATE_CHOMSKY_NORMAL_FORM_DESCRIPTION = "Generate Chomsky-Normal-Form";
 
 }

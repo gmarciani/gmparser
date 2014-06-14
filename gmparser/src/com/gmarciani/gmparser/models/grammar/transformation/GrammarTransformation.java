@@ -29,7 +29,8 @@ public enum GrammarTransformation {
 	RRS("Remove unreacheable symbols"),
 	RUS("Remove useless symbols"),
 	REP("Remove epsilon productions"),
-	RUP("Remove unit productions");
+	RUP("Remove unit productions"),
+	CNF("Generate Chomsky-Normal-Form");
 	
 	private String name;
 	

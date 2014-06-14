@@ -84,8 +84,8 @@ public class GrammarTransformer {
 			this.removeEpsilonProductions(grammar);
 		} else if (transformation == GrammarTransformation.RUP) {
 			this.removeUnitProductions(grammar);
-		} else {
-			System.out.println("Unavailable grammar transformation");
+		} else if (transformation == GrammarTransformation.CNF) {
+			this.toChomskyNormalForm(grammar);
 		}		
 	}
 	

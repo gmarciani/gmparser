@@ -135,6 +135,7 @@ public final class UiManager {
 				.hasChoice(TransformationMenu.REMOVE_USELESS_SYMBOLS, TransformationMenu.REMOVE_USELESS_SYMBOLS_DESCRIPTION)
 				.hasChoice(TransformationMenu.REMOVE_EPSILON_PRODUCTIONS, TransformationMenu.REMOVE_EPSILON_PRODUCTIONS_DESCRIPTION)
 				.hasChoice(TransformationMenu.REMOVE_UNIT_PRODUCTIONS, TransformationMenu.REMOVE_UNIT_PRODUCTIONS_DESCRIPTION)
+				.hasChoice(TransformationMenu.GENERATE_CHOMSKY_NORMAL_FORM, TransformationMenu.GENERATE_CHOMSKY_NORMAL_FORM_DESCRIPTION)
 				.create();
 		
 		Menus menus = new Menus();

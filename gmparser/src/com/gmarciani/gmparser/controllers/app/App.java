@@ -364,19 +364,19 @@ public final class App {
 	private GrammarTransformation getGrammarTransformation() {
 		int choice = this.menus.run(TransformationMenu.IDENTIFIER);
 		
-		if (choice == TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS) {
+		if (choice == TransformationMenu.REMOVE_UNGENERATIVE_SYMBOLS)
 			return GrammarTransformation.RGS;
-		} else if (choice == TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS) {
+		if (choice == TransformationMenu.REMOVE_UNREACHEABLES_SYMBOLS)
 			return GrammarTransformation.RRS;
-		} else if (choice == TransformationMenu.REMOVE_USELESS_SYMBOLS) {
+		if (choice == TransformationMenu.REMOVE_USELESS_SYMBOLS) 
 			return GrammarTransformation.RUS;
-		} else if (choice == TransformationMenu.REMOVE_EPSILON_PRODUCTIONS) {
+		if (choice == TransformationMenu.REMOVE_EPSILON_PRODUCTIONS)
 			return GrammarTransformation.REP;
-		} else if (choice == TransformationMenu.REMOVE_UNIT_PRODUCTIONS) {
+		if (choice == TransformationMenu.REMOVE_UNIT_PRODUCTIONS)
 			return GrammarTransformation.RUP;
-		} else {
-			return null;
-		}
+		if (choice == TransformationMenu.GENERATE_CHOMSKY_NORMAL_FORM)
+			return GrammarTransformation.CNF;
+		return null;
 	}
 	
 	private ParserType getParser() {
