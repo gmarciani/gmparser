@@ -23,6 +23,7 @@
 
 package com.gmarciani.gmparser.models.parser.cyk;
 
+import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
@@ -33,6 +34,7 @@ import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 public class CYKParser {
 
 	public static synchronized boolean parse(Grammar grammar, String word) {
+		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
 		CYKMatrix matrix = getRecognitionMatrix(grammar, word);
 		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
 	}

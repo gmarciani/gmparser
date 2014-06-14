@@ -41,6 +41,8 @@ import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 import com.gmarciani.gmparser.models.parser.ParserType;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
+import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
 import com.gmarciani.gmparser.views.app.MainMenu;
 import com.gmarciani.gmparser.views.app.ParserMenu;
 import com.gmarciani.gmparser.views.app.TransformationMenu;
@@ -269,13 +271,17 @@ public final class App {
 		Grammar grammar = Grammar.generateGrammar(strGrammar);
 		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your word: " + word);
-		this.getOutput().onResult("This is your wordParser: " + parser);
-		if (parser.equals(ParserType.CYK))
-			this.getOutput().onResult("Here we are! This is your parsing session results!\n\n" + 
-					this.wordParser.getCYKParsingSession(grammar, word).toFormattedString());
-		if (parser.equals(ParserType.LR1))
-			this.getOutput().onResult("Here we are! This is your parsing session results!\n\n" + 
-					this.wordParser.getLROneParsingSession(grammar, word).toFormattedString());		
+		this.getOutput().onResult("This is your parser: " + parser);
+		if (parser.equals(ParserType.CYK)) {
+			this.getOutput().onResult("Here we are! This is your parsing session results!");
+			CYKParsingSession session = this.wordParser.getCYKParsingSession(grammar, word); 
+			this.getOutput().onDefault(session.toFormattedString());
+		}			
+		if (parser.equals(ParserType.LR1)) {
+			this.getOutput().onResult("Here we are! This is your parsing session results!");
+			LROneParsingSession session = this.wordParser.getLROneParsingSession(grammar, word); 
+			this.getOutput().onDefault(session.toFormattedString());
+		}	
 	}	
 	
 	/**

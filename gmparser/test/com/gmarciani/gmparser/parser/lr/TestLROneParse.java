@@ -21,24 +21,24 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.parser.cyk;
+package com.gmarciani.gmparser.parser.lr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
+import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
 
-public class TestParse {
+public class TestLROneParse {
 	
-	private static final String GRAMMAR = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
+	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
 	private static final String WORD = "aababb";
-
+	
 	@Test public void parse() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
-		CYKParsingSession session = WordParser.getInstance().getCYKParsingSession(grammar, WORD);
+		LROneParsingSession session = WordParser.getInstance().getLROneParsingSession(grammar, WORD);
 		
 		System.out.println(session.toFormattedString());
 		

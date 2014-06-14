@@ -29,7 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	TestParse.class })
+	TestCYKParse.class })
 public class AllTestsCYK {
 
 }

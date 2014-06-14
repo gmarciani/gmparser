@@ -30,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	TestBigProduction.class,
-	TestParse.class })
+	TestLROneParse.class })
 public class AllTestsLR {
 
 }
