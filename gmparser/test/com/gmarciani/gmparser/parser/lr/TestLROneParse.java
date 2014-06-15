@@ -23,29 +23,24 @@
 
 package com.gmarciani.gmparser.parser.lr;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
+import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 
 public class TestLROneParse {
 	
 	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
-	private static final String WORD = "dcd$";
 	
 	@Test public void parse() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
-		LROneParsingSession session = WordParser.getInstance().getLROneParsingSession(grammar, WORD);
+		boolean recognized = LROneParser.parse(grammar, "dcd$");
+		boolean unrecognized = LROneParser.parse(grammar, "abcdfg$");
 		
-		System.out.println(session.toFormattedString());
-		
-		boolean parsed = session.getResult();
-		
-		assertTrue("Uncorrect parsing (should be parsed)",
-				parsed);
+		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
+		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
 	}
 
 }

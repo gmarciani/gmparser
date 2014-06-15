@@ -36,13 +36,12 @@ import org.apache.commons.cli.ParseException;
 
 import com.gmarciani.gmparser.controllers.app.Preferences.*;
 import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
-import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 import com.gmarciani.gmparser.models.parser.ParserType;
-import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
-import com.gmarciani.gmparser.models.parser.lr.LROneParsingSession;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
+import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 import com.gmarciani.gmparser.views.app.MainMenu;
 import com.gmarciani.gmparser.views.app.ParserMenu;
 import com.gmarciani.gmparser.views.app.TransformationMenu;
@@ -67,7 +66,6 @@ public final class App {
 	
 	private static App instance;
 	private GrammarTransformer grammarTransformer;
-	private WordParser wordParser;
 	
 	private Options options;
 	private Menus menus;		
@@ -105,7 +103,6 @@ public final class App {
 	private void setupControllers() {
 		this.output = Output.getInstance();
 		this.grammarTransformer = GrammarTransformer.getInstance();
-		this.wordParser = WordParser.getInstance();
 	}
 	
 	/**
@@ -272,16 +269,15 @@ public final class App {
 		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your word: " + word);
 		this.getOutput().onResult("This is your parser: " + parser);
-		if (parser.equals(ParserType.CYK)) {
-			this.getOutput().onResult("Here we are! This is your parsing session results!");
-			CYKParsingSession session = this.wordParser.getCYKParsingSession(grammar, word); 
-			this.getOutput().onDefault(session.toFormattedString());
-		}			
-		if (parser.equals(ParserType.LR1)) {
-			this.getOutput().onResult("Here we are! This is your parsing session results!");
-			LROneParsingSession session = this.wordParser.getLROneParsingSession(grammar, word); 
-			this.getOutput().onDefault(session.toFormattedString());
-		}	
+		if (!grammar.isContextFree() && !grammar.isRegular()) {
+			this.getOutput().onWarning("Your grammar is not Context-Free, but " + grammar.getType().getName() + ". Aborting parsing.");
+			return;
+		}
+		this.getOutput().onResult("Here we are! This is your parsing session results!");
+		if (parser.equals(ParserType.CYK))
+			this.getOutput().onDefault(CYKParser.parseWithSession(grammar, word).toFormattedParsingSession());
+		if (parser.equals(ParserType.LR1))
+			this.getOutput().onDefault(LROneParser.parseWithSession(grammar, word).toFormattedParsingSession());
 	}	
 	
 	/**

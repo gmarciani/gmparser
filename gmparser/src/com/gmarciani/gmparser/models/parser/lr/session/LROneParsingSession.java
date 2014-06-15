@@ -1,4 +1,4 @@
-package com.gmarciani.gmparser.models.parser.lr;
+package com.gmarciani.gmparser.models.parser.lr.session;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.ParserType;
@@ -21,7 +21,7 @@ public class LROneParsingSession extends ParsingSession {
 		return this.recognitionMatrix;
 	}
 
-	@Override protected String getFormattedRecognitionMatrix() {
+	@Override protected String getFormattedSessionContent() {
 		return this.getRecognitionMatrix().toExtendedFormattedMatrix();
 	}
 

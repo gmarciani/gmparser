@@ -22,7 +22,7 @@ public class Pair<X extends Comparable<X>, Y extends Comparable<Y>>
 	}
 	
 	@Override public String toString() {
-		return "(" + this.getX() + "," + this.getY() + ")";
+		return "(" + String.valueOf(this.getX()) + "," + String.valueOf(this.getY()) + ")";
 	}
 
 	@Override public int compareTo(Pair<X, Y> other) {

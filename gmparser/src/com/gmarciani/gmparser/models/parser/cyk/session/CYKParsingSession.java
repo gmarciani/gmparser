@@ -1,4 +1,4 @@
-package com.gmarciani.gmparser.models.parser.cyk;
+package com.gmarciani.gmparser.models.parser.cyk.session;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.ParserType;
@@ -21,7 +21,7 @@ public class CYKParsingSession extends ParsingSession {
 		return this.recognitionMatrix;
 	}
 
-	@Override protected String getFormattedRecognitionMatrix() {
+	@Override protected String getFormattedSessionContent() {
 		return this.getRecognitionMatrix().toFormattedMatrix();
 	}
 

@@ -30,12 +30,19 @@ import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
+import com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession;
 
-public class CYKParser {
-
+public class CYKParser {	
+	
 	public static synchronized boolean parse(Grammar grammar, String word) {
-		CYKMatrix matrix = getRecognitionMatrix(grammar, word);
-		return (matrix.get(word.length(), 1).contains(grammar.getAxiom()));
+		CYKMatrix recognitionMatrix = getRecognitionMatrix(grammar, word);
+		return (recognitionMatrix.get(word.length(), 1).contains(grammar.getAxiom()));
+	}
+
+	public static synchronized CYKParsingSession parseWithSession(Grammar grammar, String word) {
+		CYKMatrix recognitionMatrix = getRecognitionMatrix(grammar, word);
+		boolean result = (recognitionMatrix.get(word.length(), 1).contains(grammar.getAxiom()));
+		return new CYKParsingSession(grammar, word, recognitionMatrix, result);
 	}
 	
 	public static synchronized CYKMatrix getRecognitionMatrix(Grammar grammar, String word) {
@@ -46,11 +53,10 @@ public class CYKParser {
 		
 		for (int j = 1; j <= word.length(); j ++) {
 			Character producedTerminal = word.charAt(j - 1);
-			for (Production production : productions) {
+			for (Production production : productions)
 				if (production.getRight().getSize() == 1
 						&& production.isRightContaining(producedTerminal))
 					matrix.put(1, j, production.getLeft().getNonTerminalAlphabet());
-			}			
 		}
 		
 		for (int i = 2; i <= word.length(); i ++) {
@@ -62,9 +68,8 @@ public class CYKParser {
 					Alphabet entry1 = matrix.get(i1, j1);
 					Alphabet entry2 = matrix.get(i2, j2);
 					Productions prods = productions.getProductionsRightIndexedWithin(entry1, entry2);
-					for (Production prod : prods) {
+					for (Production prod : prods)
 						target.addAll(prod.getLeft().getNonTerminalAlphabet());
-					}
 				}
 				matrix.put(i, j, target);
 			}

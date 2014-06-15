@@ -94,6 +94,12 @@ public final class LROneMatrix extends NonDeterministicFunction<Integer, Charact
 		return super.addAndInsert(stateId, symbol, new Action(type, value));
 	}
 	
+	public Action getAction(Integer stateId, Character symbol) {
+		if (!super.containsXY(stateId, symbol))
+			return null;
+		return super.getAllForXY(stateId, symbol).getFirst().getZ();
+	}
+	
 	public String toExtendedFormattedMatrix() {
 		return super.toFormattedFunction() + this.getProductionsRepresentation();
 	}
@@ -113,5 +119,7 @@ public final class LROneMatrix extends NonDeterministicFunction<Integer, Charact
 		}			
 		return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_CENTER);
 	}
+
+	
 
 }

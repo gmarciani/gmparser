@@ -27,9 +27,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.WordParser;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.cyk.CYKParsingSession;
+import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 
 public class TestCYKParse {
 	
@@ -39,35 +38,35 @@ public class TestCYKParse {
 
 	@Test public void parseChosmky() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY);
-		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");
-		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
-		CYKParsingSession sessionUnrecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
+		boolean recognized = CYKParser.parse(grammar, "aababb");
+		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");
+		boolean unrecognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
 		
-		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
-		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());
-		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognizedEpsilon.getResult());
+		assertTrue("Uncorrect parsing (should be parsed)", recognized);
+		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
+		assertFalse("Uncorrect parsing (should not be parsed)", unrecognizedEpsilon);
 	}
 	
 	@Test public void parseChomskySExtended() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_S_EXTENDED);
-		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");		
-		CYKParsingSession sessionRecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
-		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
+		boolean recognized = CYKParser.parse(grammar, "aababb");		
+		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");	
+		boolean recognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
 		
-		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
-		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognizedEpsilon.getResult());
-		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());		
+		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
+		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
+		assertTrue("Uncorrect parsing (should be parsed)", recognizedEpsilon);
 	}
 	
 	@Test public void parseNotChomskyExtended() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY_EXTENDED);
-		CYKParsingSession sessionRecognized = WordParser.getInstance().getCYKParsingSession(grammar, "aababb");		
-		CYKParsingSession sessionRecognizedEpsilon = WordParser.getInstance().getCYKParsingSession(grammar, Grammar.EPSILON.toString());
-		CYKParsingSession sessionUnrecognized = WordParser.getInstance().getCYKParsingSession(grammar, "abcfdg");
+		boolean recognized = CYKParser.parse(grammar, "aababb");		
+		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");	
+		boolean recognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
 		
-		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognized.getResult());
-		assertTrue("Uncorrect parsing (should be parsed)", sessionRecognizedEpsilon.getResult());
-		assertFalse("Uncorrect parsing (should not be parsed)", sessionUnrecognized.getResult());
+		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
+		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
+		assertTrue("Uncorrect parsing (should be parsed)", recognizedEpsilon);
 	}
 
 }

@@ -51,7 +51,7 @@ public class Triple<X extends Comparable<X>, Y extends Comparable<Y>, Z extends 
 	}
 	
 	@Override public String toString() {
-		return "(" + this.getX() + "," + this.getY() + "," + this.getZ() + ")";
+		return "(" + String.valueOf(this.getX()) + "," + String.valueOf(this.getY()) + "," + String.valueOf(this.getZ()) + ")";
 	}
 
 	@Override public int compareTo(Triple<X, Y, Z> other) {

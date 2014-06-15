@@ -80,7 +80,7 @@ public abstract class ParsingSession {
 		return string;
 	}
 	
-	protected String getFormattedSession() {
+	protected String getFormattedSummary() {
 		String grammar = this.getGrammarAnalysis().toString();
 		String header[] = {"WORD", "PARSER", "RESULT"};
 		String data[][] = {{this.getWord(), this.getParserType().getName(), String.valueOf(this.getResult())}};
@@ -89,14 +89,13 @@ public abstract class ParsingSession {
 		return string;
 	}
 	
-	protected abstract String getFormattedRecognitionMatrix();
+	protected abstract String getFormattedSessionContent();
 	
-	public String toFormattedString() {
+	public String toFormattedParsingSession() {
 		String header = this.getFormattedHeader();
-		String session = this.getFormattedSession();
-		String recognitionMatrix = this.getFormattedRecognitionMatrix();
+		String session = this.getFormattedSummary() + this.getFormattedSessionContent();
 		String footer = this.getFormattedFooter();
-		String string = header + "\n\n" + session + recognitionMatrix + "\n\n" + footer;
+		String string = header + "\n\n" + session + "\n\n" + footer;
 		return string;
 	}
 
