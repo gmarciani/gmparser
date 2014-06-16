@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.views.option;
+package com.gmarciani.gmparser.views;
 
 public final class AppOptions {
 

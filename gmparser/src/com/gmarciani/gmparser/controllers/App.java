@@ -41,10 +41,9 @@ import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformatio
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
-import com.gmarciani.gmparser.views.UiManager;
-import com.gmarciani.gmparser.views.menu.MainMenu;
-import com.gmarciani.gmparser.views.menu.ParserMenu;
-import com.gmarciani.gmparser.views.menu.TransformationMenu;
+import com.gmarciani.gmparser.views.AppMenus.MainMenu;
+import com.gmarciani.gmparser.views.AppMenus.ParserMenu;
+import com.gmarciani.gmparser.views.AppMenus.TransformationMenu;
 
 import static org.fusesource.jansi.Ansi.*;
 
@@ -52,7 +51,7 @@ import static org.fusesource.jansi.Ansi.*;
  * <p>Main user-app interaction controller.<p>
  * <p>It manages the whole app workflow.<p>
  *  
- * @see com.gmarciani.gmparser.views.UiManager
+ * @see com.gmarciani.gmparser.controllers.UiManager
  * @see com.gmarciani.gmparser.controllers.Output
  * 
  * @author Giacomo Marciani

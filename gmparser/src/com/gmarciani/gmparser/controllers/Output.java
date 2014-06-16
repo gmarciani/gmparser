@@ -25,8 +25,6 @@ package com.gmarciani.gmparser.controllers;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import com.gmarciani.gmparser.views.UiManager;
-
 /**
  * <p>App output manager.<p> 
  * <p>It manages output format for standard outputs, warnings, exceptions, and debug.<p>

@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.views;
+package com.gmarciani.gmparser.controllers;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -33,10 +33,10 @@ import org.fusesource.jansi.Ansi.Color;
 import com.gmarciani.gmparser.models.commons.menu.Menu;
 import com.gmarciani.gmparser.models.commons.menu.MenuBuilder;
 import com.gmarciani.gmparser.models.commons.menu.Menus;
-import com.gmarciani.gmparser.views.menu.MainMenu;
-import com.gmarciani.gmparser.views.menu.ParserMenu;
-import com.gmarciani.gmparser.views.menu.TransformationMenu;
-import com.gmarciani.gmparser.views.option.AppOptions;
+import com.gmarciani.gmparser.views.AppMenus.MainMenu;
+import com.gmarciani.gmparser.views.AppMenus.ParserMenu;
+import com.gmarciani.gmparser.views.AppMenus.TransformationMenu;
+import com.gmarciani.gmparser.views.AppOptions;
 
 /**
  * <p>Command-line interface manager.<p>
