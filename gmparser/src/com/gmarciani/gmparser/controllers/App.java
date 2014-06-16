@@ -34,7 +34,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.gmarciani.gmparser.controllers.Preferences.*;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
@@ -117,7 +116,7 @@ public final class App {
 	 */
 	public void printWelcome() {
 		String welcome = UiManager.getLogo();
-		System.out.println(ansi().fg(AppUI.LOGO_COLOR).bold().a(welcome).reset());
+		System.out.println(ansi().fg(UiManager.AppUI.LOGO_COLOR).bold().a(welcome).reset());
 	}
 
 	/**
@@ -135,10 +134,6 @@ public final class App {
 		if (unrecognizedArguments.length != 0) {
 			this.getOutput().onUnrecognizedArguments(unrecognizedArguments);
 			this.quit();
-		}
-		
-		if (cmd.hasOption("logon")) {
-			AppLog.LOGON = true;
 		}
 		
 		if (cmd.getOptions().length == 1 && cmd.hasOption("logon")

@@ -28,6 +28,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.Ansi.Color;
 
 import com.gmarciani.gmparser.views.app.AppOptions;
 import com.gmarciani.gmparser.views.app.MainMenu;
@@ -87,11 +88,6 @@ public final class UiManager {
 				.hasArg(false)
 				.create("v");
 		
-		Option logon = OptionBuilder.withLongOpt("logon")
-				.withDescription(AppOptions.DESCRIPTION_LOGON)
-				.hasArg(false)
-				.create("l");
-		
 		OptionGroup optionGroup = new OptionGroup();
 		optionGroup.addOption(analyze);
 		optionGroup.addOption(transform);
@@ -101,7 +97,6 @@ public final class UiManager {
 		
 		Options options = new Options();	
 		options.addOptionGroup(optionGroup);
-		options.addOption(logon);
 		
 		return options;
 	}	
@@ -172,6 +167,22 @@ public final class UiManager {
 	 */
 	public static void uninstallAnsiConsole() {
 		AnsiConsole.systemUninstall();
+	}
+	
+	public static final class AppUI {	
+		
+		private AppUI() {
+			throw new AssertionError();
+		}
+		
+		public static final String FILE_LOGO = "com/gmarciani/gmparser/views/res/logo.txt";
+		public static final String LOGO_PLACEHOLDER = "\nWELCOME TO GMPARSER\n";
+		
+		public static final Color LOGO_COLOR = Color.YELLOW;
+		public static final Color RESULT_COLOR = Color.GREEN;
+		public static final Color LOGON_COLOR = Color.CYAN;
+		public static final Color WARNING_COLOR = Color.YELLOW;
+		public static final Color EXCEPTION_COLOR = Color.RED;
 	}
 
 }

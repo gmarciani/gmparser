@@ -25,8 +25,7 @@ package com.gmarciani.gmparser.controllers;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import com.gmarciani.gmparser.controllers.Preferences.AppLog;
-import com.gmarciani.gmparser.controllers.Preferences.AppUI;
+import com.gmarciani.gmparser.views.UiManager;
 
 /**
  * <p>App output manager.<p> 
@@ -61,17 +60,7 @@ public final class Output {
 	 */
 	public void onResult(String resultMessage) {
 		String result = "[gmparser] " + resultMessage;
-		System.out.println(ansi().fg(AppUI.RESULT_COLOR).a(result).reset());
-	}
-
-	/**
-	 * @param logonMessage
-	 */
-	public void onLogon(String logonMessage) {
-		if (AppLog.LOGON) {
-			String warning = "[gmparser] " + logonMessage;
-			System.out.println(ansi().fg(AppUI.LOGON_COLOR).a(warning).reset());
-		}
+		System.out.println(ansi().fg(UiManager.AppUI.RESULT_COLOR).a(result).reset());
 	}
 
 	/**
@@ -79,7 +68,7 @@ public final class Output {
 	 */
 	public void onWarning(String warningMessage) {
 		String warning = "[WARNING] " + warningMessage;
-		System.out.println(ansi().fg(AppUI.WARNING_COLOR).a(warning).reset());
+		System.out.println(ansi().fg(UiManager.AppUI.WARNING_COLOR).a(warning).reset());
 	}
 
 	/**
@@ -87,7 +76,7 @@ public final class Output {
 	 */
 	public void onException(String exceptionMessage) {
 		String warning = "[EXCEPTION] " + exceptionMessage;
-		System.out.println(ansi().fg(AppUI.EXCEPTION_COLOR).a(warning).reset());
+		System.out.println(ansi().fg(UiManager.AppUI.EXCEPTION_COLOR).a(warning).reset());
 	}
 
 	public void onUnrecognizedArguments(String[] arguments) {
