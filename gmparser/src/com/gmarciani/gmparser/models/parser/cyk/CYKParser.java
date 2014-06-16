@@ -23,7 +23,6 @@
 
 package com.gmarciani.gmparser.models.parser.cyk;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
@@ -35,18 +34,20 @@ import com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession;
 public class CYKParser {	
 	
 	public static synchronized boolean parse(Grammar grammar, String word) {
+		word = (word.length() == 0) ? Grammar.EPSILON.toString() : word;
 		CYKMatrix recognitionMatrix = getRecognitionMatrix(grammar, word);
 		return (recognitionMatrix.get(word.length(), 1).contains(grammar.getAxiom()));
 	}
 
 	public static synchronized CYKParsingSession parseWithSession(Grammar grammar, String word) {
+		word = (word.length() == 0) ? Grammar.EPSILON.toString() : word;
 		CYKMatrix recognitionMatrix = getRecognitionMatrix(grammar, word);
 		boolean result = (recognitionMatrix.get(word.length(), 1).contains(grammar.getAxiom()));
 		return new CYKParsingSession(grammar, word, recognitionMatrix, result);
 	}
 	
 	public static synchronized CYKMatrix getRecognitionMatrix(Grammar grammar, String word) {
-		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
+		grammar.toChomskyNormalForm();
 		CYKMatrix matrix = new CYKMatrix(word);
 		
 		Productions productions = grammar.getProductions();

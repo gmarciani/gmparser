@@ -28,7 +28,6 @@ import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.grammar.production.ProductionFactory;
 
-
 public class GrammarFactory {
 	
 	private static GrammarFactory instance;
@@ -44,10 +43,8 @@ public class GrammarFactory {
 	}
 	
 	public static GrammarFactory getInstance() {
-		if (instance == null) {
-			instance = new GrammarFactory();
-		}
-		
+		if (instance == null)
+			instance = new GrammarFactory();		
 		return instance;
 	}
 	

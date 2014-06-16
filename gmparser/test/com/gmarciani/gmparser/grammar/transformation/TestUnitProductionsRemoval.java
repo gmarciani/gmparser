@@ -27,9 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestUnitProductionsRemoval {
 	
@@ -37,17 +35,12 @@ public class TestUnitProductionsRemoval {
 	private static final String GRAMMAR_WITHOUT_UNIT_PRODUCTIONS = "S->AS|a|b;A->AS|a|b;B->AS|a|b.";	
 
 	@Test public void removeUnitProductions() {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITH_UNIT_PRODUCTIONS)
-				.create();
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_WITH_UNIT_PRODUCTIONS);
 		
-		GrammarTransformer.getInstance().removeUnitProductions(grammar);
+		grammar.removeUnitProductions();
 		
-		Grammar shouldBe = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITHOUT_UNIT_PRODUCTIONS)
-				.create();
+		Grammar shouldBe = Grammar.generateGrammar(GRAMMAR_WITHOUT_UNIT_PRODUCTIONS);
 		
-		assertTrue("Incorrect removal of unit productions", 
-				grammar.getProductions().equals(shouldBe.getProductions()));
+		assertTrue("Incorrect removal of unit productions.", grammar.getProductions().equals(shouldBe.getProductions()));
 	}
 }

@@ -35,7 +35,8 @@ import com.gmarciani.gmparser.grammar.transformation.AllTestsGrammarTransformati
 @SuiteClasses({ 
 	AllTestsGrammarBase.class,
 	AllTestsGrammarAnalysis.class, 
-	AllTestsGrammarTransformation.class })
+	AllTestsGrammarTransformation.class 
+	})
 public class AllTestsGrammar {
 
 }

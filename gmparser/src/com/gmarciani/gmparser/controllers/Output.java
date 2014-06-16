@@ -21,18 +21,18 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.app;
+package com.gmarciani.gmparser.controllers;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import com.gmarciani.gmparser.controllers.app.Preferences.AppLog;
-import com.gmarciani.gmparser.controllers.app.Preferences.AppUI;
+import com.gmarciani.gmparser.controllers.Preferences.AppLog;
+import com.gmarciani.gmparser.controllers.Preferences.AppUI;
 
 /**
  * <p>App output manager.<p> 
  * <p>It manages output format for standard outputs, warnings, exceptions, logon and debug.<p>
  * 
- * @see com.gmarciani.gmparser.controllers.app.App
+ * @see com.gmarciani.gmparser.controllers.App
  * 
  * @author Giacomo Marciani
  * @version 1.0

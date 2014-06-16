@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.app;
+package com.gmarciani.gmparser.views;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -41,7 +41,7 @@ import com.gmarciani.gmparser.views.menu.Menus;
  * <p>Command-line interface manager.<p>
  * <p>It manages options, menus and interactions <p>
  * 
- * @see com.gmarciani.gmparser.controllers.app.App
+ * @see com.gmarciani.gmparser.controllers.App
  * 
  * @author Giacomo Marciani
  * @version 1.0

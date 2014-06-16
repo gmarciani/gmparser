@@ -28,14 +28,17 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.gmarciani.gmparser.automaton.AllTestsAutomaton;
+import com.gmarciani.gmparser.commons.AllTestsCommons;
 import com.gmarciani.gmparser.grammar.AllTestsGrammar;
 import com.gmarciani.gmparser.parser.AllTestsParser;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+	AllTestsCommons.class,
 	AllTestsGrammar.class,
 	AllTestsParser.class,
-	AllTestsAutomaton.class})
+	AllTestsAutomaton.class
+	})
 public class AllTests {
 
 }

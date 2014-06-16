@@ -50,10 +50,12 @@ public class TestStates {
 		States<String> states = new States<String>();
 		
 		for (State<String> state : list)
-			assertTrue("Uncorrect state insertion. Should be added: " + state + " in " + states, states.add(state));
+			assertTrue("Uncorrect state insertion. Should be added: " + state + " in " + states, 
+					states.add(state));
 		
 		for (State<String> state : list)
-			assertFalse("Uncorrect state insertion. Should not be added: " + state + " in " + states, states.add(state));
+			assertFalse("Uncorrect state insertion. Should not be added: " + state + " in " + states, 
+					states.add(state));
 	}
 	
 	@Test public void represent() {

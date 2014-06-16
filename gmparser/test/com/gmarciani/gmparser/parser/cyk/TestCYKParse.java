@@ -32,41 +32,85 @@ import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 
 public class TestCYKParse {
 	
-	private static final String GRAMMAR_CHOMSKY = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
-	private static final String GRAMMAR_CHOMSKY_S_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
-	private static final String GRAMMAR_NOT_CHOMSKY_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB|G;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b;G->" + Grammar.EPSILON + ".";
-
-	@Test public void parseChosmky() {
-		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY);
-		boolean recognized = CYKParser.parse(grammar, "aababb");
-		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");
-		boolean unrecognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
+	private static final String GRAMMAR_LR1_ONE = "X->S;S->CC;C->cC|d.";
+	private static final String GRAMMAR_LR1_TWO = "S->A;A->BA|" + Grammar.EPSILON + ";B->aB|b.";
+	private static final String GRAMMAR_LR1_THREE = "X->S;S->aA|bB;A->cAd|" + Grammar.EPSILON + ";B->" + Grammar.EPSILON + ".";
+	
+	private static final String GRAMMAR_EMPTY = "S->" + Grammar.EPSILON + ".";
+	
+	private static final String GRAMMAR_NOTLR1_CHOMSKY = "S->AL|BL|BR;A->a;B->b;L->AS|a|b;R->BS|a|b.";
+	private static final String GRAMMAR_NOTLR1_NOTCHOMSKY = "S->aL|bL|bR;L->aS|a|b;R->bS|a|b.";
+	
+	@Test public void parseLR1One() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_ONE); //(c*d)(c*d)
 		
-		assertTrue("Uncorrect parsing (should be parsed)", recognized);
-		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
-		assertFalse("Uncorrect parsing (should not be parsed)", unrecognizedEpsilon);
+		String acceptableWords[] = {"dd", "cdd", "dcd", "cccdd", "dcccd", "cdcd", "cdcccd", "cccdcd", "cccdcccd"};
+		String notAcceptableWords[] = {"", "d", "dddd", "cc", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
-	@Test public void parseChomskySExtended() {
-		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_S_EXTENDED);
-		boolean recognized = CYKParser.parse(grammar, "aababb");		
-		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");	
-		boolean recognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
+	@Test public void parseLR1Two() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_TWO); //(a*b)*
 		
-		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
-		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
-		assertTrue("Uncorrect parsing (should be parsed)", recognizedEpsilon);
+		String acceptableWords[] = {"", "b", "bbbb", "ab", "aab", "aaab", "abab", "aabaab", "aaabaaab", "aaabbb", "bbbab"};
+		String notAcceptableWords[] = {"ddd", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
-	@Test public void parseNotChomskyExtended() {
-		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY_EXTENDED);
-		boolean recognized = CYKParser.parse(grammar, "aababb");		
-		boolean unrecognized = CYKParser.parse(grammar, "abcfdg");	
-		boolean recognizedEpsilon = CYKParser.parse(grammar, Grammar.EPSILON.toString());
+	@Test public void parseLR1Three() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_THREE); //((a(c{n}d{n})*+b)
 		
-		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
-		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
-		assertTrue("Uncorrect parsing (should be parsed)", recognizedEpsilon);
+		String acceptableWords[] = {"b", "a", "acd", "accdd", "acccddd", "accccdddd"};
+		String notAcceptableWords[] = {"", "ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+	}
+	
+	@Test public void parseEmpty() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_EMPTY); //empty		
+		
+		String acceptableWords[] = {""};
+		String notAcceptableWords[] = {"ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+	}
+	
+	@Test public void parseNotLR1Chosmky() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOTLR1_CHOMSKY); //(aa+ba+bb)*(aa+ab+ba+bb)
+		
+		String acceptableWords[] = {"aa", "ab", "ba", "bb", "aaaaaa", "aaaaab", "aaaaba", "aaaabb", "babaaa", "babaab", "bababa", "bababb", "bbbbaa", "bbbbab", "bbbbba", "bbbbbb"};
+		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+	}
+	
+	@Test public void parseNotLR1NotChosmky() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOTLR1_NOTCHOMSKY); //(aa+ba+bb)*(aa+ab+ba+bb)
+		
+		String acceptableWords[] = {"aa", "ab", "ba", "bb", "aaaaaa", "aaaaab", "aaaaba", "aaaabb", "babaaa", "babaab", "bababa", "bababb", "bbbbaa", "bbbbab", "bbbbba", "bbbbbb"};
+		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 
 }

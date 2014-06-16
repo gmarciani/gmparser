@@ -71,10 +71,7 @@ public class TestPowersetConstruction {
 		TransitionGraph<String> graph = this.createTransitionGraph();
 		FiniteAutomaton<String> expectedAutomaton = this.createExpectedAutomaton();
 		
-		System.out.println(graph.toExtendedFormattedAutomaton());
-		System.out.println(graph.powersetConstruction().toExtendedFormattedAutomaton());
-		
-		assertEquals("Uncorrect powerset-construction", 
+		assertEquals("Uncorrect powerset-construction.", 
 				expectedAutomaton, graph.powersetConstruction());
 	}
 

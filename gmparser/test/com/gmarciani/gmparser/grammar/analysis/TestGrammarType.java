@@ -28,7 +28,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestGrammarType {
 	
@@ -39,47 +38,28 @@ public class TestGrammarType {
 	private static final String GRAMMAR_REGULAR_RIGHT_LINEAR = "S->aA|bA|c;A->aA|c.";
 	
 	@Test public void check() {
-		Grammar grammarUnrestricted = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_UNRESTRICTED)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		Grammar grammarUnrestricted = Grammar.generateGrammar(GRAMMAR_UNRESTRICTED);		
+		Grammar grammarContextSensitive = Grammar.generateGrammar(GRAMMAR_CONTEXT_SENSITIVE);		
+		Grammar grammarContextFree = Grammar.generateGrammar(GRAMMAR_CONTEXT_FREE);		
+		Grammar grammarRegularLeftLinear = Grammar.generateGrammar(GRAMMAR_REGULAR_LEFT_LINEAR);		
+		Grammar grammarRegularRightLinear = Grammar.generateGrammar(GRAMMAR_REGULAR_RIGHT_LINEAR);
 		
-		Grammar grammarContextSensitive = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_CONTEXT_SENSITIVE)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		assertTrue("Uncorrect grammar type recognition. Should be Unrestricted.", 
+				grammarUnrestricted.isUnrestricted());
 		
-		Grammar grammarContextFree = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_CONTEXT_FREE)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
-		
-		Grammar grammarRegularLeftLinear = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_REGULAR_LEFT_LINEAR)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
-		
-		Grammar grammarRegularRightLinear = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_REGULAR_RIGHT_LINEAR)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
-		
-		assertTrue("Uncorrect grammar type recognition (should be Unrestricted)", 
-				(grammarUnrestricted.isUnrestricted()));
-		
-		assertTrue("Uncorrect grammar type recognition (should be Context-Sensitive)", 
-				(grammarContextSensitive.isContextSensitive()));
+		assertTrue("Uncorrect grammar type recognition. Should be Context-Sensitive.", 
+				grammarContextSensitive.isContextSensitive());
 	
-		assertTrue("Uncorrect grammar type recognition (should be Context-Free)", 
-				(grammarContextFree.isContextFree()));
+		assertTrue("Uncorrect grammar type recognition. Should be Context-Free.", 
+				grammarContextFree.isContextFree());
 		
-		assertTrue("Uncorrect grammar type recognition (should be Regular Left-Linear)", 
-				(grammarRegularLeftLinear.isRegular()
-						&& grammarRegularLeftLinear.isRegularLeftLinear()));
+		assertTrue("Uncorrect grammar type recognition. Should be Regular Left-Linear.", 
+				grammarRegularLeftLinear.isRegular()
+						&& grammarRegularLeftLinear.isRegularLeftLinear());
 		
-		assertTrue("Uncorrect grammar type recognition (should be Regular Right-Linear)", 
-				(grammarRegularRightLinear.isRegular()
-						&& grammarRegularRightLinear.isRegularRightLinear()));
+		assertTrue("Uncorrect grammar type recognition. Should be Regular Right-Linear.", 
+				grammarRegularRightLinear.isRegular()
+						&& grammarRegularRightLinear.isRegularRightLinear());
 	}
 
 }

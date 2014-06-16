@@ -32,15 +32,89 @@ import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 
 public class TestLROneParse {
 	
-	private static final String GRAMMAR = "S->A;A->CC;C->cC|d.";
+	private static final String GRAMMAR_LR1_ONE = "X->S;S->CC;C->cC|d.";
+	private static final String GRAMMAR_LR1_TWO = "S->A;A->BA|" + Grammar.EPSILON + ";B->aB|b.";
+	private static final String GRAMMAR_LR1_THREE = "X->S;S->aA|bB;A->cAd|" + Grammar.EPSILON + ";B->" + Grammar.EPSILON + ".";
 	
-	@Test public void parse() {
-		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
-		boolean recognized = LROneParser.parse(grammar, "dcd$");
-		boolean unrecognized = LROneParser.parse(grammar, "abcdfg$");
+	private static final String GRAMMAR_EMPTY = "S->" + Grammar.EPSILON + ".";
+	
+	private static final String GRAMMAR_NOTLR1_CHOMSKY = "S->AL|BL|BR;A->a;B->b;L->AS|a|b;R->BS|a|b.";
+	private static final String GRAMMAR_NOTLR1_NOTCHOMSKY = "S->aL|bL|bR;L->aS|a|b;R->bS|a|b.";
+	
+	@Test public void parseLR1One() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_ONE); //(c*d)(c*d)
 		
-		assertTrue("Uncorrect parsing (should be parsed)", recognized);		
-		assertFalse("Uncorrect parsing (should not be parsed)", unrecognized);
+		String acceptableWords[] = {"dd", "cdd", "dcd", "cccdd", "dcccd", "cdcd", "cdcccd", "cccdcd", "cccdcccd"};
+		String notAcceptableWords[] = {"", "d", "dddd", "cc", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect LR(1) parsing. Should be parsed: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed: " + word, LROneParser.parse(grammar, word));
+	}
+	
+	@Test public void parseLR1Two() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_TWO); //(a*b)*
+		
+		String acceptableWords[] = {"", "b", "bbbb", "ab", "aab", "aaab", "abab", "aabaab", "aaabaaab", "aaabbb$", "bbbab"};
+		String notAcceptableWords[] = {"ddd", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect LR(1) parsing. Should be parsed: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed: " + word, LROneParser.parse(grammar, word));
+	}
+	
+	@Test public void parseLR1Three() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_THREE); //((a(c{n}d{n})* + b)
+		
+		String acceptableWords[] = {"b", "a", "acd", "accdd", "acccddd", "accccdddd"};
+		String notAcceptableWords[] = {"", "ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect LR(1) parsing. Should be parsed: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed: " + word, LROneParser.parse(grammar, word));
+	}
+	
+	@Test public void parseEmpty() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_EMPTY); //empty		
+		
+		String acceptableWords[] = {""};
+		String notAcceptableWords[] = {"ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect LR(1) parsing. Should be parsed: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed: " + word, LROneParser.parse(grammar, word));
+	}
+	
+	@Test public void parseNotLR1Chosmky() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOTLR1_CHOMSKY); //(aa+ba+bb)*(aa+ab+ba+bb)
+		
+		assertFalse("Uncorrect LR1 parsing. Should not be parsed, because not LR1 grammar.", LROneParser.isLROneGrammar(grammar));
+		
+		String acceptableWords[] = {"aa", "ab", "ba", "bb", "aaaaaa", "aaaaab", "aaaaba", "aaaabb", "babaaa", "babaab", "bababa", "bababb", "bbbbaa", "bbbbab", "bbbbba", "bbbbbb"};
+		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
+		
+		for (String word : acceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should be parsed, because not LR1 grammar: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed, because not LR1 grammar: " + word, LROneParser.parse(grammar, word));
+	}
+	
+	@Test public void parseNotLR1NotChosmky() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOTLR1_NOTCHOMSKY); //(aa+ba+bb)*(aa+ab+ba+bb)
+		
+		assertFalse("Uncorrect LR1 parsing. Should not be parsed, because not LR1 grammar.", LROneParser.isLROneGrammar(grammar));		
+		
+		String acceptableWords[] = {"aa", "ab", "ba", "bb", "aaaaaa", "aaaaab", "aaaaba", "aaaabb", "babaaa", "babaab", "bababa", "bababb", "bbbbaa", "bbbbab", "bbbbba", "bbbbbb"};
+		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
+		
+		for (String word : acceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should be parsed, because not LR1 grammar: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed, because not LR1 grammar: " + word, LROneParser.parse(grammar, word));
 	}
 
 }

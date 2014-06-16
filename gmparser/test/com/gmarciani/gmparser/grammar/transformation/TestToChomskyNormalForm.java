@@ -27,28 +27,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestToChomskyNormalForm {
 	
 	private static final String GRAMMAR_NOT_CHOMSKY = "E->E+T|T;T->TxF|F;F->(E)|a.";
 
 	@Test public void generateChomskyNormalForm() {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_NOT_CHOMSKY)
-				.withAxiom('E')
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY);
 		
-		assertFalse("Grammar should not be recognized as Chomsky",
-				grammar.isChomskyNormalForm());
+		assertFalse("Grammar should not be recognized as Chomsky.", grammar.isChomskyNormalForm());
 		
-		GrammarTransformer.getInstance().toChomskyNormalForm(grammar);
+		grammar.toChomskyNormalForm();
 		
-		assertTrue("Grammar should be recognized as Chomsky",
-				grammar.isChomskyNormalForm());
+		assertTrue("Grammar should be recognized as Chomsky.", grammar.isChomskyNormalForm());
 	}
 	
 }

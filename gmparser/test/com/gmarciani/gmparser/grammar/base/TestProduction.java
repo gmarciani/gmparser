@@ -40,12 +40,9 @@ public class TestProduction {
 		Production prodFour = new Production(new Member("S"), new Member("A" + Grammar.EPSILON));
 		Production prodFive = new Production(new Member("S"), new Member(Grammar.EPSILON + "A" + Grammar.EPSILON));
 		
-		assertTrue("Uncorrect equality of one or more epsilons",
-				prodOne.equals(prodTwo));
+		assertTrue("Uncorrect equality of one or more epsilons.", prodOne.equals(prodTwo));
 		
-		assertTrue("Uncorrect equality of mixed epsilons",
-				prodThree.equals(prodFour)
-				&& prodFour.equals(prodFive));		
+		assertTrue("Uncorrect equality of mixed epsilons.", prodThree.equals(prodFour) && prodFour.equals(prodFive));		
 	}
 
 }

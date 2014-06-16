@@ -35,13 +35,10 @@ public class TestGrammarSyntax {
 	
 	private static final String GRAMMAR = "SB->BC|bc|" + Grammar.EPSILON + ";BC->b|a.";
 
-	@Test public void match() {
-		
-		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
-		
-		boolean m = Pattern.matches(regex, GRAMMAR);
-		
-		assertTrue("Error in validation (should be true)", m);
+	@Test public void match() {		
+		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";		
+		boolean m = Pattern.matches(regex, GRAMMAR);		
+		assertTrue("Error in validation. Should be true", m);
 	}
 
 }

@@ -35,7 +35,7 @@ public class TestGrammarAnalysis {
 	@Test public void create() {
 		
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR);
-		GrammarAnalysis analysis = grammar.getGrammarAnalysis();
+		GrammarAnalysis analysis = grammar.generateGrammarAnalysis();
 		
 		System.out.println(analysis);
 	}

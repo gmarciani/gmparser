@@ -34,9 +34,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	TestDeterministicTransitionFunction.class,
 	TestNonDeterministicTransitionFunction.class,
 	TestFiniteAutomaton.class,
-	TestTransitionGraph.class,
-	TestPushDownAutomaton.class
-})
+	TestTransitionGraph.class
+	})
 public class AllTestsAutomatonBase {
 
 }

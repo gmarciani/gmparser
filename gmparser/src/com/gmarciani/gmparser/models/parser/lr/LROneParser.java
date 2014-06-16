@@ -39,29 +39,24 @@ import com.gmarciani.gmparser.models.parser.lr.session.LROneParsingSession;
 public class LROneParser {
 	
 	public static synchronized boolean parse(Grammar grammar, String word) {
+		word += '$';
 		LROneMatrix recognitionMatrix = getRecognitionMatrix(grammar);
 		return isLROneGrammar(recognitionMatrix) 
 			&& parseWithPushDownAutomaton(recognitionMatrix, word);
 	}
 
-	public static LROneParsingSession parseWithSession(Grammar grammar, String word) {		
+	public static LROneParsingSession parseWithSession(Grammar grammar, String word) {
+		word += '$';
 		LROneMatrix recognitionMatrix = getRecognitionMatrix(grammar);
 		boolean result = isLROneGrammar(recognitionMatrix) 
 				&& parseWithPushDownAutomaton(recognitionMatrix, word);
 		return new LROneParsingSession(grammar, word, recognitionMatrix, result);
 	}	
 	
-	private static LROneMatrix getRecognitionMatrix(Grammar grammar) {
-		Grammar augmentedGrammar = generateAugmentedGrammar(grammar);
-		FiniteAutomaton<Item> automaton = generateBigProductionFiniteAutomaton(augmentedGrammar);		
+	public static LROneMatrix getRecognitionMatrix(Grammar grammar) {
+		grammar.toAugmentedGrammar();
+		FiniteAutomaton<Item> automaton = generateBigProductionFiniteAutomaton(grammar);		
 		return new LROneMatrix(grammar, automaton);
-	}
-	
-	private static Grammar generateAugmentedGrammar(Grammar grammar) {
-		if (grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).size() > 1
-				|| grammar.getProductions().getProductionsRightContaining(grammar.getAxiom()).size() >= 1)
-			return grammar.generateAugmentedGrammar();		
-		return grammar;
 	}
 
 	private static FiniteAutomaton<Item> generateBigProductionFiniteAutomaton(Grammar grammar) {
@@ -81,7 +76,6 @@ public class LROneParser {
 			action = recognitionMatrix.getAction(currentState, tapeSymbol);
 			if (action == null)
 				return false;
-			System.out.println("stack: " + stack + "; tape: " + tapeSymbol + "; action: " + action);
 			if (action.isActionType(ActionType.ACCEPT)) {
 				return true;
 			} else if (action.isActionType(ActionType.SHIFT)) {
@@ -113,12 +107,17 @@ public class LROneParser {
 		return false;
 	}
 	
-	public static boolean isLROneGrammar(LROneMatrix recognitionMatrix) {
+	public static boolean isLROneGrammar(Grammar grammar) {
+		LROneMatrix recognitionMatrix = getRecognitionMatrix(grammar);
+		return isLROneGrammar(recognitionMatrix);
+	}
+	
+	private static boolean isLROneGrammar(LROneMatrix recognitionMatrix) {
 		for (Integer stateId : recognitionMatrix.getDomainX())
 			for (Character symbol : recognitionMatrix.getDomainY())
 				if (recognitionMatrix.getAllForXY(stateId, symbol).size() > 1)
 					return false;
 		return true;
-	}
+	}	
 
 }

@@ -28,7 +28,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestGrammarNormalForm {
 	
@@ -40,39 +39,25 @@ public class TestGrammarNormalForm {
 	
 		
 	@Test public void isChomskyNormalForm() {
-		Grammar grammarChomsky = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_CHOMSKY)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		Grammar grammarChomsky = Grammar.generateGrammar(GRAMMAR_CHOMSKY);		
+		Grammar grammarNotChomsky = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY);
 		
-		Grammar grammarNotChomsky = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_NOT_CHOMSKY)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		assertTrue("Uncorrect Chomsky-Normal-Form recognition. Should be recognized.", 
+				grammarChomsky.isChomskyNormalForm());
 		
-		assertTrue("Uncorrect Chomsky Normal Form recognition (should be recognized)", 
-				(grammarChomsky.isChomskyNormalForm()));
-		
-		assertFalse("Uncorrect Chomsky Normal Form recognition (should not be recognized)", 
-				(grammarNotChomsky.isChomskyNormalForm()));
+		assertFalse("Uncorrect Chomsky-Normal-Form recognition. Should not be recognized.", 
+				grammarNotChomsky.isChomskyNormalForm());
 	}
 
 	@Test public void isGreibachNormalForm() {
-		Grammar grammarGreibach = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_GREIBACH)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		Grammar grammarGreibach = Grammar.generateGrammar(GRAMMAR_GREIBACH);		
+		Grammar grammarNotGreibach = Grammar.generateGrammar(GRAMMAR_NOT_GREIBACH);
 		
-		Grammar grammarNotGreibach = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_NOT_GREIBACH)
-				.withEpsilon(Grammar.EPSILON)
-				.create();
+		assertTrue("Uncorrect Greibach-Normal-Form recognition. Should be recognized.", 
+				grammarGreibach.isGreibachNormalForm());
 		
-		assertTrue("Uncorrect Greibach Normal Form recognition (should be recognized)", 
-				(grammarGreibach.isGreibachNormalForm()));
-		
-		assertFalse("Uncorrect Greibach Normal Form recognition (should not be recognized)", 
-				(grammarNotGreibach.isGreibachNormalForm()));
+		assertFalse("Uncorrect Greibach-Normal-Form recognition. Should not be recognized.", 
+				grammarNotGreibach.isGreibachNormalForm());
 	}	
 
 }

@@ -41,7 +41,7 @@ public abstract class ParsingSession {
 			boolean result) {
 		this.grammar = grammar;
 		this.word = word;
-		this.grammarAnalysis = grammar.getGrammarAnalysis();
+		this.grammarAnalysis = grammar.generateGrammarAnalysis();
 		this.parserType = parserType;
 		this.result = result;
 	}

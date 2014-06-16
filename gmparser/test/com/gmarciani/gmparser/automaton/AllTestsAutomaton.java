@@ -36,7 +36,7 @@ import com.gmarciani.gmparser.automaton.transformation.AllTestsAutomatonTransfor
 	AllTestsAutomatonBase.class,
 	AllTestsAutomatonAnalysis.class,
 	AllTestsAutomatonTransformation.class
-})
+	})
 public class AllTestsAutomaton {
 
 }

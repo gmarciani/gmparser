@@ -31,7 +31,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	TestGSet.class, 
 	TestNonDeterministicFunction.class,
-	TestDeterministicFunction.class})
+	TestDeterministicFunction.class
+	})
 public class AllTestsCommons {
 
 }

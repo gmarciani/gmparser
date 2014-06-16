@@ -25,8 +25,11 @@ package com.gmarciani.gmparser.models.grammar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
@@ -303,9 +306,11 @@ public class Grammar {
 				Character rSymbol = production.getRight().getValue().charAt(i);
 				scannedSymbols.add(rSymbol);
 				if (nullables.containsAll(scannedSymbols)) {
-					Character nextSymbol = production.getRight().getValue().toCharArray()[i + 1];
-					first.addAll(this.getFirstOne(nextSymbol));
-					first.remove(Grammar.EPSILON);
+					if (production.getRightSize() >= i + 2) {
+						Character nextSymbol = production.getRight().getValueAsChars()[i + 1];
+						first.addAll(this.getFirstOne(nextSymbol));
+						first.remove(Grammar.EPSILON);
+					}					
 				}		
 			}
 			if (nullables.containsAll(scannedSymbols)) {
@@ -332,38 +337,6 @@ public class Grammar {
 		this.terminals = this.getProductions().getTerminalAlphabet();
 	}
 	
-	public static boolean validate(String strGrammar) {
-		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
-		
-		return Pattern.matches(regex, strGrammar);
-	}
-	
-	public Grammar generateAugmentedGrammar() {
-		Grammar augmentedGrammar = new Grammar(this);
-		Character newNonTerminalForOldAxiom = augmentedGrammar.getNewNonTerminal();
-		Character newAxiom = 'S';
-		
-		augmentedGrammar.renameNonTerminal(augmentedGrammar.getAxiom(), newNonTerminalForOldAxiom);
-		Production augmentedProduction = new Production(new Member(newAxiom), new Member(newNonTerminalForOldAxiom));
-		augmentedGrammar.addProduction(augmentedProduction);
-		
-		augmentedGrammar.addTerminal('$');
-		
-		return augmentedGrammar;
-	}
-	
-	public GrammarAnalysis getGrammarAnalysis() {
-		return new GrammarAnalysis(this);
-	}
-	
-	public static Grammar generateGrammar(String strGrammar) {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(strGrammar)
-				.withEpsilon(Grammar.EPSILON)
-				.create();		
-		return grammar;
-	}
-
 	@Override public String toString() {
 		return "Grammar(" + 
 					this.getTerminals() + "," + 
@@ -389,6 +362,192 @@ public class Grammar {
 				this.getTerminals(), 
 				this.getAxiom(), 
 				this.getProductions());
+	}	
+	
+	public static Grammar generateGrammar(String strGrammar) {
+		Grammar grammar = GrammarFactory.getInstance()
+				.hasProductions(strGrammar)
+				.withEpsilon(Grammar.EPSILON)
+				.create();		
+		return grammar;
+	}
+	
+	public static boolean validate(String strGrammar) {
+		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";		
+		return Pattern.matches(regex, strGrammar);
+	}	
+	
+	public GrammarAnalysis generateGrammarAnalysis() {
+		return new GrammarAnalysis(this);
+	}
+	
+	public void toAugmentedGrammar() {
+		if (this.getProductions().getProductionsLeftContaining(this.getAxiom()).size() == 1
+				&& this.getProductions().getProductionsRightContaining(this.getAxiom()).size() == 0) {
+			this.addTerminal('$');
+			return;
+		}
+		Character newAxiom = this.getNewNonTerminal();		
+		Production augmentedProduction = new Production(new Member(newAxiom), new Member(this.getAxiom()));
+		this.addProduction(augmentedProduction);	
+		this.setAxiom(newAxiom);
+		this.addTerminal('$');
+	}	
+	
+	public void removeUngenerativeSymbols() {
+		Alphabet generativeNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		Alphabet generativeAlphabet = new Alphabet(this.getTerminals(), generativeNonTerminals);
+		
+		boolean loop = true;
+		while(loop) {
+			loop = false;		
+			
+			generativeAlphabet.addAll(generativeNonTerminals);
+			
+			for (Production production : this.getProductions()) {
+				if (production.isRightWithin(generativeAlphabet))
+					loop = generativeNonTerminals.addAll(production.getLeft().getNonTerminalAlphabet()) ? true : loop;	
+			}			
+		}		
+		this.retainAllProductionsWithin(generativeAlphabet);
+	}
+		
+	public void removeUnreacheableSymbols() {	
+		Alphabet reacheableTerminals = new Alphabet(AlphabetType.TERMINAL);
+		Alphabet reacheableNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
+		reacheableNonTerminals.add(this.getAxiom());
+		
+		boolean loop = true;
+		while(loop) {
+			loop = false;			
+			for (Production production : this.getProductions()) {	
+				if (production.isLeftWithin(reacheableNonTerminals))
+					loop = reacheableNonTerminals.addAll(production.getRight().getNonTerminalAlphabet()) ? true : loop;				
+				if (production.isLeftWithin(reacheableNonTerminals))
+					reacheableTerminals.addAll(production.getRight().getTerminalAlphabet());
+			}
+		}			
+		Alphabet acceptedAlphabet = new Alphabet();
+		acceptedAlphabet.addAll(reacheableTerminals);
+		acceptedAlphabet.addAll(reacheableNonTerminals);		
+		this.retainAllProductionsWithin(acceptedAlphabet);
+	}
+	
+	public void removeUselessSymbols() {
+		this.removeUngenerativeSymbols();
+		this.removeUnreacheableSymbols();
+	}
+	
+	public void removeEpsilonProductions() {
+		Alphabet nullables = this.getNullables();	
+		
+		for (Production production : this.getProductions()) {
+			Alphabet nullablesForProduction = this.getNullablesForProduction(production);
+			if (!nullablesForProduction.isEmpty()) {
+				Map<Character, List<Integer>> nullablesOccurencesMap = production.getRight().getSymbolsOccurrences(nullablesForProduction);
+				for (Character nullable : nullablesForProduction) {
+					List<Integer> nullableOccurrences = nullablesOccurencesMap.get(nullable);
+					for (int nullableOccurrence : nullableOccurrences) {
+						Member lhs = production.getLeft();
+						StringBuilder builder = new StringBuilder(production.getRight().getValue());
+						builder.insert(nullableOccurrence, Grammar.EPSILON);
+						Member rhs = new Member(builder.toString());
+						Production productionWithoutNullable = new Production(lhs, rhs);
+						this.addProduction(productionWithoutNullable);
+					}						
+				}				
+				Member lhs = production.getLeft();
+				Member rhs = new Member(production.getRight().getValue().replaceAll(nullables.getUnionRegex(), Grammar.EPSILON.toString()));
+				Production productionWithoutNullables = new Production(lhs, rhs);
+				this.addProduction(productionWithoutNullables);
+			}
+		}
+		
+		for (Production epsilonProduction : this.getEpsilonProductions())
+			this.removeProduction(epsilonProduction);
+		
+		if (nullables.contains(this.getAxiom()))
+			this.addProduction(new Production(new Member(this.getAxiom()), new Member(Grammar.EPSILON)));
+	}
+	
+	public void removeUnitProductions() {
+		this.removeEpsilonProductions();
+		
+		for (Production trivialUnitProduction : this.getTrivialUnitProductions())
+			this.removeProduction(trivialUnitProduction);
+		
+		Queue<Production> queue = new ConcurrentLinkedQueue<Production>(this.getNonTrivialUnitProductions());
+		while(!queue.isEmpty()) {
+			Production nonTrivialUnitProduction = queue.poll();
+			String lhs = nonTrivialUnitProduction.getLeft().getValue();
+			Character rhs = nonTrivialUnitProduction.getRight().getValue().charAt(0);
+			
+			Set<String> unfoldings = this.getProductions().getRightForNonTerminal(rhs);
+			for (String unfolding : unfoldings)
+				this.addProduction(new Production(new Member(lhs), new Member(unfolding)));
+			
+			this.removeProduction(nonTrivialUnitProduction);
+			
+			for (Production trivialUnitProduction : this.getTrivialUnitProductions())
+				this.removeProduction(trivialUnitProduction);
+			
+			queue.addAll(this.getNonTrivialUnitProductions());
+		}
+	}	
+	
+	public void toChomskyNormalForm() {
+		this.removeEpsilonProductions();
+		this.removeUnitProductions();
+		
+		boolean emptyGeneration = this.getNullables().contains(this.getAxiom());
+		
+		boolean loop = true;
+		while(loop) {
+			loop = false;
+			
+			for (Production production : this.getProductions()) {
+				if (production.getRight().getSize() > 2) {
+					loop = true;
+					Character newNonTerminal = this.getNewNonTerminal();
+					Member lhs = production.getLeft();
+					Member rhs = new Member(production.getRight().getValue().substring(0, 1) + newNonTerminal);
+					Production reducedProductionOne = new Production(lhs, rhs);
+					
+					Production reducedProductionTwo = new Production(new Member(newNonTerminal), new Member(production.getRight().getValue().substring(1)));
+					
+					this.removeProduction(production);
+					this.addProduction(reducedProductionOne);
+					this.addProduction(reducedProductionTwo);
+				}
+			}
+		}
+		
+		loop = true;
+		while(loop) {
+			loop = false;
+			
+			for (Production production : this.getProductions()) {
+				if (production.getRight().getSize() > 1
+						&& !production.getRight().getTerminalAlphabet().isEmpty()) {
+					
+					loop = true;
+					Character newNonTerminal = this.getNewNonTerminal();
+					Character terminal = production.getRight().getTerminalAlphabet().getFirst();
+					Member lhs = production.getLeft();
+					Member rhs = new Member(production.getRight().getValue().replace(terminal, newNonTerminal));
+					Production promotionProductionOne = new Production(lhs, rhs);
+					
+					Production promotionProductionTwo = new Production(new Member(newNonTerminal), new Member(terminal));
+					
+					this.removeProduction(production);
+					this.addProduction(promotionProductionOne);
+					this.addProduction(promotionProductionTwo);
+				}
+			}
+		}
+		
+		if (emptyGeneration)
+			this.addProduction(new Production(new Member(this.getAxiom()), new Member(this.getEpsilon())));		
 	}
 	
 }

@@ -34,8 +34,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	TestUngenerativeRemoval.class,
 	TestUnitProductionsRemoval.class, 
 	TestUnreacheableRemoval.class,
-	TestUselessRemoval.class,
-	TestAugmentedGrammar.class})
+	TestUselessRemoval.class
+	})
 public class AllTestsGrammarTransformation {
 
 }

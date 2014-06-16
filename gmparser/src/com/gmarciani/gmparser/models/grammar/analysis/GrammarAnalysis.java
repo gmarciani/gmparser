@@ -28,13 +28,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.bethecoder.ascii_table.ASCIITable;
-import com.gmarciani.gmparser.controllers.app.UiManager;
 import com.gmarciani.gmparser.models.grammar.Extension;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.NormalForm;
 import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
+import com.gmarciani.gmparser.views.UiManager;
 
 /**
  * Grammar analysis report.

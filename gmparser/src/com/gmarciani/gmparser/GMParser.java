@@ -25,13 +25,13 @@ package com.gmarciani.gmparser;
 
 import org.apache.commons.cli.ParseException;
 
-import com.gmarciani.gmparser.controllers.app.App;
+import com.gmarciani.gmparser.controllers.App;
 
 /**
  * GMParser entry-point.
  * 
- * @see com.gmarciani.gmparser.controllers.app.App
- * @see com.gmarciani.gmparser.controllers.app.Output
+ * @see com.gmarciani.gmparser.controllers.App
+ * @see com.gmarciani.gmparser.controllers.Output
  * 
  * @author Giacomo Marciani
  * @version 1.0

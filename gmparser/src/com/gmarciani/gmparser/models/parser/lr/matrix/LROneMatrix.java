@@ -74,10 +74,11 @@ public final class LROneMatrix extends NonDeterministicFunction<Integer, Charact
 		for (State<Item> state : this.getAutomaton().getStates()) {
 			if (this.getAutomaton().isFinalState(state))
 				continue;
-			Item item = state.getValue().getFirst();
-			if (item.isComplete())
-				for (Character symbol : item.getLookAhead())
-					this.addAction(ActionType.REDUCE, this.getProductions().indexOf(item.getProduction()), state.getId(), symbol);
+			GSet<Item> items = state.getValue();
+			for (Item item : items)
+				if (item.isComplete())
+					for (Character symbol : item.getLookAhead())
+						this.addAction(ActionType.REDUCE, this.getProductions().indexOf(item.getProduction()), state.getId(), symbol);
 		}		
 		for (Triple<State<Item>, Character, State<Item>> transition : this.getAutomaton().getAllTransitions()) {
 			State<Item> sState = transition.getX();

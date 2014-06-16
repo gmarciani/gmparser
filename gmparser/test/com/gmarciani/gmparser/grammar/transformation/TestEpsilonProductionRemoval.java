@@ -27,9 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestEpsilonProductionRemoval {
 	
@@ -37,17 +35,12 @@ public class TestEpsilonProductionRemoval {
 	private static final String GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS = "S->A|" + Grammar.EPSILON + ".";
 
 	@Test public void removeEpsilonProductions() {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITH_EPSILON_PRODUCTIONS)
-				.create();
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_WITH_EPSILON_PRODUCTIONS);
 		
-		GrammarTransformer.getInstance().removeEpsilonProductions(grammar);
+		grammar.removeEpsilonProductions();
 		
-		Grammar shouldBe = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS)
-				.create();	
+		Grammar shouldBe = Grammar.generateGrammar(GRAMMAR_WITHOUT_EPSILON_PRODUCTIONS);
 		
-		assertTrue("Incorrect removal of epsilon productions", 
-				grammar.equals(shouldBe));
+		assertTrue("Incorrect removal of epsilon productions.", grammar.equals(shouldBe));
 	}
 }

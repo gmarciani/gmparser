@@ -25,13 +25,14 @@ package com.gmarciani.gmparser.parser.lr;
 
 import org.junit.Test;
 
+import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.lr.LROneParser;
-import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
+import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
-public class TestLROneMatrix {
-	
-	private static final String GRAMMAR_ONE = "X->S;S->CC;C->cC|d.";
+public class TestBigProductionFiniteAutomaton {
+
+	private static final String GRAMMAR_ONE = "S->A;A->CC;C->cC|d.";
 	private static final String GRAMMAR_TWO = "S->A;A->BA|" + Grammar.EPSILON + ";B->aB|b.";
 	private static final String GRAMMAR_THREE = "X->S;S->aA|bB;A->cAd|" + Grammar.EPSILON + ";B->" + Grammar.EPSILON + ".";
 	private static final String GRAMMAR_CHOMSKY = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
@@ -39,53 +40,53 @@ public class TestLROneMatrix {
 	private static final String GRAMMAR_NOT_CHOMSKY_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB|G;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b;G->" + Grammar.EPSILON + ".";
 	private static final String GRAMMAR_CHOMSKY_EMPTY = "S->" + Grammar.EPSILON + ".";
 	
-	@Test public void createOne() {
+	@Test public void createOne() {		
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_ONE);
 		System.out.println("#createOne: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
-	@Test public void createTwo() {
+	@Test public void createTwo() {		
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_TWO);
 		System.out.println("#createTwo: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
-	@Test public void createThree() {
+	@Test public void createThree() {		
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_THREE);
 		System.out.println("#createThree: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
 	@Test public void createChomsky() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY);
 		System.out.println("#createChomsky: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
 	@Test public void createChomskySExtended() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_S_EXTENDED);
 		System.out.println("#createChomskySExtended: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
 	@Test public void createNotChomskyExtended() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_NOT_CHOMSKY_EXTENDED);
 		System.out.println("#createNotChomskyExtended: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 	
-	@Test public void createChosmkyEmpty() {
+	@Test public void createChomskyEmpty() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_EMPTY);
-		System.out.println("#createChosmkyEmpty: " + grammar);
-		LROneMatrix matrix = LROneParser.getRecognitionMatrix(grammar);
-		System.out.println(matrix.toExtendedFormattedMatrix());
+		System.out.println("#createChomskyEmpty: " + grammar);
+		FiniteAutomaton<Item> bigProduction = new BigProductionGraph(grammar).powersetConstruction();
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
 	}
 
 }

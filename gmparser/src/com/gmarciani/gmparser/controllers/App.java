@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.controllers.app;
+package com.gmarciani.gmparser.controllers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,14 +34,14 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.gmarciani.gmparser.controllers.app.Preferences.*;
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
+import com.gmarciani.gmparser.controllers.Preferences.*;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
+import com.gmarciani.gmparser.views.UiManager;
 import com.gmarciani.gmparser.views.app.MainMenu;
 import com.gmarciani.gmparser.views.app.ParserMenu;
 import com.gmarciani.gmparser.views.app.TransformationMenu;
@@ -55,9 +55,9 @@ import static org.fusesource.jansi.Ansi.*;
  *  
  * @see com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer
  * @see com.gmarciani.gmparser.controllers.grammar.WordParser
- * @see com.gmarciani.gmparser.controllers.app.UiManager
- * @see com.gmarciani.gmparser.controllers.app.Output
- * @see com.gmarciani.gmparser.controllers.app.Preferences
+ * @see com.gmarciani.gmparser.views.UiManager
+ * @see com.gmarciani.gmparser.controllers.Output
+ * @see com.gmarciani.gmparser.controllers.Preferences
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -65,7 +65,6 @@ import static org.fusesource.jansi.Ansi.*;
 public final class App {	
 	
 	private static App instance;
-	private GrammarTransformer grammarTransformer;
 	
 	private Options options;
 	private Menus menus;		
@@ -102,7 +101,6 @@ public final class App {
 	 */
 	private void setupControllers() {
 		this.output = Output.getInstance();
-		this.grammarTransformer = GrammarTransformer.getInstance();
 	}
 	
 	/**
@@ -226,7 +224,7 @@ public final class App {
 		Grammar grammar = Grammar.generateGrammar(strGrammar);
 		this.getOutput().onResult("This is your grammar: " + grammar.toString());
 		
-		GrammarAnalysis analysis = grammar.getGrammarAnalysis();	
+		GrammarAnalysis analysis = grammar.generateGrammarAnalysis();	
 		analysis.setTitle("GRAMMAR ANALYSIS");
 		this.getOutput().onResult("Here we are! This is your grammar analysis");		
 		this.getOutput().onDefault(analysis.toString());
@@ -244,11 +242,24 @@ public final class App {
 		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your transformation: " + transformation);
 		
-		GrammarAnalysis analysisIn = grammar.getGrammarAnalysis();
+		GrammarAnalysis analysisIn = grammar.generateGrammarAnalysis();	
 		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");
 		
-		this.grammarTransformer.transform(grammar, transformation);
-		GrammarAnalysis analysisOut = grammar.getGrammarAnalysis();
+		if (transformation == GrammarTransformation.RGS) {
+			grammar.removeUngenerativeSymbols();
+		} else if (transformation == GrammarTransformation.RRS) {
+			grammar.removeUnreacheableSymbols();
+		} else if (transformation == GrammarTransformation.RUS) {
+			grammar.removeUselessSymbols();
+		} else if (transformation == GrammarTransformation.REP) {
+			grammar.removeEpsilonProductions();
+		} else if (transformation == GrammarTransformation.RUP) {
+			grammar.removeUnitProductions();
+		} else if (transformation == GrammarTransformation.CNF) {
+			grammar.toChomskyNormalForm();
+		}
+		
+		GrammarAnalysis analysisOut = grammar.generateGrammarAnalysis();
 		analysisOut.setTitle("GRAMMAR ANALYSIS: output grammar");
 		
 		this.getOutput().onResult("Here we are! This is your transformation result");
@@ -353,9 +364,6 @@ public final class App {
 		}
 	    
 	    System.out.print("\n");
-	    
-	    if (input.isEmpty())
-	    	input = Grammar.EPSILON.toString();
 	    
 		return input;
 	}

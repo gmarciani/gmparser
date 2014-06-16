@@ -88,14 +88,13 @@ public class Item implements Comparable<Item> {
 	}
 	
 	public boolean isStart() {
-		return this.getDot() == 0;
+		return (this.getDot() == 0
+				|| (this.getProduction().isEpsilonProduction() && this.isComplete()));
 	}
 	
 	public boolean isComplete() {
 		return this.getDot() == this.getProduction().getRightSize();
-	}
-	
-	
+	}	
 	
 	@Override public String toString() {
 		String lhs = this.getProduction().getLeft().toString();

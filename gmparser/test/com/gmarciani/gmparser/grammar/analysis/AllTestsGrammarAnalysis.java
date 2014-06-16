@@ -29,10 +29,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	TestGrammarNormalForm.class, 
+	TestGrammarSyntax.class,
 	TestGrammarType.class,
-	TestGrammarAnalysis.class,
-	TestGrammarSyntax.class})
+	TestGrammarNormalForm.class, 	
+	TestGrammarAnalysis.class
+})
 public class AllTestsGrammarAnalysis {
 
 }

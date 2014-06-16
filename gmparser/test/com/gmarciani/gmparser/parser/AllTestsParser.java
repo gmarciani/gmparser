@@ -33,7 +33,8 @@ import com.gmarciani.gmparser.parser.lr.AllTestsLR;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	AllTestsCYK.class,
-	AllTestsLR.class})
+	AllTestsLR.class
+	})
 public class AllTestsParser {
 
 }

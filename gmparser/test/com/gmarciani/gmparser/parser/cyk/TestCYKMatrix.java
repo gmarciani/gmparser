@@ -34,7 +34,8 @@ public class TestCYKMatrix {
 	private static final String GRAMMAR_CHOMSKY = "S->CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
 	private static final String GRAMMAR_CHOMSKY_S_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
 	private static final String GRAMMAR_NOT_CHOMSKY_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB|G;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b;G->" + Grammar.EPSILON + ".";
-
+	private static final String GRAMMAR_CHOMSKY_EMPTY = "S->" + Grammar.EPSILON + ".";
+	
 	@Test public void createChomsky() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY);
 		CYKMatrix matrixRecognized = CYKParser.getRecognitionMatrix(grammar, "aababb");
@@ -63,6 +64,14 @@ public class TestCYKMatrix {
 		System.out.println(matrixUnrecognized.toFormattedMatrix());
 		CYKMatrix matrixEpsilon = CYKParser.getRecognitionMatrix(grammar, Grammar.EPSILON.toString());
 		System.out.println(matrixEpsilon.toFormattedMatrix());
+	}
+	
+	@Test public void parseChosmkyEmpty() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_CHOMSKY_EMPTY);
+		CYKMatrix matrixRecognized = CYKParser.getRecognitionMatrix(grammar, Grammar.EPSILON.toString());
+		System.out.println(matrixRecognized.toFormattedMatrix());
+		CYKMatrix matrixUnrecognized = CYKParser.getRecognitionMatrix(grammar, "abcdfg");
+		System.out.println(matrixUnrecognized.toFormattedMatrix());
 	}
 
 }

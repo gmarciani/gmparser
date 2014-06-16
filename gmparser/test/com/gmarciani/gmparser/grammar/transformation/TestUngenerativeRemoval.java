@@ -27,9 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.controllers.grammar.GrammarTransformer;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
 
 public class TestUngenerativeRemoval {
 	
@@ -37,17 +35,12 @@ public class TestUngenerativeRemoval {
 	private static final String GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS = "S->a;X->a.";
 
 	@Test public void removeUngenerativeSymbols() {
-		Grammar grammar = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS)
-				.create();
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_WITH_UNGENERATIVE_SYMBOLS);
 		
-		GrammarTransformer.getInstance().removeUngenerativeSymbols(grammar);
+		grammar.removeUngenerativeSymbols();
 		
-		Grammar shouldBe = GrammarFactory.getInstance()
-				.hasProductions(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS)
-				.create();		
+		Grammar shouldBe = Grammar.generateGrammar(GRAMMAR_WITHOUT_UNGENERATIVE_SYMBOLS);	
 		
-		assertTrue("Incorrect removal of ungenerative symbols", 
-				grammar.equals(shouldBe));
+		assertTrue("Incorrect removal of ungenerative symbols.", grammar.equals(shouldBe));
 	}
 }

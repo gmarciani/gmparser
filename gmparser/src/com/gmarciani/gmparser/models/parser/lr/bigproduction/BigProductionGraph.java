@@ -52,7 +52,7 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 	private void generate() {
 		GSet<Pair<Item, Item>> epsilonTransitions = new GSet<Pair<Item, Item>>();
 		GSet<Item> items = new GSet<Item>();
-		items.addAll(generateAxiomItems(this.getGrammar()));
+		items.addAll(this.generateAxiomItems());
 		boolean loop = true;
 		while(loop) {
 			loop = false;
@@ -64,7 +64,7 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 				Productions nextProductions = this.getGrammar().getProductions().getProductionsLeftEqual(new Member(nextNonTerminal));
 				for (Production nextProduction : nextProductions) {
 					GSet<Item> nextItems = generateItemsWithoutLookAhead(nextProduction);
-					Alphabet lookAheadSet = generateLookAheadSet(this.getGrammar(), item);
+					Alphabet lookAheadSet = generateLookAheadSet(item);
 					for (Item nextItem : nextItems) {
 						if (nextItem.isStart())
 							epsilonTransitions.add(new Pair<Item, Item>(item, nextItem));
@@ -109,22 +109,22 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 		}
 	}	
 	
-	private GSet<Item> generateAxiomItems(Grammar grammar) {
+	private GSet<Item> generateAxiomItems() {
 		GSet<Item> items = new GSet<Item>();
-		Production axiomProduction = grammar.getProductions().getProductionsLeftContaining(grammar.getAxiom()).getFirst();
+		Production axiomProduction = this.getGrammar().getProductions().getProductionsLeftContaining(this.getGrammar().getAxiom()).getFirst();
 		items.addAll(generateItemsWithoutLookAhead(axiomProduction));
 		for (Item item : items)
 			item.getLookAhead().add(END_MARKER);
 		return items;
 	}
 	
-	private Alphabet generateLookAheadSet(Grammar grammar, Item item) {
+	private Alphabet generateLookAheadSet(Item item) {
 		Character symbol = item.getNextCharacter(1);		
 		if (symbol == null) //b = epsilon
 			return item.getLookAhead();
-		if (grammar.getNullables().contains(symbol)) { // b != epsilon, b = nullable
+		if (this.getGrammar().getNullables().contains(symbol)) { // b != epsilon, b = nullable
 			Alphabet lookAheadSet = new Alphabet();
-			Alphabet first = grammar.getFirstOne(symbol);
+			Alphabet first = this.getGrammar().getFirstOne(symbol);
 			first.remove(Grammar.EPSILON);			
 			lookAheadSet.addAll(item.getLookAhead());
 			lookAheadSet.addAll(first);

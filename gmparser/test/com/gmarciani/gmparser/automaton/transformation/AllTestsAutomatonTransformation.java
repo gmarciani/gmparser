@@ -30,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	TestPowersetConstruction.class
-})
+	})
 public class AllTestsAutomatonTransformation {
 
 }
