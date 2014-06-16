@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.grammar;
+package com.gmarciani.gmparser.models.grammar.analysis;
 
 public enum Type {
 	

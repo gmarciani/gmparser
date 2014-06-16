@@ -28,6 +28,10 @@ import java.util.Objects;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class State<V> implements Comparable<State<V>> {
 	
 	private final Integer id;

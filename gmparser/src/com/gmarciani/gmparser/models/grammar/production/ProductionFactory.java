@@ -25,6 +25,10 @@ package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.regex.Pattern;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class ProductionFactory {
 
 	private static ProductionFactory instance;

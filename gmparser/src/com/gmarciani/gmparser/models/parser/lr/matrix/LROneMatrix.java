@@ -39,6 +39,10 @@ import com.gmarciani.gmparser.models.parser.lr.action.ActionType;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
 import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public final class LROneMatrix extends NonDeterministicFunction<Integer, Character, Action> {
 	
 	private final Grammar grammar;

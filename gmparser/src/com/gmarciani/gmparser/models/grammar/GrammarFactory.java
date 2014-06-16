@@ -28,6 +28,10 @@ import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.grammar.production.ProductionFactory;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class GrammarFactory {
 	
 	private static GrammarFactory instance;

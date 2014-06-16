@@ -21,34 +21,18 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.views.menu;
+package com.gmarciani.gmparser.views.option;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+public final class AppOptions {
 
-
-public class Menus implements Serializable {
-
-	private static final long serialVersionUID = -6320704459207698679L;
+	private AppOptions() {
+		throw new AssertionError();
+	}				
 	
-	private Map<String, Menu> menus = new HashMap<String, Menu>();
-	
-	public Menus addMenu(Menu menu) {
-		String menuIdentifier = getMenuIdentifier(menu);
-		menus.put(menuIdentifier, menu);
-		return this;
-	}
-	
-	private String getMenuIdentifier(Menu menu) {
-		String name = menu.getName();
-		String identifier = name.toLowerCase().replaceAll(" ", "-");
-		return identifier;
-	}
-
-	public int run(String menuIdentifier) {
-		Menu menu = menus.get(menuIdentifier);
-		return menu.run();
-	}
+	public static final String DESCRIPTION_ANALYZE = "Analyzes the GRAMMAR.";
+	public static final String DESCRIPTION_TRANSFORM = "Executes the TRANSFORMATION to the GRAMMAR.";
+	public static final String DESCRIPTION_PARSE = "Parses the WORD on GRAMMAR with PARSER.";
+	public static final String DESCRIPTION_HELP = "GMParser helper.";
+	public static final String DESCRIPTION_VERSION = "GMParser version.";
 
 }

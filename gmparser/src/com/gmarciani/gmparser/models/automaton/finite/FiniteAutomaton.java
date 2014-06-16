@@ -30,8 +30,12 @@ import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class FiniteAutomaton<V> extends AbstractAutomaton<V> 
-							 implements Automaton<V> {
+							 	implements Automaton<V> {
 	
 	public FiniteAutomaton(State<V> initialState) {
 		this.states = new States<V>();

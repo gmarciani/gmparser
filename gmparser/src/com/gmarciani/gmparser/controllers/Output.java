@@ -29,7 +29,7 @@ import com.gmarciani.gmparser.views.UiManager;
 
 /**
  * <p>App output manager.<p> 
- * <p>It manages output format for standard outputs, warnings, exceptions, logon and debug.<p>
+ * <p>It manages output format for standard outputs, warnings, exceptions, and debug.<p>
  * 
  * @see com.gmarciani.gmparser.controllers.App
  * 
@@ -42,6 +42,11 @@ public final class Output {
 
 	private Output() {}
 	
+	/**
+	 * <p>Returns the output controller singleton instance.<p>
+	 * 
+	 * @return the controller singleton instance.
+	 */
 	public static Output getInstance() {
 		if (instance == null)
 			instance = new Output();
@@ -49,36 +54,49 @@ public final class Output {
 	}
 	
 	/**
-	 * @param message
+	 * <p>Shows the message with default style.<p>
+	 * 
+	 * @param message message to show.
 	 */
 	public void onDefault(String message) {
 		System.out.println(message);
 	}
 	
 	/**
-	 * @param resultMessage
+	 * <p>Shows the message with default style.<p>
+	 * 
+	 * @param message message to show.
 	 */
-	public void onResult(String resultMessage) {
-		String result = "[gmparser] " + resultMessage;
+	public void onResult(String message) {
+		String result = "[gmparser] " + message;
 		System.out.println(ansi().fg(UiManager.AppUI.RESULT_COLOR).a(result).reset());
 	}
 
 	/**
-	 * @param warningMessage
+	 * <p>Shows the message with warning style.<p>
+	 * 
+	 * @param message message to show.
 	 */
-	public void onWarning(String warningMessage) {
-		String warning = "[WARNING] " + warningMessage;
+	public void onWarning(String message) {
+		String warning = "[WARNING] " + message;
 		System.out.println(ansi().fg(UiManager.AppUI.WARNING_COLOR).a(warning).reset());
 	}
 
 	/**
-	 * @param exceptionMessage
+	 * <p>Shows the message with exception style.<p>
+	 * 
+	 * @param message message to show.
 	 */
-	public void onException(String exceptionMessage) {
-		String warning = "[EXCEPTION] " + exceptionMessage;
+	public void onException(String message) {
+		String warning = "[EXCEPTION] " + message;
 		System.out.println(ansi().fg(UiManager.AppUI.EXCEPTION_COLOR).a(warning).reset());
 	}
 
+	/**
+	 * <p>Shows a warning for unrecognized arguments passed by the command-line.<p>
+	 * 
+	 * @param arguments parsed arguments.
+	 */
 	public void onUnrecognizedArguments(String[] arguments) {
 		String unrecognizedArgs = "";
 		int uArgsNo = 0;
@@ -87,10 +105,8 @@ public final class Output {
 				unrecognizedArgs += arg + " ";
 				uArgsNo ++;
 			}
-		}
-		
-		String warning = "Unrecognized argument" + ((uArgsNo > 1) ? "s" : "") + ": " + unrecognizedArgs;
-		
+		}		
+		String warning = "Unrecognized argument" + ((uArgsNo > 1) ? "s" : "") + ": " + unrecognizedArgs;		
 		this.onWarning(warning);
 	}
 

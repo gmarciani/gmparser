@@ -29,6 +29,10 @@ import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public interface Automaton<V> {
 	
 	public States<V> getStates();

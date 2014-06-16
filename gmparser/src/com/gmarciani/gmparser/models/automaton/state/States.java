@@ -26,6 +26,10 @@ package com.gmarciani.gmparser.models.automaton.state;
 import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class States<V> extends GSet<State<V>> {
 
 	private static final long serialVersionUID = -971990098522233593L;

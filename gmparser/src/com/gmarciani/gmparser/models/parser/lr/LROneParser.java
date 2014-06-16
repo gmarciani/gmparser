@@ -36,6 +36,10 @@ import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
 import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
 import com.gmarciani.gmparser.models.parser.lr.session.LROneParsingSession;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class LROneParser {
 	
 	public static synchronized boolean parse(Grammar grammar, String word) {

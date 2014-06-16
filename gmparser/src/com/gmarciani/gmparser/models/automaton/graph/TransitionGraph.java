@@ -36,8 +36,12 @@ import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class TransitionGraph<V> extends AbstractAutomaton<V> 
-							 implements Automaton<V> {
+							 	implements Automaton<V> {
 	
 	public TransitionGraph(State<V> initialState) {
 		this.states = new States<V>();		

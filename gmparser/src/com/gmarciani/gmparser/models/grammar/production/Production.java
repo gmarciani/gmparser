@@ -25,9 +25,9 @@ package com.gmarciani.gmparser.models.grammar.production;
 
 import java.util.Objects;
 
-import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.analysis.Type;
 
 /**
  * LHS/RHS member of a production.

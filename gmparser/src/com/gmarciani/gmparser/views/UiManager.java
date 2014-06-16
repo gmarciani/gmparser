@@ -30,13 +30,13 @@ import org.apache.commons.cli.Options;
 import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi.Color;
 
-import com.gmarciani.gmparser.views.app.AppOptions;
-import com.gmarciani.gmparser.views.app.MainMenu;
-import com.gmarciani.gmparser.views.app.ParserMenu;
-import com.gmarciani.gmparser.views.app.TransformationMenu;
-import com.gmarciani.gmparser.views.menu.Menu;
-import com.gmarciani.gmparser.views.menu.MenuBuilder;
-import com.gmarciani.gmparser.views.menu.Menus;
+import com.gmarciani.gmparser.models.commons.menu.Menu;
+import com.gmarciani.gmparser.models.commons.menu.MenuBuilder;
+import com.gmarciani.gmparser.models.commons.menu.Menus;
+import com.gmarciani.gmparser.views.menu.MainMenu;
+import com.gmarciani.gmparser.views.menu.ParserMenu;
+import com.gmarciani.gmparser.views.menu.TransformationMenu;
+import com.gmarciani.gmparser.views.option.AppOptions;
 
 /**
  * <p>Command-line interface manager.<p>
@@ -50,7 +50,7 @@ import com.gmarciani.gmparser.views.menu.Menus;
 public final class UiManager {
 
 	/**
-	 * Builds available command-line options.
+	 * <p>Builds available command-line options.<p>
 	 * 
 	 * @return command-line options
 	 */
@@ -102,7 +102,7 @@ public final class UiManager {
 	}	
 	
 	/**
-	 * Builds available menus entries.
+	 * <p>Builds available menus entries.<p>
 	 * 
 	 * @return menus entries
 	 */
@@ -141,34 +141,37 @@ public final class UiManager {
 		return menus;
 	}
 	
+	/**
+	 * Returns the ASCII art GMParser logo.
+	 * 
+	 * @return the logo, represented as a string.
+	 */
 	public static String getLogo() {
 		final String logo = "\n   ___|   \\  |   _ \\                               \n  |      |\\/ |  |   |  _` |   __|  __|   _ \\   __| \n  |   |  |   |  ___/  (   |  |   \\__ \\   __/  |    \n \\____| _|  _| _|    \\__,_| _|   ____/ \\___| _|    \n";
 		
 		return logo;
 	}
-	
-	public static String makeBold(String string) {
-		return "\033[0;1m" + string + "\033[0;0m ";
-	}
-	
-	public static String getBullet() {
-		return "\u0700 ";
-	}
 
 	/**
-	 * Installs ANSI Console for colored command-line interface.
+	 * Installs the ANSI Console for colored command-line interface.
 	 */
 	public static void installAnsiConsole() {
 		AnsiConsole.systemInstall();
 	}
 
 	/**
-	 * Uninstalls ANSI Console to set the default system console.
+	 * Uninstalls the ANSI Console to set the default system console.
 	 */
 	public static void uninstallAnsiConsole() {
 		AnsiConsole.systemUninstall();
 	}
 	
+	/**
+	 * <p>GMParser user-interface preferences, like colors and placeholders.<p>
+	 * 
+	 * @author Giacomo Marciani
+	 * @version 1.0
+	 */
 	public static final class AppUI {	
 		
 		private AppUI() {

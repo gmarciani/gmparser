@@ -23,6 +23,10 @@
 
 package com.gmarciani.gmparser.models.parser.lr.action;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public enum ActionType {
 	
 	SHIFT("Shift", "sh"),

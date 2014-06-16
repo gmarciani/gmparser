@@ -27,6 +27,10 @@ import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public abstract class ParsingSession {	
 	
 	private final Grammar grammar;

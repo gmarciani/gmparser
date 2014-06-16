@@ -23,6 +23,10 @@
 
 package com.gmarciani.gmparser.models.grammar.transformation;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public enum GrammarTransformation {
 	
 	RGS("Remove ungenerative symbols"),

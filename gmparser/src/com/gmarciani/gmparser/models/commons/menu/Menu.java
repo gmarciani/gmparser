@@ -21,7 +21,7 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.views.menu;
+package com.gmarciani.gmparser.models.commons.menu;
 
 import java.io.BufferedReader;
 import java.io.IOException;

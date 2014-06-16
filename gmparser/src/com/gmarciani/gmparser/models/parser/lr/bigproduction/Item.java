@@ -28,6 +28,10 @@ import java.util.Objects;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Item implements Comparable<Item> {
 	
 	public static final Character DOT_SEPARATOR = '.';

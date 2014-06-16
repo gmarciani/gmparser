@@ -34,6 +34,10 @@ import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class CYKMatrix {
 	
 	private Table<Integer, Integer, Alphabet> matrix;

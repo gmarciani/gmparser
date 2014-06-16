@@ -28,7 +28,7 @@ import org.apache.commons.cli.ParseException;
 import com.gmarciani.gmparser.controllers.App;
 
 /**
- * GMParser entry-point.
+ * <p>GMParser entry-point.<p>
  * 
  * @see com.gmarciani.gmparser.controllers.App
  * @see com.gmarciani.gmparser.controllers.Output
@@ -41,7 +41,7 @@ public final class GMParser {
 	protected GMParser() {}
 
 	/**
-	 * The GMParser app main.
+	 * <p>The GMParser app main.<p>
 	 * 
 	 * @param args command-line arguments.
 	 */

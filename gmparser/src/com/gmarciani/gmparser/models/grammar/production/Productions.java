@@ -29,10 +29,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
-import com.gmarciani.gmparser.models.grammar.NormalForm;
-import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.analysis.NormalForm;
+import com.gmarciani.gmparser.models.grammar.analysis.Type;
 
 /**
  * LHS/RHS member of a production.

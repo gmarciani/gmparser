@@ -28,6 +28,10 @@ import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public interface TransitionFunction<V> {
 	
 	public boolean addTransition(State<V> sState, State<V> dState, Character symbol);

@@ -27,6 +27,10 @@ import java.util.Objects;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Alphabet extends GSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;

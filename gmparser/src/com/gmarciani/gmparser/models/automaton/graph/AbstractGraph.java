@@ -27,6 +27,10 @@ import com.gmarciani.gmparser.models.commons.function.NonDeterministicFunction;
 import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class AbstractGraph<V extends Comparable<V>, E extends Comparable<E>> {
 	
 	protected GSet<V> vertex;

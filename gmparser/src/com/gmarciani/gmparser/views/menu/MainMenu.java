@@ -1,4 +1,4 @@
-package com.gmarciani.gmparser.views.app;
+package com.gmarciani.gmparser.views.menu;
 
 public final class MainMenu {
 

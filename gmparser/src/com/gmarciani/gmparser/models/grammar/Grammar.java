@@ -34,7 +34,10 @@ import java.util.regex.Pattern;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
+import com.gmarciani.gmparser.models.grammar.analysis.Extension;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
+import com.gmarciani.gmparser.models.grammar.analysis.NormalForm;
+import com.gmarciani.gmparser.models.grammar.analysis.Type;
 import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
@@ -45,9 +48,9 @@ import com.gmarciani.gmparser.models.grammar.production.Productions;
  * @see com.gmarciani.gmparser.models.grammar.production.Productions
  * @see com.gmarciani.gmparser.models.grammar.production.Production
  * @see com.gmarciani.gmparser.models.alphabet.Alphabet
- * @see com.gmarciani.gmparser.models.grammar.Type
- * @see com.gmarciani.gmparser.models.grammar.Extension
- * @see com.gmarciani.gmparser.models.grammar.NormalForm
+ * @see com.gmarciani.gmparser.models.grammar.analysis.Type
+ * @see com.gmarciani.gmparser.models.grammar.analysis.Extension
+ * @see com.gmarciani.gmparser.models.grammar.analysis.NormalForm
  * 
  * @author Giacomo Marciani
  * @version 1.0

@@ -30,8 +30,12 @@ import com.gmarciani.gmparser.models.commons.nple.Triple;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class DeterministicTransitionFunction<V> extends DeterministicFunction<State<V>, Character, State<V>> 
-											 implements TransitionFunction<V> {
+											 	implements TransitionFunction<V> {
 
 	public DeterministicTransitionFunction(States<V> sStates, Alphabet alphabet, States<V> dStates) {
 		super(sStates, alphabet, dStates);

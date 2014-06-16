@@ -23,6 +23,10 @@
 
 package com.gmarciani.gmparser.models.parser;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public enum ParserType {
 	
 	CYK("Cock-Younger-Kasami", "CYK"),

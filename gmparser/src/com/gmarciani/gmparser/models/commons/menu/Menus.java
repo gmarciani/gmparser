@@ -21,15 +21,34 @@
  *	SOFTWARE.
 */
 
-package com.gmarciani.gmparser.models.grammar.alphabet;
+package com.gmarciani.gmparser.models.commons.menu;
 
-/**
- * @author Giacomo Marciani
- * @version 1.0
- */
-public enum AlphabetType {
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class Menus implements Serializable {
+
+	private static final long serialVersionUID = -6320704459207698679L;
 	
-	TERMINAL,
-	NON_TERMINAL;
+	private Map<String, Menu> menus = new HashMap<String, Menu>();
+	
+	public Menus addMenu(Menu menu) {
+		String menuIdentifier = getMenuIdentifier(menu);
+		menus.put(menuIdentifier, menu);
+		return this;
+	}
+	
+	private String getMenuIdentifier(Menu menu) {
+		String name = menu.getName();
+		String identifier = name.toLowerCase().replaceAll(" ", "-");
+		return identifier;
+	}
+
+	public int run(String menuIdentifier) {
+		Menu menu = menus.get(menuIdentifier);
+		return menu.run();
+	}
 
 }

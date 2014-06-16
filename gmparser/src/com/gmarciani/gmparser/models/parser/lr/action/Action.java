@@ -25,6 +25,10 @@ package com.gmarciani.gmparser.models.parser.lr.action;
 
 import java.util.Objects;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class Action implements Comparable<Action> {
 	
 	private final ActionType type;

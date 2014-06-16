@@ -34,6 +34,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.gmarciani.gmparser.models.commons.menu.Menus;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.analysis.GrammarAnalysis;
 import com.gmarciani.gmparser.models.grammar.transformation.GrammarTransformation;
@@ -41,22 +42,18 @@ import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 import com.gmarciani.gmparser.views.UiManager;
-import com.gmarciani.gmparser.views.app.MainMenu;
-import com.gmarciani.gmparser.views.app.ParserMenu;
-import com.gmarciani.gmparser.views.app.TransformationMenu;
-import com.gmarciani.gmparser.views.menu.Menus;
+import com.gmarciani.gmparser.views.menu.MainMenu;
+import com.gmarciani.gmparser.views.menu.ParserMenu;
+import com.gmarciani.gmparser.views.menu.TransformationMenu;
 
 import static org.fusesource.jansi.Ansi.*;
 
 /**
  * <p>Main user-app interaction controller.<p>
- * <p>It manages the whole app flow.<p>
+ * <p>It manages the whole app workflow.<p>
  *  
- * @see com.gmarciani.gmparser.controllers.grammar.GrammarAnalyzer
- * @see com.gmarciani.gmparser.controllers.grammar.WordParser
  * @see com.gmarciani.gmparser.views.UiManager
  * @see com.gmarciani.gmparser.controllers.Output
- * @see com.gmarciani.gmparser.controllers.Preferences
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -96,7 +93,7 @@ public final class App {
 	}	
 	
 	/**
-	 * Sets up the GMParser controllers: GrammarAnalyzer, GrammarTransformer and WordParser.
+	 * Sets up the GMParser controllers: Output controller, for single entry-point to output display.
 	 */
 	private void setupControllers() {
 		this.output = Output.getInstance();
@@ -112,7 +109,7 @@ public final class App {
 	}
 	
 	/**
-	 * Shows the GMParser welcome splash screen.
+	 * Shows the GMParser welcome splash screen, based on ASCII art style.
 	 */
 	public void printWelcome() {
 		String welcome = UiManager.getLogo();
@@ -120,15 +117,15 @@ public final class App {
 	}
 
 	/**
-	 * The app entry-method.
+	 * <p>The app entry-point method.<p>
+	 * <p>This method is activated when no arguments neither options are specified.<p>
 	 * 
 	 * @param args command-line arguments.
 	 * @throws ParseException
 	 */
 	public void play(String[] args) throws ParseException {
 		CommandLineParser cmdParser = new GnuParser();
-		CommandLine cmd = cmdParser.parse(this.options, args);
-		
+		CommandLine cmd = cmdParser.parse(this.options, args);		
 		String unrecognizedArguments[] = cmd.getArgs();
 		
 		if (unrecognizedArguments.length != 0) {
@@ -136,16 +133,13 @@ public final class App {
 			this.quit();
 		}
 		
-		if (cmd.getOptions().length == 1 && cmd.hasOption("logon")
-				|| cmd.getOptions().length == 0) {
+		if (cmd.getOptions().length == 0) {
 			boolean loop = true;
 			while(loop) {
 				this.playMenu();
 				loop = this.getContinued();
 			}				
-		}		
-		
-		if (cmd.hasOption("analyze")) {
+		} else if (cmd.hasOption("analyze")) {
 			final String vals[] = cmd.getOptionValues("analyze");
 			final String grammar = vals[0];
 			if (!this.validateGrammar(grammar))				
@@ -171,8 +165,7 @@ public final class App {
 			this.help();
 		} else if (cmd.hasOption("version")) {
 			this.version();
-		}
-		
+		}		
 		this.quit();
 	}	
 
@@ -217,8 +210,7 @@ public final class App {
 	 */
 	private void analyze(String strGrammar) {
 		Grammar grammar = Grammar.generateGrammar(strGrammar);
-		this.getOutput().onResult("This is your grammar: " + grammar.toString());
-		
+		this.getOutput().onResult("This is your grammar: " + grammar.toString());		
 		GrammarAnalysis analysis = grammar.generateGrammarAnalysis();	
 		analysis.setTitle("GRAMMAR ANALYSIS");
 		this.getOutput().onResult("Here we are! This is your grammar analysis");		
@@ -227,18 +219,27 @@ public final class App {
 	
 	/**
 	 * <p>Executes the specified transformation to the specified grammar, represented as string.<p> 
+	 * <p>It also generates a grammar analysis both for input grammar and output grammar.<p>	 * 
+	 * <p>Available transformations: 
+	 * remove ungenerative symbols (RGS), 
+	 * remove unreacheables symbols (RRS), 
+	 * remove useless symbols (RUS), 
+	 * remove epsilon productions (REP), 
+	 * remove unit productions (RUP) 
+	 * and generate CHosmky-Normal-Form (CNF).<p>
 	 * <p>This method is activated by the command-line option {@code -transform}.<p>
 	 * 
 	 * @param strGrammar grammar to transform, represented as string.
-	 * @param transformation target transformation.
+	 * @param transformation target transformation to run on grammar.
 	 */
 	private void transform(String strGrammar, GrammarTransformation transformation) {
 		Grammar grammar = Grammar.generateGrammar(strGrammar);
+		
 		this.getOutput().onResult("This is your grammar: " + grammar);
-		this.getOutput().onResult("This is your transformation: " + transformation);
+		this.getOutput().onResult("This is your transformation: " + transformation);	
 		
 		GrammarAnalysis analysisIn = grammar.generateGrammarAnalysis();	
-		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");
+		analysisIn.setTitle("GRAMMAR ANALYSIS: input grammar");		
 		
 		if (transformation == GrammarTransformation.RGS) {
 			grammar.removeUngenerativeSymbols();
@@ -263,23 +264,28 @@ public final class App {
 	}
 
 	/**
-	 * <p>Parses the specified word by the specified parse, according to the specified grammar, represented as string.<p> 
+	 * <p>Parses the specified word by the specified parser, according to the specified grammar, represented as a string.<p> 
+	 * <p>It shows a grammar analysis for the specified grammar, and a complete parsing session report.<p>
 	 * <p>This method is activated by the command-line option {@code -parse}.<p>
 	 * 
-	 * @param strGrammar grammar to parse with, represented as string.
+	 * @param strGrammar grammar to parse with, represented as a string.
 	 * @param word word to parse.
-	 * @param wordParser wordParser type to parse with.
+	 * @param parserType parser to parse with.
 	 */
 	private void parse(String strGrammar, String word, ParserType parser) {
 		Grammar grammar = Grammar.generateGrammar(strGrammar);
+		
 		this.getOutput().onResult("This is your grammar: " + grammar);
 		this.getOutput().onResult("This is your word: " + word);
 		this.getOutput().onResult("This is your parser: " + parser);
+		
 		if (!grammar.isContextFree() && !grammar.isRegular()) {
 			this.getOutput().onWarning("Your grammar is not Context-Free, but " + grammar.getType().getName() + ". Aborting parsing.");
 			return;
 		}
+		
 		this.getOutput().onResult("Here we are! This is your parsing session results!");
+		
 		if (parser.equals(ParserType.CYK))
 			this.getOutput().onDefault(CYKParser.parseWithSession(grammar, word).toFormattedParsingSession());
 		if (parser.equals(ParserType.LR1))
@@ -313,8 +319,13 @@ public final class App {
 		this.getOutput().onResult("Good bye!");
 		UiManager.uninstallAnsiConsole();
 		System.exit(0);
-	}	
+	}		
 	
+	/**
+	 * <p>Lets the user continue or quit the app workflow after a correct execution or warning/exception.<p>
+	 *
+	 * @return true if the user wants to continue the workflow; false, otherwise.
+	 */
 	private boolean getContinued() {
 		System.out.print("[continue? (y/n)]> ");
 		System.out.flush();
@@ -324,13 +335,16 @@ public final class App {
 	    	input = br.readLine();
 		} catch (NumberFormatException | IOException e) {
 			
-		}
-	    
-	    System.out.print("\n");
-	  
+		}	    
+	    System.out.print("\n");	  
 		return (input.equals("y") ? true : false);
 	}
 	
+	/**
+	 * <p>Lets the user specify the grammar to analyze, transform, or parse with.<p>
+	 * 
+	 * @return the input grammar, represented as a string.
+	 */
 	private String getGrammar() {
 		System.out.print("[grammar]> ");
 		System.out.flush();
@@ -338,15 +352,19 @@ public final class App {
 		String input = null;
 	    try {
 	    	input = br.readLine();
-		} catch (NumberFormatException | IOException e) {
-			
-		}
-	    
-	    System.out.print("\n");
-	    
+		} catch (NumberFormatException | IOException exc) {
+			this.getOutput().onException(exc.getMessage());
+		}	    
+	    System.out.print("\n");	    
 		return input;
 	}
 	
+	/**
+	 * <p>Lets the user specify the word to parse.<p>
+	 * <p>The empty word is normally specified by an empty input. The user doesn't need to care about any end marker (like $ for LR(1)).<p>
+	 * 
+	 * @return the word to parse.
+	 */
 	private String getWord() {
 		System.out.print("[word]> ");
 		System.out.flush();
@@ -354,15 +372,25 @@ public final class App {
 		String input = null;
 	    try {
 	    	input = br.readLine();
-		} catch (NumberFormatException | IOException e) {
-			
-		}
-	    
-	    System.out.print("\n");
-	    
+		} catch (NumberFormatException | IOException exc) {
+			this.getOutput().onException(exc.getMessage());
+		}	    
+	    System.out.print("\n");	    
 		return input;
 	}
 	
+	/**
+	 * <p>Lets the user selected the desidered grammar transformation.<p>
+	 * <p>Available transformations: 
+	 * remove ungenerative symbols (RGS), 
+	 * remove unreacheables symbols (RRS), 
+	 * remove useless symbols (RUS), 
+	 * remove epsilon productions (REP), 
+	 * remove unit productions (RUP) 
+	 * and generate CHosmky-Normal-Form (CNF).<p>
+	 * 
+	 * @return the selected grammar transformation.
+	 */
 	private GrammarTransformation getGrammarTransformation() {
 		int choice = this.menus.run(TransformationMenu.IDENTIFIER);
 		
@@ -381,6 +409,14 @@ public final class App {
 		return null;
 	}
 	
+	/**
+	 * <p>Let the user select the desidered parse type.<p>
+	 * <p>Available parsers:
+	 * Cock-Younger-Kasami Parser (CYK)
+	 * and LR(1) Parser (LR).<p>
+	 * 
+	 * @return parserType selected parser type.
+	 */
 	private ParserType getParser() {
 		int choice = this.menus.run(ParserMenu.IDENTIFIER);
 		
@@ -393,12 +429,18 @@ public final class App {
 		}
 	}
 	
+	/**
+	 * <p>Validates the input grammar, represented as a string.<p>
+	 * 
+	 * @param strGrammar input grammar, represented as a string.
+	 * 
+	 * @return true if the string correctly represents a grammar; false, otherwise.
+	 */
 	private boolean validateGrammar(String strGrammar) {
 		if (!Grammar.validate(strGrammar)) {
 			this.getOutput().onWarning("Grammar syntax error\n");
 			return false;
-		}
-		
+		}		
 		return true;		
 	}
 

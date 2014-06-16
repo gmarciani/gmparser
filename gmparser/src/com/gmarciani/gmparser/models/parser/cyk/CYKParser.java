@@ -31,6 +31,10 @@ import com.gmarciani.gmparser.models.grammar.production.Productions;
 import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
 import com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class CYKParser {	
 	
 	public static synchronized boolean parse(Grammar grammar, String word) {

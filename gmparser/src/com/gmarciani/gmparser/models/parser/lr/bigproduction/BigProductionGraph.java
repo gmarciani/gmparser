@@ -33,6 +33,10 @@ import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
+/**
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public class BigProductionGraph extends TransitionGraph<Item> {	
 	
 	private Grammar grammar;

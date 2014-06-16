@@ -28,13 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.bethecoder.ascii_table.ASCIITable;
-import com.gmarciani.gmparser.models.grammar.Extension;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.NormalForm;
-import com.gmarciani.gmparser.models.grammar.Type;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
-import com.gmarciani.gmparser.views.UiManager;
 
 /**
  * Grammar analysis report.
@@ -183,7 +179,7 @@ public class GrammarAnalysis {
 	public String toFormattedParameters() {
 		String string = "";
 		for (Map.Entry<String, String> parameter : this.getParameters().entrySet())
-        	string += UiManager.getBullet() + " " + parameter.getKey() + ": " + parameter.getValue() + "\n";
+        	string += "\u0700" + " " + parameter.getKey() + ": " + parameter.getValue() + "\n";
 		return string;
 	}
 	
@@ -193,13 +189,10 @@ public class GrammarAnalysis {
 		
         int i = 0;
         for (Map.Entry<String, String> parameter : this.getParameters().entrySet()) {
-        	data[i][0] = UiManager.getBullet() + " " + parameter.getKey() + ": " + parameter.getValue();
+        	data[i][0] = "\u0700" + " " + parameter.getKey() + ": " + parameter.getValue();
         	i ++;
-        }
-        
-        String table = ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);
-        
-        return table;
+        }        
+        return ASCIITable.getInstance().getTable(header, ASCIITable.ALIGN_CENTER, data, ASCIITable.ALIGN_LEFT);  
 	}
 
 }
