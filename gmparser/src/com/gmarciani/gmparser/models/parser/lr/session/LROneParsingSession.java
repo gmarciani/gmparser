@@ -26,9 +26,14 @@ package com.gmarciani.gmparser.models.parser.lr.session;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.ParserType;
 import com.gmarciani.gmparser.models.parser.ParsingSession;
-import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
+import com.gmarciani.gmparser.models.parser.lr.recognition.LROneMatrix;
 
 /**
+ * <p>The parsing session report for the LR(1) parser.<p>
+ * <p>A parsing session is a container of all input/output parameters used/provided by the LR(1) parser.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.parser.lr.LROneParser
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -36,6 +41,14 @@ public class LROneParsingSession extends ParsingSession {
 	
 	private final LROneMatrix recognitionMatrix;
 
+	/**
+	 * Creates a new LR(1) parsing session.
+	 * 
+	 * @param grammar the grammar to parser with.
+	 * @param word the word to parse.
+	 * @param recognitionMatrix	the LR(1) parser recognition matrix.
+	 * @param result the parsing result.
+	 */
 	public LROneParsingSession(Grammar grammar, 
 			String word,
 			LROneMatrix recognitionMatrix, 
@@ -44,6 +57,11 @@ public class LROneParsingSession extends ParsingSession {
 		this.recognitionMatrix = recognitionMatrix;
 	}
 	
+	/**
+	 * Returns the recognition matrix used by the LR(1) parser.
+	 * 
+	 * @return the recognition matrix used by the LR(1) parser.
+	 */
 	public LROneMatrix getRecognitionMatrix() {
 		return this.recognitionMatrix;
 	}

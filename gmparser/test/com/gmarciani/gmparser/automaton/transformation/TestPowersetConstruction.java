@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
-import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
+import com.gmarciani.gmparser.models.automaton.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.grammar.Grammar;
 
@@ -20,7 +20,7 @@ public class TestPowersetConstruction {
 		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);
 		graph.addState(stateThree);
-		graph.addAsFinalState(stateFour);
+		graph.addAsFinal(stateFour);
 		
 		graph.addSymbol('a');
 		graph.addSymbol('b');
@@ -46,8 +46,8 @@ public class TestPowersetConstruction {
 		State<String> stateThree = new State<String>(2, "three");
 		
 		FiniteAutomaton<String> automaton = new FiniteAutomaton<String>(stateOneTwoFour);
-		automaton.addAsFinalState(stateOneTwoFour);
-		automaton.addAsFinalState(stateTwoFour);
+		automaton.addAsFinal(stateOneTwoFour);
+		automaton.addAsFinal(stateTwoFour);
 		automaton.addState(stateThree);
 		
 		automaton.addSymbol('a');

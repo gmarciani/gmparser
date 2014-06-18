@@ -24,12 +24,15 @@
 package com.gmarciani.gmparser.models.parser;
 
 /**
+ * <p>Parser type enumeration model.<p>
+ * <p>Available parsers are: Cocke-Younger-Kasami parser (CYK) and LR(1) parser (LR1).<p>
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
 public enum ParserType {
 	
-	CYK("Cock-Younger-Kasami", "CYK"),
+	CYK("Cocke-Younger-Kasami", "CYK"),
 	LR1("LR(1)", "LR1");	
 	
 	private String name;
@@ -40,10 +43,20 @@ public enum ParserType {
 		this.shortName = shortName;
 	}
 
+	/**
+	 * Returns the parser type name.
+	 * 
+	 * @return the parser type name.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Returns the parser type short name.
+	 * 
+	 * @return the parser type short name.
+	 */
 	public String getShortName() {
 		return shortName;
 	}

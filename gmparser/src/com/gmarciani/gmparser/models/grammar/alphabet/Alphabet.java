@@ -23,11 +23,14 @@
 
 package com.gmarciani.gmparser.models.grammar.alphabet;
 
-import java.util.Objects;
-
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 /**
+ * <p>The alphabet model.<p>
+ * <p>An alphabet is a set of symbols, that could be terminals or non terminals.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -35,140 +38,144 @@ public class Alphabet extends GSet<Character> {
 
 	private static final long serialVersionUID = 86933392974869837L;
 	
-	private static final Alphabet STANDARD_NON_TERMINAL_ALPHABET = new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	
-	private AlphabetType type = null;
-	
+	/**
+	 * Constructs a new alphabet.
+	 */
 	public Alphabet() {
 		super();
 	}
 	
+	/**
+	 * Constructs a new alphabet containing the specified symbols.
+	 * 
+	 * @param symbols the symbols to add to the alphabet.
+	 */
 	public Alphabet(Character ... symbols) {
 		super();
 		for (Character symbol : symbols)
 			super.add(symbol);
 	}
 	
+	/**
+	 * Constructs a new alphabet containing the symbols in the specified string.
+	 * 
+	 * @param symbols the symbols to add to the alphabet.
+	 */
 	public Alphabet(String symbols) {
 		super();
 		this.addAll(symbols);
 	}	
 	
+	/**
+	 * Constructs a new alphabet as union of the specified alphabets.
+	 * 
+	 * @param alphabets the symbols to add to the alphabet.
+	 */
 	public Alphabet(Alphabet ... alphabets) {
 		super();
 		for (Alphabet alphabet : alphabets)
 			super.addAll(alphabet);
-	}		
-	
-	public Alphabet(AlphabetType type) {
-		super();
-		this.type = type;
-	}		
-	
-	public AlphabetType getType() {
-		return this.type;
 	}
 	
-	public boolean addAll(Alphabet symbols) {
+	/**
+	 * Adds to the alphabet all the symbols contained in the specified alphabet.
+	 * 
+	 * @param alphabet the symbols to add to the alphabet
+	 * 
+	 * @return true if at least one symbols has been added to the alphabet; false, otherwise.
+	 */
+	public boolean addAll(Alphabet alphabet) {
 		boolean added = false;
-		for (Character symbol : symbols) {
-			if (this.isAcceptableSymbol(symbol)) {
-				added = this.add(symbol) ? true : added;
-			} else {
-				System.out.println("Not acceptable symbol: " + symbol + " in alphabet of type " + this.type);
-			}
-				
-		}
-		
+		for (Character symbol : alphabet)
+			added = this.add(symbol) ? true : added;		
 		return added;
 	}
 	
+	/**
+	 * Adds to the alphabet all the symbols contained in the specified string.
+	 * 
+	 * @param symbols the symbols to add to the alphabet.
+	 * 
+	 * @return true if at least one symbol has been added to the alphabet; false, otherwise.
+	 */
 	public boolean addAll(String symbols) {
 		boolean added = false;
-		for (Character symbol : symbols.toCharArray()) {
-			if (this.isAcceptableSymbol(symbol)) {
-				added = this.add(symbol) ? true : added;
-			} else {
-				System.out.println("Not acceptable symbol: " + symbol + " in alphabet of type " + this.type);
-			}
-		}
-		
+		for (Character symbol : symbols.toCharArray())
+			added = this.add(symbol) ? true : added;
 		return added;
 	}
 	
-	
-	// REMOVAL
-	
+	/**
+	 * Removes from the alphabet all symbols of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet of symbols to remove.
+	 * 
+	 * @return true if at least a symbol has been removed; false, otherwise.
+	 */
 	public boolean removeAll(Alphabet alphabet) {
 		boolean removed = false;
-		for (Character symbol : alphabet) {
-			removed = this.remove(symbol) ? true : removed;
-		}
-		
+		for (Character symbol : alphabet) 
+			removed = this.remove(symbol) ? true : removed;		
 		return removed;
 	}
 	
+	/**
+	 * Removes from the alphabet all symbols in the string.
+	 * 
+	 * @param symbols the string of symbols to remove.
+	 * 
+	 * @return true if at least a symbol has been removed; false, otherwise.
+	 */
 	public boolean removeAll(String symbols) {
 		boolean removed = false;
-		for (Character symbol : symbols.toCharArray()) {
-			removed = this.remove(symbol) ? true : removed;
-		}
-		
+		for (Character symbol : symbols.toCharArray())
+			removed = this.remove(symbol) ? true : removed;		
 		return removed;
-	}
-	
-	private boolean isAcceptableSymbol(Character symbol) {
-		if (this.getType() == null)
-			return true;
-		if (this.getType() == AlphabetType.NON_TERMINAL
-				&& isNonTerminal(symbol))
-			return true;
-		if (this.getType() == AlphabetType.TERMINAL
-				&& isTerminal(symbol))
-			return true;
-		
-		return false;
 	}	
 	
+	/**
+	 * Checks if the specified symbol is a terminal symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return true if the symbol is a terminal symbol; false, otherwise.
+	 */
 	public static boolean isTerminal(Character symbol) {
 		return (!isNonTerminal(symbol));
 	}
 	
+	/**
+	 * Checks if the specified symbol is a non terminal symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return true if the symbol is a non terminal symbol; false, otherwise.
+	 */
 	public static boolean isNonTerminal(Character symbol) {
 		return (Character.isLetter(symbol)
 				&& Character.isUpperCase(symbol));
 	}
 
+	/**
+	 * Returns the regular expression of the alphabet.
+	 * 
+	 * @return the regular expression of the alphabet.
+	 */
 	public String getUnionRegex() {
 		String regex = "[";
-		for (Character symbol : this) {
+		for (Character symbol : this)
 			regex += symbol;
-		}
-		regex += "]";
-		
+		regex += "]";		
 		return regex;
 	}
 
+	/**
+	 * Returns an alphabet of all the possible non terminal symbols.
+	 * 
+	 * @return the alphabet of all the possible non terminal symbols.
+	 */
 	public static Alphabet getTotalNonTerminals() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);
-		target.addAll(STANDARD_NON_TERMINAL_ALPHABET);
-		
-		return target;
-	}	
-	
-	@Override public boolean equals(Object obj) {
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		
-		Alphabet other = (Alphabet) obj;
-		
-		return (this.getType() == other.getType()
-				&& this.containsAll(other) 
-				&& other.containsAll(this));
-	}
-	
-	@Override public int hashCode() {
-		return Objects.hash(this.type, this.toArray(new Character[this.size()]));
+		return new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	}
 	
 }

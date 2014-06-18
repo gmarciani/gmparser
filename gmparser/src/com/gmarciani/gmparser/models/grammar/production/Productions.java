@@ -26,21 +26,18 @@ package com.gmarciani.gmparser.models.grammar.production;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.gmarciani.gmparser.models.commons.set.GSet;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.analysis.NormalForm;
 import com.gmarciani.gmparser.models.grammar.analysis.Type;
 
 /**
- * LHS/RHS member of a production.
+ * <p>Set of productions model.<p>
  * 
  * @see com.gmarciani.gmparser.models.grammar.Grammar 
  * @see com.gmarciani.gmparser.models.grammar.production.Production
  * @see com.gmarciani.gmparser.models.grammar.production.Member
- * @see com.gmarciani.gmparser.models.alphabet.Alphabet
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -54,14 +51,30 @@ public class Productions extends GSet<Production> {
 	public static final String PRODUCTION_SEPARATOR = ";";
 	public static final String PRODUCTION_ENDER = ".";
 
+	/**
+	 * Creates a new set of productions.
+	 */
 	public Productions() {
 		super();
 	}
 	
+	/**
+	 * Creates a new set of productions as a copy of the specified set of productions.
+	 * 
+	 * @param productions the set of productions to copy.
+	 */
 	public Productions(Productions productions) {
 		super(productions);
 	}
 	
+	/**
+	 * Returns the subset of productions with LHS/RHS members equals to the specified members.
+	 * 
+	 * @param left the LHS member.
+	 * @param right the RHS member.
+	 * 
+	 * @return the subset of productions with LHS/RHS members equals to the specified members.
+	 */
 	public Productions getProductionsEqual(Member left, Member right) {
 		Productions target = new Productions();
 		for (Production production : this)
@@ -71,6 +84,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with LHS member equals to the specified member.
+	 * 
+	 * @param left the LHS member.
+	 * 
+	 * @return the subset of productions with LHS member equals to the specified member.
+	 */
 	public Productions getProductionsLeftEqual(Member left) {
 		Productions target = new Productions();
 		for (Production production : this)
@@ -79,6 +99,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with RHS member equals to the specified member.
+	 * 
+	 * @param right the RHS member.
+	 * 
+	 * @return the subset of productions with RHS member equals to the specified member.
+	 */
 	public Productions getProductionsRightEqual(Member right) {
 		Productions target = new Productions();
 		for (Production production : this)
@@ -87,6 +114,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with both LHS and RHS members within the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return the subset of productions with both the LHS and RHS members within the specified alphabet.
+	 */
 	public Productions getProductionsWithin(Alphabet alphabet) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -95,22 +129,43 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with LHS member within the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet
+	 * 
+	 * @return the subset of productions with LHS member within the specified alphabet.
+	 */
 	public Productions getProductionsLeftWithin(Alphabet alphabet) {
 		Productions target = new Productions();		
 		for (Production production : this)
-			if (production.isLeftWithin(alphabet))
+			if (production.getLeft().isWithin(alphabet))
 				target.add(production);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with RHS member within the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return the subset of productions with RHS member within the specified alphabet.
+	 */
 	public Productions getProductionsRightWithin(Alphabet alphabet) {
 		Productions target = new Productions();		
 		for (Production production : this)
-			if (production.isRightWithin(alphabet))
+			if (production.getRight().isWithin(alphabet))
 				target.add(production);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with both the LHS and RHS member containing at least one symbol of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return the subset of productions with both the LHS and RHS member containing at least one symbol of the specified alphabet.
+	 */
 	public Productions getProductionsContaining(Alphabet alphabet) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -119,22 +174,43 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with the LHS member containing at least one symbol of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return the subset of productions with the LHS member containing at least one symbol of the specified alphabet.
+	 */
 	public Productions getProductionsLeftContaining(Alphabet alphabet) {
 		Productions target = new Productions();	
 		for (Production production : this)
-			if (production.isLeftContaining(alphabet))
+			if (production.getLeft().isContaining(alphabet))
 				target.add(production);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with the RHS member containing at least one symbol of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return the subset of productions with the RHS member containing at least one symbol of the specified alphabet.
+	 */
 	public Productions getProductionsRightContaining(Alphabet alphabet) {
 		Productions target = new Productions();		
 		for (Production production : this)
-			if (production.isRightContaining(alphabet))
+			if (production.getRight().isContaining(alphabet))
 				target.add(production);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with both the LHS and RHS member containing at least one occurrence of the specified symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return the subset of productions with both the LHS and RHS member containing at least one occurrence of the specified symbol.
+	 */
 	public Productions getProductionsContaining(Character symbol) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -143,29 +219,50 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with LHS member containing at least one occurrence of the specified symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return the subset of productions with LHS member containing at least one occurrence of the specified symbol.
+	 */
 	public Productions getProductionsLeftContaining(Character symbol) {
 		Productions target = new Productions();		
 		for (Production production : this) 
-			if (production.isLeftContaining(symbol))
+			if (production.getLeft().isContaining(symbol))
 				target.add(production);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of productions with RHS member containing at least one occurrence of the specified symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return the subset of productions with RHS member containing at least one occurrence of the specified symbol.
+	 */
 	public Productions getProductionsRightContaining(Character symbol) {
 		Productions target = new Productions();		
 		for (Production production : this)
-			if (production.isRightContaining(symbol))
+			if (production.getRight().isContaining(symbol))
 				target.add(production);		
 		return target;
 	}
 	
-	public Productions getProductionsRightIndexedWithin(Alphabet ... entries) {
+	/**
+	 * Returns the subset of productions with the specified mapping of alphabet occurrences.
+	 * 
+	 * @param alphabets the alphabets.
+	 * 
+	 * @return the subset of productions with the specified mapping of alphabet occurrences.
+	 */
+	public Productions getProductionsRightIndexedWithin(Alphabet ... alphabets) {
 		Productions target = new Productions();		
 		for (Production production : this) {
 			String rhs = production.getRight().getValue();
 			boolean match = true;
-			for (int index = 0; index < entries.length; index ++) {
-				Alphabet alphabet = entries[index];
+			for (int index = 0; index < alphabets.length; index ++) {
+				Alphabet alphabet = alphabets[index];
 				match = (alphabet.contains(rhs.charAt(index)) ? match : false);
 				if (!match)
 					break;
@@ -176,6 +273,14 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the set of productions type, with respect to the Chomsky hierarchy.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return the set of productions type, with respect to the Chomsky hierarchy.
+	 */
 	public Type getType(Alphabet nonTerminals, Alphabet terminals) {
 		if (this.areRegular(nonTerminals, terminals))
 			return Type.REGULAR;		
@@ -188,6 +293,14 @@ public class Productions extends GSet<Production> {
 		return Type.UNKNOWN;
 	}
 	
+	/**
+	 * Checks if the set of productions is unrestricted.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is unrestricted; false, otherwise.
+	 */
 	public boolean areUnrestricted(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isUnrestricted(nonTerminals, terminals))
@@ -195,6 +308,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is context-sensitive.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is context-sensitive; false, otherwise.
+	 */
 	public boolean areContextSensitive(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isContextSensitive(nonTerminals, terminals))
@@ -202,6 +323,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is context-free.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is context-free; false, otherwise.
+	 */
 	public boolean areContextFree(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isContextFree(nonTerminals, terminals))
@@ -209,6 +338,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is regular.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is regular; false, otherwise.
+	 */
 	public boolean areRegular(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isRegular(nonTerminals, terminals))
@@ -216,6 +353,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is left linear.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is left linear; false, otherwise.
+	 */
 	public boolean areRegularLeftLinear(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isRegularLeftLinear(nonTerminals, terminals))
@@ -223,6 +368,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is right linear.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is right linear; false, otherwise.
+	 */
 	public boolean areRegularRightLinear(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isRegularRightLinear(nonTerminals, terminals))
@@ -230,6 +383,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}	
 	
+	/**
+	 * Checks the normal forms of the set of productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return the normal forms of the set of productions.
+	 */
 	public Set<NormalForm> getNormalForm(Alphabet nonTerminals, Alphabet terminals) {
 		Set<NormalForm> target = new HashSet<NormalForm>();		
 		if (this.areChomskyNormalForm(nonTerminals, terminals))
@@ -239,6 +400,14 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Checks if the set of productions is in Chomsky Normal Form.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is in Chomsky Normal Form; false, otherwise.
+	 */
 	public boolean areChomskyNormalForm(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isChomskyNormalForm(nonTerminals, terminals))
@@ -246,6 +415,14 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
+	/**
+	 * Checks if the set of productions is in Greibach Normal Form.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the set of productions is in Greibach Normal Form; false, otherwise.
+	 */
 	public boolean areGreibachNormalForm(Alphabet nonTerminals, Alphabet terminals) {
 		for (Production production : this)
 			if (!production.isGreibachNormalForm(nonTerminals, terminals))
@@ -253,7 +430,12 @@ public class Productions extends GSet<Production> {
 		return true;
 	}
 	
-	public Productions getEpsilonProductions(Character epsilon) {
+	/**
+	 * Returns the subset of epsilon productions.
+	 * 
+	 * @return the subset of epsilon productions.
+	 */
+	public Productions getEpsilonProductions() {
 		Productions target = new Productions();		
 		for (Production production : this)
 			if (production.isEpsilonProduction())
@@ -261,6 +443,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of unit productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return the subset of unit productions.
+	 */
 	public Productions getUnitProductions(Alphabet nonTerminals) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -269,6 +458,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of trivial unit productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return the subset of trivial unit productions.
+	 */
 	public Productions getTrivialUnitProductions(Alphabet nonTerminals) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -277,6 +473,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of non trivial unit productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return the subset of non trivial unit productions.
+	 */
 	public Productions getNonTrivialUnitProductions(Alphabet nonTerminals) {
 		Productions target = new Productions();		
 		for (Production production : this)
@@ -285,8 +488,13 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of nullables symbols in the set of productions.
+	 * 
+	 * @return the subset of nullables symbols in the set of productions.
+	 */
 	public Alphabet getNullables() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Production production : this)
 			if (production.isEpsilonProduction())
 				target.addAll(production.getLeft().getNonTerminalAlphabet());		
@@ -296,34 +504,51 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of ungenerative symbols in the set of productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return the subset of ungenerative symbols in the set of productions.
+	 */
 	public Alphabet getUngeneratives(Alphabet nonTerminals, Alphabet terminals) {
 		Alphabet target = new Alphabet(nonTerminals);		
-		Alphabet generativeTerminals = new Alphabet(AlphabetType.NON_TERMINAL);
+		Alphabet generativeTerminals = new Alphabet();
 		Alphabet generativeAlphabet = new Alphabet(terminals, generativeTerminals);				
 		boolean loop = true;
 		while(loop) {
 			loop = false;							
 			generativeAlphabet.addAll(generativeTerminals);					
 			for (Production production : this)
-				if (production.isRightWithin(generativeAlphabet))
+				if (production.getRight().isWithin(generativeAlphabet))
 					loop = generativeTerminals.addAll(production.getLeft().getNonTerminalAlphabet()) ? true : loop;			
 		}						
 		target.removeAll(generativeTerminals);		
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of unreacheable symbols in the set of productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * @param axiom the axiom.
+	 * 
+	 * @return the subset of unreacheable symbols in the set of productions.
+	 */
 	public Alphabet getUnreacheables(Alphabet nonTerminals, Alphabet terminals, Character axiom) {
 		Alphabet target = new Alphabet(nonTerminals);		
-		Alphabet reacheableTerminals = new Alphabet(AlphabetType.TERMINAL);
-		Alphabet reacheableNonTerminals = new Alphabet(AlphabetType.NON_TERMINAL);	
+		Alphabet reacheableTerminals = new Alphabet();
+		Alphabet reacheableNonTerminals = new Alphabet();	
 		reacheableNonTerminals.add(axiom);				
 		boolean loop = true;
 		while(loop) {
 			loop = false;					
 			for (Production production : this) {	
-				if (production.isLeftWithin(reacheableNonTerminals))
+				if (production.getLeft().isWithin(reacheableNonTerminals))
 					loop = reacheableNonTerminals.addAll(production.getRight().getNonTerminalAlphabet()) ? true : loop;				
-				if (production.isLeftWithin(reacheableNonTerminals))
+				if (production.getLeft().isWithin(reacheableNonTerminals))
 					reacheableTerminals.addAll(production.getRight().getTerminalAlphabet());
 			}
 		}					
@@ -331,8 +556,17 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the subset of useless symbols in the set of productions.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * @param axiom the axiom.
+	 * 
+	 * @return the subset of useless symbols in the set of productions.
+	 */
 	public Alphabet getUseless(Alphabet nonTerminals, Alphabet terminals, Character axiom) {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		Alphabet ungeneratives = this.getUngeneratives(nonTerminals, terminals);
 		Alphabet unreacheables = this.getUnreacheables(nonTerminals, terminals, axiom);		
 		target.addAll(ungeneratives);
@@ -340,14 +574,11 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
-	public Set<String> getRightForNonTerminal(Character nonTerminal) {
-		Set<String> target = new ConcurrentSkipListSet<String>();		
-		for (Production production : this)
-			if (production.isLeftContaining(nonTerminal))
-				target.add(production.getRight().getValue());		
-		return target;
-	}
-	
+	/**
+	 * Returns the alphabet of the set of productions.
+	 * 
+	 * @return the alphabet of the set of productions.
+	 */
 	public Alphabet getAlphabet() {
 		Alphabet target = new Alphabet();		
 		target.addAll(this.getNonTerminalAlphabet());
@@ -355,54 +586,79 @@ public class Productions extends GSet<Production> {
 		return target;
 	}
 	
+	/**
+	 * Returns the non terminal alphabet of the set of productions.
+	 * 
+	 * @return the non terminal alphabet of the set of productions.
+	 */
 	public Alphabet getNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getLeftNonTerminalAlphabet());
 		target.addAll(this.getRightNonTerminalAlphabet());		
 		return target;
 	}
 	
+	/**
+	 * Returns the terminal alphabet of the set of productions.
+	 * 
+	 * @return the terminal alphabet of the set of productions.
+	 */
 	public Alphabet getTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getRightTerminalAlphabet());		
 		return target;
 	}
 	
+	/**
+	 * Returns the non terminal alphabet of the LHS members of the set of productions.
+	 * 
+	 * @return the non terminal alphabet of the LHS members of the set of productions.
+	 */
 	public Alphabet getLeftNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Production production : this)
 			target.addAll(production.getLeft().getNonTerminalAlphabet());
 		return target;
 	}
 	
+	/**
+	 * Returns the non terminal alphabet of the RHS members of the set of productions.
+	 * 
+	 * @return the non terminal alphabet of the RHS members of the set of productions.
+	 */
 	public Alphabet getRightNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Production production : this)
 			target.addAll(production.getRight().getNonTerminalAlphabet());
 		return target;
 	}
 	
+	/**
+	 * Returns the terminal alphabet of the RHS members of the set of productions.
+	 * 
+	 * @return the terminal alphabet of the RHS members of the set of productions.
+	 */
 	public Alphabet getRightTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Production production : this)
 			target.addAll(production.getRight().getTerminalAlphabet());		
 		return target;
 	}	
 
 	@Override public String toString() {
-		String s = "[";
+		String s = "{";
 		Iterator<Character> nonTerminals = this.getLeftNonTerminalAlphabet().iterator();
 		while(nonTerminals.hasNext()) {
 			Character nonTerminal = nonTerminals.next();
 			s += nonTerminal + Production.MEMBER_SEPARATOR;
-			Iterator<String> sententials = this.getRightForNonTerminal(nonTerminal).iterator();
-			while(sententials.hasNext()) {
-				String sentential = sententials.next();
-				s += sentential + ((sententials.hasNext()) ? INFIX_SEPARATOR : "");
+			Iterator<Production> productionsForNonTerminal = this.getProductionsLeftContaining(nonTerminal).iterator();
+			while(productionsForNonTerminal.hasNext()) {
+				String sentential = productionsForNonTerminal.next().getRight().getValue();
+				s += sentential + ((productionsForNonTerminal.hasNext()) ? INFIX_SEPARATOR : "");
 			}
 			s += ((nonTerminals.hasNext()) ? PRODUCTION_SEPARATOR : "");
 		}		
-		s += "]";		
+		s += "}";		
 		return s;
 	}	
 	

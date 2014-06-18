@@ -23,6 +23,15 @@
 
 package com.gmarciani.gmparser.models.grammar.analysis;
 
+/**
+ * <p>Grammar type enumeration model.<p>
+ * <p>Supported grammar type are all of those provided by the Chomsky hierarchy.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public enum Type {
 	
 	UNRESTRICTED("Unrestricted"),
@@ -39,6 +48,11 @@ public enum Type {
 		this.name = name;
 	}
 	
+	/**
+	 * Returns the name of the grammar type.
+	 * 
+	 * @return the name of the grammar type.
+	 */
 	public String getName() {
 		return this.name;
 	}

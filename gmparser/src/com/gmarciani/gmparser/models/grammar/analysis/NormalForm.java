@@ -24,6 +24,11 @@
 package com.gmarciani.gmparser.models.grammar.analysis;
 
 /**
+ * <p>Grammar normal form enumeration model.<p>
+ * <p>Supported grammar normal forms are: Chomsky Normal Form, and Greibach Normal Form.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -40,10 +45,20 @@ public enum NormalForm {
 		this.shortName = shortName;
 	}
 
+	/**
+	 * Returns the name of the grammar normal form.
+	 * 
+	 * @return the name of the grammar normal form.
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Returns the short name of the grammar normal form.
+	 * 
+	 * @return the short name of the grammar normal form.
+	 */
 	public String getShortName() {
 		return this.shortName;
 	}

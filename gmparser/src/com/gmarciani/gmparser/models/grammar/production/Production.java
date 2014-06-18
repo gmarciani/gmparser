@@ -26,16 +26,15 @@ package com.gmarciani.gmparser.models.grammar.production;
 import java.util.Objects;
 
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 import com.gmarciani.gmparser.models.grammar.analysis.Type;
 
 /**
- * LHS/RHS member of a production.
+ * <p>Production model.<p>
+ * <p>A production is a pair of members: a LHS member, and a RHS member.<p>
  * 
  * @see com.gmarciani.gmparser.models.grammar.Grammar
  * @see com.gmarciani.gmparser.models.grammar.production.Productions
  * @see com.gmarciani.gmparser.models.grammar.production.Member
- * @see com.gmarciani.gmparser.models.alphabet.Alphabet
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -47,108 +46,131 @@ public class Production implements Comparable<Production> {
 	
 	public static final String MEMBER_SEPARATOR = "->";	
 	
+	/**
+	 * Creates a new production with the specified LHS/RHS members.
+	 * 
+	 * @param left the LHS member.
+	 * @param right the RHS member.
+	 */
 	public Production(Member left, Member right) {
 		this.setLeft(left);
 		this.setRight(right);
 	}
 	
+	/**
+	 * Creates a new production as a copy of the specified production.
+	 * 
+	 * @param production the production to copy.
+	 */
 	public Production(Production production) {
 		this.setLeft(production.getLeft());
 		this.setRight(production.getRight());
 	}
 
+	/**
+	 * Return the LHS member of the production.
+	 * 
+	 * @return the LHS member of the production.
+	 */
 	public Member getLeft() {
 		return this.left;
 	}
 
+	/**
+	 * Sets the LHS member of the production.
+	 * 
+	 * @param left the LHS member of the production.
+	 */
 	public void setLeft(Member left) {
 		this.left = left;
 	}
 
+	/**
+	 * Returns the RHS member of the production.
+	 * 
+	 * @return the RHS member of the production.
+	 */
 	public Member getRight() {
 		return this.right;
 	}
 
+	/**
+	 * Sets the RHS member of the production.
+	 * 
+	 * @param right the RHS member of the production.
+	 */
 	public void setRight(Member right) {
 		this.right = right;
 	}
 	
-	public int getLeftSize() {
-		return (this.getLeft().getSize());
-	}
-	
-	public int getRightSize() {
-		return (this.getRight().getSize());
-	}
-	
-	public Alphabet getAlphabet() {
-		Alphabet target = new Alphabet();		
-		target.addAll(this.getNonTerminalAlphabet());
-		target.addAll(this.getTerminalAlphabet());		
-		return target;
-	}
-	
+	/**
+	 * Returns the non terminal alphabet of the production.
+	 * 
+	 * @return the non terminal alphabet of the production.
+	 */
 	public Alphabet getNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getLeft().getNonTerminalAlphabet());
 		target.addAll(this.getRight().getNonTerminalAlphabet());		
 		return target;
 	}
 	
+	/**
+	 * Returns the terminal alphabet of the production.
+	 * 
+	 * @return the terminal alphabet of the production.
+	 */
 	public Alphabet getTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
+		Alphabet target = new Alphabet();		
 		target.addAll(this.getLeft().getTerminalAlphabet());
 		target.addAll(this.getRight().getTerminalAlphabet());		
 		return target;
 	}
 	
+	/**
+	 * Checks if both the LHS and RHS members are within the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet
+	 * 
+	 * @return true if both the LHS and RHS members are within the specified alphabet; false, otherwise.
+	 */
 	public boolean isWithin(Alphabet alphabet) {
-		return (this.isLeftWithin(alphabet)
-				&& this.isRightWithin(alphabet));
+		return (this.getLeft().isWithin(alphabet)
+				&& this.getRight().isWithin(alphabet));
 	}
 	
-	public boolean isLeftWithin(Alphabet alphabet) {
-		return this.getLeft().isWithin(alphabet);
-	}
-	
-	public boolean isRightWithin(Alphabet alphabet) {
-		return this.getRight().isWithin(alphabet);
-	}	
-	
+	/**
+	 * Checks if both the LHS and RHS members contain the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return true if both the LHS and RHS members contain the specified alphabet; false, otherwise.
+	 */
 	public boolean isContaining(Alphabet alphabet) {
-		return (this.isLeftContaining(alphabet)
-				&& this.isRightContaining(alphabet));
+		return (this.getLeft().isContaining(alphabet)
+				&& this.getRight().isContaining(alphabet));
 	}
 	
-	public boolean isLeftContaining(Alphabet alphabet) {
-		return this.getLeft().isContaining(alphabet);
-	}
-	
-	public boolean isRightContaining(Alphabet alphabet) {
-		return this.getRight().isContaining(alphabet);
-	}
-	
+	/**
+	 * Checks if both the LHS and RHS members contain the specified symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return true if both the LHS and RHS members contain the specified symbol; false, otherwise.
+	 */
 	public boolean isContaining(Character symbol) {
-		return (this.isLeftContaining(symbol)
-				&& this.isRightContaining(symbol));
+		return (this.getLeft().isContaining(symbol)
+				&& this.getRight().isContaining(symbol));
 	}
 	
-	public boolean isLeftContaining(Character symbol) {
-		return this.getLeft().isContaining(symbol);
-	}
-	
-	public boolean isRightContaining(Character symbol) {
-		return this.getRight().isContaining(symbol);
-	}
-	
-	public boolean isLeftEpsilon() {
-		return (this.getLeft().isEpsilon());
-	}
-	
-	public boolean isRightEpsilon() {
-		return (this.getRight().isEpsilon());
-	}
-	
+	/**
+	 * Returns the production type, with respect to the Chomsky hierarchy.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return the production type, with respect to the Chomsky hierarchy.
+	 */
 	public Type getType(Alphabet nonTerminals, Alphabet terminals) {
 		if (this.isRegular(nonTerminals, terminals))
 			return Type.REGULAR;		
@@ -161,66 +183,140 @@ public class Production implements Comparable<Production> {
 		return Type.UNKNOWN;
 	}
 	
+	/**
+	 * Checks if the production is unrestricted.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is unrestricted; false, otherwise.
+	 */
 	public boolean isUnrestricted(Alphabet nonTerminals, Alphabet terminals) {
 		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
-		return (this.isLeftWithin(acceptedAlphabet)
-				&& (this.isRightWithin(acceptedAlphabet) || this.isRightEpsilon()));
+		return (this.getLeft().isWithin(acceptedAlphabet)
+				&& (this.getRight().isWithin(acceptedAlphabet) || this.getRight().isEpsilon()));
 	}
 
+	/**
+	 * Checks if the production is context-sensitive.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is context-sensitive; false, otherwise.
+	 */
 	public boolean isContextSensitive(Alphabet nonTerminals, Alphabet terminals) {
 		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
-		return (this.isLeftWithin(acceptedAlphabet)
-				&& this.isRightWithin(acceptedAlphabet)
-				&& this.getLeftSize() <= this.getRightSize());
+		return (this.getLeft().isWithin(acceptedAlphabet)
+				&& this.getRight().isWithin(acceptedAlphabet)
+				&& this.getLeft().getSize() <= this.getRight().getSize());
 	}
 	
+	/**
+	 * Checks if the production is context-free.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is context-free; false, otherwise.
+	 */
 	public boolean isContextFree(Alphabet nonTerminals, Alphabet terminals) {
 		Alphabet acceptedAlphabet = new Alphabet(nonTerminals, terminals);
-		return (this.isLeftWithin(nonTerminals)
-				&& this.getLeftSize() == 1
-				&& this.isRightWithin(acceptedAlphabet));
+		return (this.getLeft().isWithin(nonTerminals)
+				&& this.getLeft().getSize() == 1
+				&& this.getRight().isWithin(acceptedAlphabet));
 	}
 	
+	/**
+	 * Checks if the production is regular.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is regular; false, otherwise.
+	 */
 	public boolean isRegular(Alphabet nonTerminals, Alphabet terminals) {
 		return (this.isRegularLeftLinear(nonTerminals, terminals)
 				|| this.isRegularRightLinear(nonTerminals, terminals));
 	}
 	
+	/**
+	 * Checks if the production is left linear.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is left linear; false, otherwise.
+	 */
 	public boolean isRegularLeftLinear(Alphabet nonTerminals, Alphabet terminals) {
-		return (this.isLeftWithin(nonTerminals)
-				&& this.getLeftSize() == 1
+		return (this.getLeft().isWithin(nonTerminals)
+				&& this.getLeft().getSize() == 1
 				&& this.getRight().matches("^" + nonTerminals.getUnionRegex() + "{0,1}" + terminals.getUnionRegex() + "$"));
 	}
 	
+	/**
+	 * Checks if the production is right linear.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is right linear; false, otherwise.
+	 */
 	public boolean isRegularRightLinear(Alphabet nonTerminals, Alphabet terminals) {
-		return (this.isLeftWithin(nonTerminals)
-				&& this.getLeftSize() == 1
+		return (this.getLeft().isWithin(nonTerminals)
+				&& this.getLeft().getSize() == 1
 				&& this.getRight().matches("^" + terminals.getUnionRegex() + nonTerminals.getUnionRegex() + "{0,1}$"));
 	}		
 
+	/**
+	 * Checks if the production is in Chomsky Normal Form.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is in Chomsky Normal Form; false, otherwise.
+	 */
 	public boolean isChomskyNormalForm(Alphabet nonTerminals, Alphabet terminals) {
-		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
-				&& this.isRightWithin(nonTerminals) && this.getRight().getSize() == 2)
+		if (this.getLeft().isWithin(nonTerminals) && this.getLeft().getSize() == 1
+				&& this.getRight().isWithin(nonTerminals) && this.getRight().getSize() == 2)
 			return true;		
-		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
-				&& this.isRightWithin(terminals) && this.getRight().getSize() == 1)
-			return true;		
-		//aggiungere S->empty e S non sta nel rhs di alcuna produzione		
+		if (this.getLeft().isWithin(nonTerminals) && this.getLeft().getSize() == 1
+				&& this.getRight().isWithin(terminals) && this.getRight().getSize() == 1)
+			return true;			
 		return false;
 	}
 	
+	/**
+	 * Checks if the production is in Greibach Normal Form.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * @param terminals the terminal alphabet.
+	 * 
+	 * @return true if the production is in Greibach Normal Form; false, otherwise.
+	 */
 	public boolean isGreibachNormalForm(Alphabet nonTerminals, Alphabet terminals) {		
-		if (this.isLeftWithin(nonTerminals) && this.getLeft().getSize() == 1
+		if (this.getLeft().isWithin(nonTerminals) && this.getLeft().getSize() == 1
 				&& this.getRight().matches("^" + terminals.getUnionRegex() + nonTerminals.getUnionRegex() + "*$"))
 			return true;		
-		//aggiungere S->empty		
 		return false;
 	}
 
+	/**
+	 * Checks if the production is an epsilon production.
+	 * 
+	 * @return true if the production is an epsilon production; false, otherwise.
+	 */
 	public boolean isEpsilonProduction() {
-		return (this.isRightEpsilon());
+		return (this.getRight().isEpsilon());
 	}	
 	
+	/**
+	 * Checks if the production is a unit production.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return true if the production is a unit production; false, otherwise.
+	 */
 	public boolean isUnitProduction(Alphabet nonTerminals) {
 		return (this.getLeft().getSize() == 1
 				&& this.getRight().getSize() == 1
@@ -228,11 +324,25 @@ public class Production implements Comparable<Production> {
 				&& this.getRight().isWithin(nonTerminals));
 	}
 	
+	/**
+	 * Checks if the production is a trivial unit production.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return true if the production is a trivial unit production; false, otherwise.
+	 */
 	public boolean isTrivialUnitProduction(Alphabet nonTerminals) {
 		return (this.isUnitProduction(nonTerminals)
 				&& this.getLeft().equals(this.getRight()));
 	}
 	
+	/**
+	 * Checks if the production is a non trivial unit production.
+	 * 
+	 * @param nonTerminals the non terminal alphabet.
+	 * 
+	 * @return true if the production is a non trivial unit production; false, otherwise.
+	 */
 	public boolean isNonTrivialUnitProduction(Alphabet nonTerminals) {
 		return (this.isUnitProduction(nonTerminals)
 				&& !this.getLeft().equals(this.getRight()));

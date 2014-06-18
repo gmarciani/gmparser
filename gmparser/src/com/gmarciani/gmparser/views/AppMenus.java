@@ -23,6 +23,16 @@
 
 package com.gmarciani.gmparser.views;
 
+/**
+ * <p>This class is a container of all GMParser menus building blocks.<p>
+ * <p>Every static features in this class is used by the UiManager to build menus entries.<p>
+ * 
+ * @see com.gmarciani.gmparser.controllers.UiManager
+ * @see com.gmarciani.gmparser.controllers.Output
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public final class AppMenus {
 
 	private AppMenus() {
@@ -92,7 +102,7 @@ public final class AppMenus {
 		public static final int CYK = 1;
 		public static final int LR1 = 2;
 		
-		public static final String CYK_DESCRIPTION = "Cock-Younger-Kasami";
+		public static final String CYK_DESCRIPTION = "Cocke-Younger-Kasami";
 		public static final String LR1_DESCRIPTION = "LR(1) Parser";
 
 	}

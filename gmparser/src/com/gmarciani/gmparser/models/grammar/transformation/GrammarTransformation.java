@@ -24,6 +24,15 @@
 package com.gmarciani.gmparser.models.grammar.transformation;
 
 /**
+ * <p>Grammar transformation enumeration model.<p>
+ * <p>Supported grammar transformations are:
+ * removal of ungenerative symbols (RGS),
+ * removal of unreacheable symbols (RRS),
+ * removal of useless symbols (RUS),
+ * removal of epsilon productions (REP),
+ * removal of unit productions (RUP),
+ * generation of Chomsky Normal Form (CNF).<p>
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -42,6 +51,11 @@ public enum GrammarTransformation {
 		this.name = name;
 	}
 	
+	/**
+	 * Returns the name of the grammar transformation.
+	 * 
+	 * @return the name of the grammar transformation.
+	 */
 	public String getName() {
 		return this.name;
 	}

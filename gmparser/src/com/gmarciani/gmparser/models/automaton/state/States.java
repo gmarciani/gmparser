@@ -27,6 +27,12 @@ import com.bethecoder.ascii_table.ASCIITable;
 import com.gmarciani.gmparser.models.commons.set.GSet;
 
 /**
+ * <p>The set of states.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.automaton.state.State
+ * @see com.gmarciani.gmparser.models.automaton.FiniteAutomaton
+ * @see com.gmarciani.gmparser.models.automaton.TransitionGraph
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -34,14 +40,29 @@ public class States<V> extends GSet<State<V>> {
 
 	private static final long serialVersionUID = -971990098522233593L;
 
+	/**
+	 * Creates a new empty set of states.
+	 */
 	public States() {
 		super();
 	}
 	
+	/**
+	 * Creates a new set of states, initialized with the specified state.
+	 * 
+	 * @param state the state.
+	 */
 	public States(State<V> state) {
 		super(state);
 	}
 	
+	/**
+	 * Returns the state with the specified state id, if present.
+	 * 
+	 * @param id the state id.
+	 * 
+	 * @return the state with the specified state id, if present; null, otherwise.
+	 */
 	public State<V> getState(Integer id) {
 		for (State<V> state : this)
 			if (state.getId().equals(id))
@@ -49,6 +70,11 @@ public class States<V> extends GSet<State<V>> {
 		return null;
 	}
 	
+	/**
+	 * Returns the set of all state id of every state in the set of states.
+	 * 
+	 * @return the set of all state id of every state in the set of states.
+	 */
 	public GSet<Integer> getIds() {
 		GSet<Integer> ids = new GSet<Integer>();
 		for (State<V> state : this)
@@ -56,6 +82,11 @@ public class States<V> extends GSet<State<V>> {
 		return ids;
 	}
 	
+	/**
+	 * Returns the set of all values contained by every state in the set of states.
+	 * 
+	 * @return the set of all values contained by every state in the set of states.
+	 */
 	public GSet<V> getValues() {
 		GSet<V> values = new GSet<V>();
 		for (State<V> state : this)

@@ -24,6 +24,11 @@
 package com.gmarciani.gmparser.models.grammar.analysis;
 
 /**
+ * <p>Grammar extension enumeration model.<p>
+ * <p>Supported grammar extension are S-Extended and Extended.<p>
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
+ * 
  * @author Giacomo Marciani
  * @version 1.0
  */
@@ -39,6 +44,11 @@ public enum Extension {
 		this.name = name;
 	}
 	
+	/**
+	 * Returns the name of the grammar extension.
+	 * 
+	 * @return the name of the grammar extension.
+	 */
 	public String getName() {
 		return this.name;
 	}

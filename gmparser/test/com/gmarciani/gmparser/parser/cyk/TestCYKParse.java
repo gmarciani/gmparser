@@ -48,9 +48,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"", "d", "dddd", "cc", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
 	@Test public void parseLR1Two() {
@@ -60,9 +60,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"ddd", "cddd", "dcdd", "dcdc", "ddccc", "dcccdccc", "cdcddd", "abcdfg"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
 	@Test public void parseLR1Three() {
@@ -72,9 +72,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"", "ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
 	@Test public void parseEmpty() {
@@ -84,9 +84,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"ab", "bb", "bbb", "bbbb", "aa", "aaa", "aaaa", "acdb", "aacd", "acdcd", "acdd", "accd"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
 	@Test public void parseNotLR1Chosmky() {
@@ -96,9 +96,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 	
 	@Test public void parseNotLR1NotChosmky() {
@@ -108,9 +108,9 @@ public class TestCYKParse {
 		String notAcceptableWords[] = {"", "abcdefg", "ababaa", "ababab", "ababba", "ababbb"};
 		
 		for (String word : acceptableWords)
-			assertTrue("Uncorrect Cock-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
+			assertTrue("Uncorrect Cocke-Younger-Kasami parsing. Should be parsed: " + word, CYKParser.parse(grammar, word));		
 		for (String word : notAcceptableWords)
-			assertFalse("Uncorrect Cock-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
+			assertFalse("Uncorrect Cocke-Younger-Kasami parsing. Should not be parsed: " + word, CYKParser.parse(grammar, word));
 	}
 
 }

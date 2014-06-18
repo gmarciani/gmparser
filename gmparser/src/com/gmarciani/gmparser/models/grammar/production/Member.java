@@ -31,15 +31,13 @@ import java.util.Objects;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
-import com.gmarciani.gmparser.models.grammar.alphabet.AlphabetType;
 
 /**
- * LHS/RHS member of a production.
+ * <p>LHS/RHS member of a production.<p>
  * 
  * @see com.gmarciani.gmparser.models.grammar.Grammar
  * @see com.gmarciani.gmparser.models.grammar.production.Productions
  * @see com.gmarciani.gmparser.models.grammar.production.Production
- * @see com.gmarciani.gmparser.models.alphabet.Alphabet
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -48,39 +46,82 @@ public class Member implements Comparable<Member> {
 	
 	private String value;
 
+	/**
+	 * Creates a new member, with its value initializes to the empty string.
+	 */
 	public Member() {
 		this.value = "";
 	}
 	
+	/**
+	 * Creates a new member, with the specified value.
+	 * 
+	 * @param value the value of the member.
+	 */
 	public Member(String value) {
 		this.setValue(value);
 	}
 	
+	/**
+	 * Creates a new member, with the specified single symbol value.
+	 * 
+	 * @param value the single symbol value of the member.
+	 */
 	public Member(Character value) {
 		this(value.toString());
 	}
 
+	/**
+	 * Returns the value of the member.
+	 * 
+	 * @return the value of the member.
+	 */
 	public String getValue() {
 		return this.value;
 	}
 	
+	/**
+	 * Returns the value of the member, represented as an array of symbols.
+	 * 
+	 * @return the value of the member, represented as an array of symbols.
+	 */
 	public char[] getValueAsChars() {
 		return this.getValue().toCharArray();
 	}
 
+	/**
+	 * Sets the value of the member to the specified value.
+	 * 
+	 * @param value the new value of the member.
+	 */
 	public void setValue(String value) {
 		this.value = value;
 		this.rebuild();
 	}
 	
+	/**
+	 * Sets the value of the member to the specified single symbol value.
+	 * 
+	 * @param value the new single symbol value of the member.
+	 */
 	public void setValue(Character value) {
 		this.setValue(value.toString());
 	}
 	
+	/**
+	 * Returns the length of the member's value.
+	 * 
+	 * @return the length of the member's value.
+	 */
 	public int getSize() {
 		return this.getValue().length();
 	}
 	
+	/**
+	 * Returns the alphabet of the member's value.
+	 * 
+	 * @return the alphabet of the member's value.
+	 */
 	public Alphabet getAlphabet() {
 		Alphabet target = new Alphabet();		
 		target.addAll(this.getNonTerminalAlphabet());
@@ -88,29 +129,39 @@ public class Member implements Comparable<Member> {
 		return target;
 	}
 	
+	/**
+	 * Returns the non terminal alphabet of the member's value.
+	 * 
+	 * @return the non terminal alphabet of the member's value.
+	 */
 	public Alphabet getNonTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.NON_TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isNonTerminal(symbol)) 
 				target.add(symbol);
 		return target;
 	}
 	
+	/**
+	 * Returns the terminal alphabet of the member's value.
+	 * 
+	 * @return the terminal alphabet of the member's value.
+	 */
 	public Alphabet getTerminalAlphabet() {
-		Alphabet target = new Alphabet(AlphabetType.TERMINAL);		
+		Alphabet target = new Alphabet();		
 		for (Character symbol : this.getValue().toCharArray())
 			if (Alphabet.isTerminal(symbol)) 
 				target.add(symbol);
 		return target;
 	}	
 	
-	public List<Character> getSymbols() {
-		List<Character> target = new ArrayList<Character>();		
-		for (Character symbol : this.getValue().toCharArray()) 
-			target.add(symbol);		
-		return target;
-	}
-	
+	/**
+	 * Returns the mapping of all the specified symbols occurrences in the member's value.
+	 * 
+	 * @param alphabet
+	 * 
+	 * @return the mapping of symbols occurrences in the member's value.
+	 */
 	public Map<Character, List<Integer>> getSymbolsOccurrences(Alphabet alphabet) {
 		Map<Character, List<Integer>> target = new HashMap<Character, List<Integer>>();		
 		for (int index = 0; index < this.getValue().length(); index ++) {
@@ -122,32 +173,37 @@ public class Member implements Comparable<Member> {
 			}			
 		}		
 		return target;		
-	}
-	
-	public List<Character> getNonTerminals() {
-		List<Character> target = new ArrayList<Character>();		
-		for (Character symbol : this.getValue().toCharArray())
-			if (Alphabet.isNonTerminal(symbol))
-				target.add(symbol);
-		return target;
-	}
-	
-	public List<Character> getTerminals() {
-		List<Character> target = new ArrayList<Character>();		
-		for (Character symbol : this.getValue().toCharArray())
-			if (Alphabet.isTerminal(symbol))
-				target.add(symbol);
-		return target;
 	}	
 	
+	/**
+	 * Checks if the members matches the specified regular expression.
+	 * 
+	 * @param regex the regular expression to match.
+	 * 
+	 * @return true if the member matches the specified regular expression; false, otherwise.
+	 */
 	public boolean matches(String regex) {
 		return (this.getValue().matches(regex));
 	}
 	
+	/**
+	 * Checks if the member's value contains all symbols of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return true if the member's value contains all symbols of the specified alphabet; false, otherwise.
+	 */
 	public boolean isWithin(Alphabet alphabet) {
 		return (alphabet.containsAll(this.getAlphabet()));
 	}
 	
+	/**
+	 * Checks if the member's value contains at least one symbol of the specified alphabet.
+	 * 
+	 * @param alphabet the alphabet.
+	 * 
+	 * @return true if the member's value contains at least one symbol of the specified alphabet; false, otherwise.
+	 */
 	public boolean isContaining(Alphabet alphabet) {
 		for (Character symbol : alphabet)
 			if (this.isContaining(symbol))
@@ -155,36 +211,43 @@ public class Member implements Comparable<Member> {
 		return false;
 	}
 	
+	/**
+	 * Checks if the member's value contains the specified symbol.
+	 * 
+	 * @param symbol the symbol.
+	 * 
+	 * @return true if the member's value contains the specified symbol; false, otherwise.
+	 */
 	public boolean isContaining(Character symbol) {
 		return (this.getValue().indexOf(symbol) != -1);
 	}
 	
-	public void replace(Character oldSymbol, Character newSymbol) {
-		String oldValue = this.getValue();
-		String newValue = oldValue.replace(oldSymbol, newSymbol);
-		this.setValue(newValue);
-	}
-	
+	/**
+	 * Check if the member's value is the empty word.
+	 * 
+	 * @return true if the member's value is the empty word; false, otherwise.
+	 */
 	public boolean isEpsilon() {
 		for (Character symbol : this.getValue().toCharArray())
 			if (!symbol.equals(Grammar.EPSILON))
 				return false;
 		return true;
-		//return this.getValue().matches("^" + Grammar.EPSILON + "+$");
 	}
 	
+	/**
+	 * Rebuilds the member's value to satisfy the epsilon invariance.
+	 */
 	private void rebuild() {
 		if (this.isEpsilon()) {
 			this.value = Grammar.EPSILON.toString();
-		} else {
-			String oldValue = this.getValue();
-			String newValue = "";
-			for (Character symbol : oldValue.toCharArray())
-				if (!symbol.equals(Grammar.EPSILON))
-					newValue += symbol;
-			this.value = newValue;
-			//this.value = this.getValue().replace(Grammar.EPSILON.toString(), "");
-		}			
+			return;
+		}
+		String oldValue = this.getValue();
+		String newValue = "";
+		for (Character symbol : oldValue.toCharArray())
+			if (!symbol.equals(Grammar.EPSILON))
+				newValue += symbol;
+		this.value = newValue;		
 	}
 	
 	@Override public String toString() {

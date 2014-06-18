@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.automaton.graph.TransitionGraph;
+import com.gmarciani.gmparser.models.automaton.TransitionGraph;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.Grammar;
@@ -44,7 +44,7 @@ public class TestTransitionGraph {
 		TransitionGraph<String> graph = new TransitionGraph<String>(stateOne);		
 		graph.addState(stateTwo);
 		graph.addState(stateThree);
-		graph.addAsFinalState(stateFour);
+		graph.addAsFinal(stateFour);
 		
 		graph.addSymbol('a');
 		graph.addSymbol('b');
@@ -85,10 +85,10 @@ public class TestTransitionGraph {
 				expectedStates, graph.getStates());
 		
 		assertEquals("Uncorrect transition-graph creation (initial state)",
-				expectedInitialState, graph.getInitialState());
+				expectedInitialState, graph.getInitial());
 		
 		assertEquals("Uncorrect transition-graph creation (final states)",
-				expectedFinalStates, graph.getFinalStates());
+				expectedFinalStates, graph.getFinals());
 		
 		assertEquals("Uncorrect transition-graph creation (alphabet)", 
 				expectedAlphabet, graph.getAlphabet());

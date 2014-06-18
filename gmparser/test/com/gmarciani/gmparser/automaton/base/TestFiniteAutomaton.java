@@ -27,22 +27,21 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.automaton.Automaton;
-import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.FiniteAutomaton;
 import com.gmarciani.gmparser.models.automaton.state.State;
 import com.gmarciani.gmparser.models.automaton.state.States;
 import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 
 public class TestFiniteAutomaton {
 	
-	private Automaton<String> createFiniteAutomaton() {
+	private FiniteAutomaton<String> createFiniteAutomaton() {
 		State<String> stateOne = new State<String>(1, "one");
 		State<String> stateTwo = new State<String>(2, "two");
 		State<String> stateThree = new State<String>(3, "three");
 		
-		Automaton<String> automaton = new FiniteAutomaton<String>(stateOne);
+		FiniteAutomaton<String> automaton = new FiniteAutomaton<String>(stateOne);
 		automaton.addState(stateTwo);
-		automaton.addAsFinalState(stateThree);
+		automaton.addAsFinal(stateThree);
 		
 		automaton.addSymbol('a');
 		automaton.addSymbol('b');
@@ -58,7 +57,7 @@ public class TestFiniteAutomaton {
 	}
 
 	@Test public void create() {
-		Automaton<String> automaton = this.createFiniteAutomaton();
+		FiniteAutomaton<String> automaton = this.createFiniteAutomaton();
 		
 		State<String> stateOne = automaton.getStates().getState(1);
 		State<String> stateTwo = automaton.getStates().getState(2);
@@ -76,10 +75,10 @@ public class TestFiniteAutomaton {
 				expectedStates, automaton.getStates());
 		
 		assertEquals("Uncorrect finite-automaton creation (initial state)",
-				expectedInitialState, automaton.getInitialState());
+				expectedInitialState, automaton.getInitial());
 		
 		assertEquals("Uncorrect finite-automaton creation (final states)",
-				expectedFinalStates, automaton.getFinalStates());
+				expectedFinalStates, automaton.getFinals());
 		
 		assertEquals("Uncorrect finite-automaton creation (alphabet)", 
 				expectedAlphabet, automaton.getAlphabet());
@@ -91,7 +90,7 @@ public class TestFiniteAutomaton {
 	}
 	
 	@Test public void modify() {
-		Automaton<String> automaton = this.createFiniteAutomaton();		
+		FiniteAutomaton<String> automaton = this.createFiniteAutomaton();		
 		
 		State<String> stateOne = automaton.getStates().getState(1);
 		State<String> stateTwo = automaton.getStates().getState(2);
@@ -106,10 +105,10 @@ public class TestFiniteAutomaton {
 		automaton.addTransition(stateFour, stateTwo, 'b');
 		automaton.addTransition(stateFour, stateFive, 'c');
 		
-		automaton.addAsInitialState(stateFour);
-		automaton.removeFromFinalStates(stateThree);
-		automaton.addAsFinalState(stateOne);
-		automaton.addAsFinalState(stateFive);
+		automaton.addAsInitial(stateFour);
+		automaton.removeFromFinals(stateThree);
+		automaton.addAsFinal(stateOne);
+		automaton.addAsFinal(stateFive);
 		automaton.removeState(stateTwo);
 		automaton.removeSymbol('b');
 		
@@ -128,10 +127,10 @@ public class TestFiniteAutomaton {
 				expectedStates, automaton.getStates());
 		
 		assertEquals("Uncorrect finite-automaton creation (initial state)",
-				expectedInitialState, automaton.getInitialState());
+				expectedInitialState, automaton.getInitial());
 		
 		assertEquals("Uncorrect finite-automaton creation (final states)",
-				expectedFinalStates, automaton.getFinalStates());
+				expectedFinalStates, automaton.getFinals());
 		
 		assertEquals("Uncorrect finite-automaton creation (alphabet)", 
 				expectedAlphabet, automaton.getAlphabet());
@@ -146,7 +145,7 @@ public class TestFiniteAutomaton {
 	}
 	
 	@Test public void accept() {
-		Automaton<String> automaton = this.createFiniteAutomaton();
+		FiniteAutomaton<String> automaton = this.createFiniteAutomaton();
 		
 		String wordToAccept[] = {"ac", "abac", "ababac", "abababac", "ababababac"};
 		String wordToNotAccept[] = {"", "c", "a", "ab", "abc"};
@@ -161,7 +160,7 @@ public class TestFiniteAutomaton {
 	}
 	
 	@Test public void represent() {
-		Automaton<String> automaton = this.createFiniteAutomaton();
+		FiniteAutomaton<String> automaton = this.createFiniteAutomaton();
 		
 		System.out.println(automaton);
 		System.out.println(automaton.toExtendedFormattedAutomaton());

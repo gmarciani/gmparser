@@ -25,10 +25,10 @@ package com.gmarciani.gmparser.parser.lr;
 
 import org.junit.Test;
 
-import com.gmarciani.gmparser.models.automaton.finite.FiniteAutomaton;
+import com.gmarciani.gmparser.models.automaton.FiniteAutomaton;
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.parser.lr.bigproduction.BigProductionGraph;
-import com.gmarciani.gmparser.models.parser.lr.bigproduction.Item;
+import com.gmarciani.gmparser.models.parser.lr.recognition.BigProductionGraph;
+import com.gmarciani.gmparser.models.parser.lr.recognition.Item;
 
 public class TestBigProductionFiniteAutomaton {
 

@@ -153,14 +153,13 @@ public final class App {
 			this.transform(grammar, transformation);
 		} else if (cmd.hasOption("parse")) {
 			final String vals[] = cmd.getOptionValues("parse");
-			final String grammar = vals[0];
-			final String word = vals[1];
-			final ParserType parserType = ParserType.valueOf(vals[2]);
+			final ParserType parserType = ParserType.valueOf(vals[0]);
+			final String word = (vals[1] == null || vals[1].equals(Grammar.EPSILON.toString())) ? "" : vals[1];
+			final String grammar = vals[2];			
 			if (!this.validateGrammar(grammar))				
 				return;
 			this.parse(grammar, word, parserType);
 		} else if (cmd.hasOption("help")) {
-			this.printWelcome();
 			this.help();
 		} else if (cmd.hasOption("version")) {
 			this.version();
@@ -411,7 +410,7 @@ public final class App {
 	/**
 	 * <p>Let the user select the desidered parse type.<p>
 	 * <p>Available parsers:
-	 * Cock-Younger-Kasami Parser (CYK)
+	 * Cocke-Younger-Kasami Parser (CYK)
 	 * and LR(1) Parser (LR).<p>
 	 * 
 	 * @return parserType selected parser type.

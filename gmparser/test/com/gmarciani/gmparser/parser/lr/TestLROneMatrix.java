@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.lr.LROneParser;
-import com.gmarciani.gmparser.models.parser.lr.matrix.LROneMatrix;
+import com.gmarciani.gmparser.models.parser.lr.recognition.LROneMatrix;
 
 public class TestLROneMatrix {
 	

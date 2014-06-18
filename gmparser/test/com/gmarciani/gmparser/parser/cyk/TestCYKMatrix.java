@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
 import com.gmarciani.gmparser.models.parser.cyk.CYKParser;
-import com.gmarciani.gmparser.models.parser.cyk.matrix.CYKMatrix;
+import com.gmarciani.gmparser.models.parser.cyk.recognition.CYKMatrix;
 
 public class TestCYKMatrix {
 	

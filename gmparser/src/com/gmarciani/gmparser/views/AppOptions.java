@@ -23,6 +23,16 @@
 
 package com.gmarciani.gmparser.views;
 
+/**
+ * <p>This class is a container of all GMParser command line options building blocks.<p>
+ * <p>Every static features in this class is used by the UiManager to build options entries.<p>
+ * 
+ * @see com.gmarciani.gmparser.controllers.UiManager
+ * @see com.gmarciani.gmparser.controllers.Output
+ * 
+ * @author Giacomo Marciani
+ * @version 1.0
+ */
 public final class AppOptions {
 
 	private AppOptions() {
@@ -31,7 +41,7 @@ public final class AppOptions {
 	
 	public static final String DESCRIPTION_ANALYZE = "Analyzes the GRAMMAR.";
 	public static final String DESCRIPTION_TRANSFORM = "Executes the TRANSFORMATION to the GRAMMAR.";
-	public static final String DESCRIPTION_PARSE = "Parses the WORD on GRAMMAR with PARSER.";
+	public static final String DESCRIPTION_PARSE = "Parses by PARSER the WORD with GRAMMAR.";
 	public static final String DESCRIPTION_HELP = "GMParser helper.";
 	public static final String DESCRIPTION_VERSION = "GMParser version.";
 

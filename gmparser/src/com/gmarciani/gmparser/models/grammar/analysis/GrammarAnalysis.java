@@ -33,7 +33,15 @@ import com.gmarciani.gmparser.models.grammar.alphabet.Alphabet;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
 
 /**
- * Grammar analysis report.
+ * <p>Grammar analysis report model.<p>
+ * <p>A grammar analysis report is a complete report of the most important parameters of a grammar<p>
+ * <p>It exposes the following parameters:
+ * terminal alphabet, non terminal alphabet, axiom, epsilon, productions, 
+ * grammar type, grammar extension, grammar normal forms,
+ * epsilon productions, unit productions, trivial unit productions, non trivial unit productions,
+ * nullables symbols, ungenerative symbols, unreacheable symbols and useless symbols.
+ * 
+ * @see com.gmarciani.gmparser.models.grammar.Grammar
  * 
  * @author Giacomo Marciani
  * @version 1.0
@@ -61,6 +69,11 @@ public class GrammarAnalysis {
 	
 	private Map<String, String> parameters;
 
+	/**
+	 * Constructs a grammar analysis for the specified grammar.
+	 * 
+	 * @param grammar the grammar to analyze.
+	 */
 	public GrammarAnalysis(Grammar grammar) {
 		this.title = "GRAMMAR ANALYSIS";
 		Grammar copy = new Grammar(grammar);
@@ -100,87 +113,175 @@ public class GrammarAnalysis {
 		this.parameters.put("Useless", this.getUseless().toString());
 	}
 	
+	/**
+	 * Returns the title of the grammar analysis.
+	 * 
+	 * @return the title of the grammar analysis.
+	 */
 	public String getTitle() {
 		return this.title;
 	}
 	
+	/**
+	 * Sets the title of the grammar analysis.
+	 * 
+	 * @param title the title of the grammar analysis.
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	/**
+	 * Returns the axiom of the grammar.
+	 * 
+	 * @return the axiom of the grammar.
+	 */
 	public Character getAxiom() {
 		return this.axiom;
 	}
 
+	/**
+	 * Returns the epsilon representation of the grammar.
+	 * 
+	 * @return the epsilon representation of the grammar.
+	 */
 	public Character getEpsilon() {
 		return this.epsilon;
 	}
-
-	public Alphabet getNonTerminalAlphabet() {
-		return this.nonTerminalAlphabet;
-	}
-
+	
+	/**
+	 * Returns the non terminal alphabet of the grammar.
+	 * 
+	 * @return the non terminal alphabet of the grammar.
+	 */
 	public Alphabet getTerminalAlphabet() {
 		return this.terminalAlphabet;
 	}
 
+	/**
+	 * Returns the non terminal alphabet of the grammar.
+	 * 
+	 * @return the non terminal alphabet of the grammar.
+	 */
+	public Alphabet getNonTerminalAlphabet() {
+		return this.nonTerminalAlphabet;
+	}	
+
+	/**
+	 * Returns the set of productions of the grammar.
+	 * 
+	 * @return the set of productions of the grammar.
+	 */
 	public Productions getProductions() {
 		return this.productions;
 	}
 
+	/**
+	 * Returns the grammar type of the grammar.
+	 * 
+	 * @return the grammar type of the grammar.
+	 */
 	public Type getGrammarType() {
 		return this.grammarType;
 	}
 	
+	/**
+	 * Returns the extension of the grammar.
+	 * 
+	 * @return the extension of the grammar.
+	 */
 	public Extension getExtension() {
 		return this.grammarExtension;
 	}
 
+	/**
+	 * Returns the matching normal forms of the grammar.
+	 * 
+	 * @return the matching normal forms of the grammar.
+	 */
 	public Set<NormalForm> getNormalForms() {
 		return this.normalForms;
 	}
 
+	/**
+	 * Returns the epsilon productions of the grammar.
+	 * 
+	 * @return the epsilon productions of the grammar.
+	 */
 	public Productions getEpsilonProductions() {
 		return this.epsilonProductions;
 	}
 
+	/**
+	 * Returns the set of unit productions of the grammar.
+	 * 
+	 * @return the set of unit productions of the grammar.
+	 */
 	public Productions getUnitProductions() {
 		return this.unitProductions;
 	}
 
+	/**
+	 * Returns the set of non trivial unit productions of the grammar.
+	 * 
+	 * @return the set of non trivial unit productions of the grammar.
+	 */
 	public Productions getNonTrivialUnitProductions() {
 		return this.nonTrivialUnitProductions;
 	}
 
+	/**
+	 * Returns the set of trivial unit productions of the grammar.
+	 * 
+	 * @return the set of trivial unit productions of the grammar.
+	 */
 	public Productions getTrivialUnitProductions() {
 		return this.trivialUnitProductions;
 	}
 
+	/**
+	 * Returns the set of nullable symbols of the grammar.
+	 * 
+	 * @return the set of nullable symbols of the grammar.
+	 */
 	public Alphabet getNullables() {
 		return this.nullables;
 	}
 	
+	/**
+	 * Returns the set of ungenerative symbols of the grammar.
+	 * 
+	 * @return the set of ungenerative symbols of the grammar.
+	 */
 	public Alphabet getUngeneratives() {
 		return this.ungeneratives;
 	}
 	
+	/**
+	 * Returns the set of unreacheable symbols of the grammar.
+	 * 
+	 * @return the set of unreacheable symbols of the grammar.
+	 */
 	public Alphabet getUnreacheables() {
 		return this.unreacheables;
 	}
 	
+	/**
+	 * Returns the set of useless symbols of the grammar.
+	 * 
+	 * @return the set of useless symbols of the grammar.
+	 */
 	public Alphabet getUseless() {
 		return this.useless;
 	}
 	
+	/**
+	 * Returns the set of all parameters of the grammar analysis.
+	 * 
+	 * @return the map of all parameters of the grammar analysis.
+	 */
 	public Map<String, String> getParameters() {
 		return this.parameters;
-	}
-	
-	public String toFormattedParameters() {
-		String string = "";
-		for (Map.Entry<String, String> parameter : this.getParameters().entrySet())
-        	string += "\u0700" + " " + parameter.getKey() + ": " + parameter.getValue() + "\n";
-		return string;
 	}
 	
 	@Override public String toString() {

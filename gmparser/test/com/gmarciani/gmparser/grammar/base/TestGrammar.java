@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.gmarciani.gmparser.models.grammar.Grammar;
-import com.gmarciani.gmparser.models.grammar.GrammarFactory;
+import com.gmarciani.gmparser.models.grammar.factory.GrammarFactory;
 import com.gmarciani.gmparser.models.grammar.production.Member;
 import com.gmarciani.gmparser.models.grammar.production.Production;
 import com.gmarciani.gmparser.models.grammar.production.Productions;
