@@ -118,8 +118,8 @@ public abstract class ParsingSession {
 	
 	protected String getFormattedFooter() {
 		String string = "###########################";
-		string +=         "##### END OF PARSING SESSION #####";
-		string +=         "###########################\n";
+		string +=         "##### END OF PARSING SESSION ";
+		string +=         "#########################\n";
 		return string;
 	}
 	

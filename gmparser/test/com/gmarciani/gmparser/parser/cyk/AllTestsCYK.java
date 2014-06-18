@@ -30,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	TestCYKMatrix.class,
-	TestCYKParse.class 
+	TestCYKParse.class,
+	TestCYKParsingSession.class
 	})
 public class AllTestsCYK {
 
