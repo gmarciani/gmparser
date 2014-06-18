@@ -69,7 +69,7 @@ public class TransitionGraph<V> extends AbstractAutomaton<V> {
 	
 	/**
 	 * <p>Generates the deterministic finite automaton equivalent to the current transition graph.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 2.3.8]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 2.3.8]<p>
 	 * 
 	 * @return the deterministic finite automaton equivalent to the current transition graph.
 	 */
@@ -116,7 +116,7 @@ public class TransitionGraph<V> extends AbstractAutomaton<V> {
 	
 	/**
 	 * <p>Returns the symbol-image of the specified subset of states.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", def 2.3.6]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", def 2.3.6]<p>
 	 * 
 	 * @param states the subset of states.
 	 * @param symbol the symbol.
@@ -132,7 +132,7 @@ public class TransitionGraph<V> extends AbstractAutomaton<V> {
 	
 	/**
 	 * <p>Returns the symbol-image of the specified state.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", def. 2.3.2]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", def. 2.3.2]<p>
 	 * 
 	 * @param state the state.
 	 * @param symbol the symbol.

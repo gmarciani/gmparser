@@ -145,9 +145,9 @@ public final class App {
 				return;
 			this.analyze(grammar);
 		} else if (cmd.hasOption("transform")) {
-			final String vals[] = cmd.getOptionValues("transform");			
-			final String grammar = vals[0];
-			final GrammarTransformation transformation = GrammarTransformation.valueOf(vals[1]);
+			final String vals[] = cmd.getOptionValues("transform");	
+			final GrammarTransformation transformation = GrammarTransformation.valueOf(vals[0]);
+			final String grammar = vals[1];
 			if (!this.validateGrammar(grammar))				
 				return;
 			this.transform(grammar, transformation);

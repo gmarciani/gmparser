@@ -531,7 +531,8 @@ public class Grammar {
 	 * @return true if the specified string correctly represent a grammar.
 	 */
 	public static boolean validate(String strGrammar) {
-		String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";		
+		//String regex = "^([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*)(\\u003B([a-zA-Z]+->[a-zA-Z\\u03B5]+(\\|[a-zA-Z\\u03B5]+)*))*\\u002E$";
+		String regex = "^([^->]+->[^->]+(\\|[^->]+)*)(\\u003B([^->]+->[^->]+(\\|[^->]+)*))*\\u002E$";
 		return Pattern.matches(regex, strGrammar);
 	}	
 	
@@ -546,7 +547,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Computes the First1 for the specified symbol.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 4.2.2]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 4.2.2]<p>
 	 * 
 	 * @param symbol the symbol.
 	 * 
@@ -585,7 +586,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Converts the current grammar to the augmented grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", def. 5.1.3]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", def. 5.1.3]<p>
 	 */
 	public void toAugmentedGrammar() {
 		if (this.getProductions().getProductionsLeftContaining(this.getAxiom()).size() == 1 // if there is only one production for the axiom ...
@@ -602,7 +603,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Removes from the current grammar all the ungenerative symbols.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 3.5.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 3.5.1]<p>
 	 */
 	public void removeUngenerativeSymbols() {
 		Alphabet generativeNonTerminals = new Alphabet(); // Vn' = {}.
@@ -621,7 +622,7 @@ public class Grammar {
 		
 	/**
 	 * <p>Removes from the current grammar all the unreacheable symbols.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 3.5.3]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 3.5.3]<p>
 	 */
 	public void removeUnreacheableSymbols() {	
 		Alphabet reacheableTerminals = new Alphabet(); // Vt' = {}.
@@ -645,7 +646,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Removes from the current grammar all the useless symbols.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", the. 3.5.6]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", the. 3.5.6]<p>
 	 */
 	public void removeUselessSymbols() {
 		this.removeUngenerativeSymbols(); // first, remove ungenerative symbols ...
@@ -654,7 +655,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Removes from the current grammar all the epsilon productions.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 3.5.8]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 3.5.8]<p>
 	 */
 	public void removeEpsilonProductions() {
 		Alphabet nullables = this.getNullables(); // N = {n | n is a nullable symbol}.		
@@ -689,7 +690,7 @@ public class Grammar {
 	
 	/**
 	 * <p>Removes from the current grammar all the unit productions.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 3.5.11]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 3.5.11]<p>
 	 */
 	public void removeUnitProductions() {
 		this.removeEpsilonProductions(); // The input grammar must be a context-free without epsilon productions.
@@ -717,7 +718,7 @@ public class Grammar {
 	/**
 	 * <p>Converts the current grammar to the equivalent grammar in Chomsky Normal Form.<p>
 	 * <p>Note that the current grammar should be a context-free grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", alg. 3.6.3]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", alg. 3.6.3]<p>
 	 */
 	public void toChomskyNormalForm() {
 		this.removeEpsilonProductions(); // Simplify the grammar, removing the epsilon productions ...

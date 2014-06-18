@@ -38,7 +38,7 @@ import com.gmarciani.gmparser.models.parser.lr.session.LROneParsingSession;
 
 /**
  * <p>CLR(1) parser implementation.<p>
- * <p>Every algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+ * <p>Every algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
  * 
  * @see com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession
  * 
@@ -49,7 +49,7 @@ public class LROneParser {
 	
 	/**
 	 * <p>Checks if the specified word can be parsed by the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
 	 * 
 	 * @param grammar the grammar to parse with.
 	 * @param word the word to parse.
@@ -65,7 +65,7 @@ public class LROneParser {
 
 	/**
 	 * <p>Checks if the specified word can be parsed by the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
 	 * 
 	 * @param grammar the grammar to parse with.
 	 * @param word the word to parse.
@@ -82,7 +82,7 @@ public class LROneParser {
 	
 	/**
 	 * <p>Generates the LR(1) recognition matrix derived from the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
 	 * 
 	 * @param grammar the grammar.
 	 * 
@@ -96,7 +96,7 @@ public class LROneParser {
 
 	/**
 	 * <p>Generates the deterministic finite automaton of items derived from the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
 	 * 
 	 * @param grammar the grammar.
 	 * 
@@ -110,7 +110,7 @@ public class LROneParser {
 	
 	/**
 	 * <p>Checks if the specified word can be accepted by a the non deterministic PDA by the specified LR(1) recognition matrix.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg. 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg. 5.4.1]<p>
 	 * 
 	 * @param recognitionMatrix the LR(1) recognition matrix to parse with.
 	 * @param word the word to parse.
@@ -161,7 +161,7 @@ public class LROneParser {
 	
 	/**
 	 * <p>Checks if the specified grammar is a LR(1) grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", rem. 5.4.4]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", rem. 5.4.4]<p>
 	 * 
 	 * @param grammar the grammar.
 	 * 
@@ -175,7 +175,7 @@ public class LROneParser {
 	
 	/**
 	 * Checks if the specified LR(1) recognition matrix has been derived from a LR(1) grammar.
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", rem. 5.4.4]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", rem. 5.4.4]<p>
 	 * 
 	 * @param recognitionMatrix the LR(1) recognition matrix.
 	 * 

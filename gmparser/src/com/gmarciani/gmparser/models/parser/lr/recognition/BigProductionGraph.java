@@ -73,7 +73,7 @@ public class BigProductionGraph extends TransitionGraph<Item> {
 	
 	/**
 	 * <p>Generates the Big Production Graph.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3th edition)", alg 5.4.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Techniques for Searching, Parsing and Matching (3rd edition)", alg 5.4.1]<p>
 	 */
 	private void generate() {
 		GSet<Pair<Item, Item>> epsilonTransitions = new GSet<Pair<Item, Item>>();

@@ -32,7 +32,7 @@ import com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession;
 
 /**
  * <p>Cocke-Younger-Kasami parser implementation.<p>
- * <p>Every algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", par. 3.15.1]<p>
+ * <p>Every algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", par. 3.15.1]<p>
  * 
  * @see com.gmarciani.gmparser.models.parser.cyk.session.CYKParsingSession
  * 
@@ -43,7 +43,7 @@ public class CYKParser {
 	
 	/**
 	 * <p>Checks if the specified word can be parsed by the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", par. 3.15.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", par. 3.15.1]<p>
 	 * 
 	 * @param grammar the grammar to parse with.
 	 * @param word the word to parse.
@@ -58,7 +58,7 @@ public class CYKParser {
 
 	/**
 	 * <p>Checks if the specified word can be parsed by the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", par. 3.15.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", par. 3.15.1]<p>
 	 * 
 	 * @param grammar the grammar to parse with.
 	 * @param word the word to parse.
@@ -74,7 +74,7 @@ public class CYKParser {
 	
 	/**
 	 * <p>Generates the Cocke-Younger-Kasami recognition matrix derived from the specified grammar.<p>
-	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3th edition)", par. 3.15.1]<p>
+	 * <p>The algorithm has been derived from [A. Pettorossi "Automata Theory and Formal Languages (3rd edition)", par. 3.15.1]<p>
 	 * 
 	 * @param grammar the grammar.
 	 * 
