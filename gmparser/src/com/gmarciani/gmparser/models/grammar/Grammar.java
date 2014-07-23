@@ -553,7 +553,7 @@ public class Grammar {
 	 * 
 	 * @return the First1 for the specified symbol.
 	 */
-	public Alphabet getFirstOne(Character symbol) {		
+	public Alphabet getFirstOne(Character symbol) {	
 		if (symbol.equals(Grammar.EPSILON)) // First1(e) = {e}.
 			return new Alphabet(Grammar.EPSILON);
 		if (this.getTerminals().contains(symbol)) // First1(a) = {a}.
@@ -564,8 +564,12 @@ public class Grammar {
 			if (!production.getLeft().getValue().equals(String.valueOf(symbol)))
 				continue;
 			Character firstSymbol = production.getRight().getValue().toCharArray()[0];
-			first.addAll(this.getFirstOne(firstSymbol));
-			first.remove(Grammar.EPSILON);
+			
+			if (!firstSymbol.equals(symbol)) {
+				first.addAll(this.getFirstOne(firstSymbol));
+				first.remove(Grammar.EPSILON);
+			}
+			
 			List<Character> scannedSymbols = new ArrayList<Character>();
 			for (int i = 0; i < production.getRight().getSize(); i ++) { // if B1 ->* e then add First1(B2) - {e} ... if B1B2...Bk-1 -> *e then add First1(Bk) - {e}.
 				Character rSymbol = production.getRight().getValue().charAt(i);

@@ -30,6 +30,7 @@ import com.gmarciani.gmparser.models.parser.lr.recognition.BigProductionGraph;
 
 public class TestBigProductionGraph {
 	
+	private static final String GRAMMAR_EXAM = "S->BBa;B->Bb|c.";
 	private static final String GRAMMAR_ONE = "X->S;S->CC;C->cC|d.";
 	private static final String GRAMMAR_TWO = "S->A;A->BA|" + Grammar.EPSILON + ";B->aB|b.";
 	private static final String GRAMMAR_THREE = "X->S;S->aA|bB;A->cAd|" + Grammar.EPSILON + ";B->" + Grammar.EPSILON + ".";
@@ -37,6 +38,13 @@ public class TestBigProductionGraph {
 	private static final String GRAMMAR_CHOMSKY_S_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b.";
 	private static final String GRAMMAR_NOT_CHOMSKY_EXTENDED = "S->" + Grammar.EPSILON + "|CB|FA|FB|G;A->CS|FD|a;B->FS|CE|b;C->a;D->AA;E->BB;F->b;G->" + Grammar.EPSILON + ".";
 	private static final String GRAMMAR_CHOMSKY_EMPTY = "S->" + Grammar.EPSILON + ".";
+	
+	@Test public void createExam() {		
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_EXAM);
+		System.out.println("#createExam: " + grammar);
+		BigProductionGraph bigProduction = new BigProductionGraph(grammar);
+		System.out.println(bigProduction.toExtendedFormattedAutomaton());
+	}
 	
 	@Test public void createOne() {		
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_ONE);

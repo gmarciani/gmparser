@@ -32,8 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	TestBigProductionGraph.class,
 	TestBigProductionFiniteAutomaton.class,
 	TestLROneMatrix.class,
-	TestLROneParse.class,
-	TestLROneParsingSession.class
+	TestLROneParse.class
 	})
 public class AllTestsLR {
 

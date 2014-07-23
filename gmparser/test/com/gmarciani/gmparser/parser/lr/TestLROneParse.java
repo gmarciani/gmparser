@@ -32,6 +32,8 @@ import com.gmarciani.gmparser.models.parser.lr.LROneParser;
 
 public class TestLROneParse {
 	
+	private static final String GRAMMAR_LR1_ONE_EXAM = "S->BBa;B->Bb|c.";
+	
 	private static final String GRAMMAR_LR1_ONE = "X->S;S->CC;C->cC|d.";
 	private static final String GRAMMAR_LR1_TWO = "S->A;A->BA|" + Grammar.EPSILON + ";B->aB|b.";
 	private static final String GRAMMAR_LR1_THREE = "X->S;S->aA|bB;A->cAd|" + Grammar.EPSILON + ";B->" + Grammar.EPSILON + ".";
@@ -40,6 +42,18 @@ public class TestLROneParse {
 	
 	private static final String GRAMMAR_NOTLR1_CHOMSKY = "S->AL|BL|BR;A->a;B->b;L->AS|a|b;R->BS|a|b.";
 	private static final String GRAMMAR_NOTLR1_NOTCHOMSKY = "S->aL|bL|bR;L->aS|a|b;R->bS|a|b.";
+	
+	@Test public void parseLR1Exam() {
+		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_ONE_EXAM); // (cb*)(cb*)a
+		
+		String acceptableWords[] = {"cca", "ccba", "ccbbbba", "cbcba", "cbbbcbbba", "cbbbbcbbba", "cbbbcbbbba", "cbbbbcbbbba"};
+		String notAcceptableWords[] = {"", "c", "ca", "cba", "cddd", "cbab", "cacb", "cbbacb", "cccba", "cccbbbba", "ccbac", "cbbcbbc", "cbbbcbbbbca"};
+		
+		for (String word : acceptableWords)
+			assertTrue("Uncorrect LR(1) parsing. Should be parsed: " + word, LROneParser.parse(grammar, word));		
+		for (String word : notAcceptableWords)
+			assertFalse("Uncorrect LR(1) parsing. Should not be parsed: " + word, LROneParser.parse(grammar, word));
+	}
 	
 	@Test public void parseLR1One() {
 		Grammar grammar = Grammar.generateGrammar(GRAMMAR_LR1_ONE); //(c*d)(c*d)
